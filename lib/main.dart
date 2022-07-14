@@ -90,8 +90,7 @@ class _MainPageState extends State<MainPage> {
                     icon: Icon(Icons.list_alt_rounded, color: Colors.white),
                     label: ''),
                 NavigationDestination(
-                    icon: Icon(Icons.camera_alt, color: Colors.white),
-                    label: ''),
+                    icon: Image.asset('images/icon/Vector-9.png'), label: ''),
                 NavigationDestination(
                     icon: Icon(Icons.chat_bubble, color: Colors.white),
                     label: ''),

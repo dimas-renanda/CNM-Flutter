@@ -45,7 +45,7 @@ class _MyLoginState extends State<MyLogin> {
     return Container(
       margin: EdgeInsets.all(50),
       child: Column(children: [
-        Image.asset('images/crosslogo.jpeg'),
+        Image.asset('images/crosslogo.png'),
       ]),
     );
   }
@@ -56,11 +56,11 @@ class _MyLoginState extends State<MyLogin> {
       child: Column(children: [
         TextField(
             decoration: InputDecoration(
-          labelText: "Username Or Email",
+          labelText: "Email or username",
           labelStyle: TextStyle(color: Colors.white),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(color: Colors.white, width: 2)),
+          // enabledBorder: OutlineInputBorder(
+          //     borderRadius: BorderRadius.circular(18),
+          //     borderSide: BorderSide(color: Colors.white, width: 2)),
         )),
       ]),
     );
@@ -73,9 +73,9 @@ class _MyLoginState extends State<MyLogin> {
             decoration: InputDecoration(
           labelText: "Password",
           labelStyle: TextStyle(color: Colors.white),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(color: Colors.white, width: 2)),
+          // enabledBorder: OutlineInputBorder(
+          //     borderRadius: BorderRadius.circular(18),
+          //     borderSide: BorderSide(color: Colors.white, width: 2)),
         )),
       ]),
     );
@@ -109,7 +109,7 @@ class _MyLoginState extends State<MyLogin> {
 
   _buttonQR(context) {
     return Container(
-      padding: EdgeInsets.only(top: 30),
+      padding: EdgeInsets.only(top: 15),
       child: Column(
         children: [
           ElevatedButton(
@@ -155,16 +155,18 @@ class _MyLoginState extends State<MyLogin> {
           topRight: Radius.circular(18),
         ),
       ),
-      child: Column(
-        children: [
-          SizedBox(height: 20),
-          _Username(context),
-          _Password(context),
-          _buttonLogin(context),
-          _buttonQR(
-            context,
-          )
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            _Username(context),
+            _Password(context),
+            _buttonLogin(context),
+            _buttonQR(
+              context,
+            )
+          ],
+        ),
       ),
     );
   }

@@ -108,7 +108,7 @@ class HomePage extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfileUser()),
+              MaterialPageRoute(builder: (context) => Profile()),
             );
           },
         )),
@@ -124,14 +124,17 @@ class HomePage extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: (GestureDetector(
           child: Text(
-            "Active Package ",
-            style: TextStyle(color: Color.fromARGB(255, 0, 88, 160)),
+            "Aktive Package",
+            style: TextStyle(
+                decoration: TextDecoration.underline,
+                color: Color.fromARGB(255, 0, 88, 160),
+                fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfileUser()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => ProfileUser()),
+            // );
           },
         )),
       ),
@@ -317,14 +320,17 @@ class HomePage extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: (GestureDetector(
           child: Text(
-            "Recomended for you!",
-            style: TextStyle(color: Color.fromARGB(255, 0, 88, 160)),
+            "Recomended for you !",
+            style: TextStyle(
+                decoration: TextDecoration.underline,
+                color: Color.fromARGB(255, 0, 88, 160),
+                fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfileUser()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => ProfileUser()),
+            // );
           },
         )),
       ),
@@ -463,13 +469,16 @@ class HomePage extends StatelessWidget {
         child: (GestureDetector(
           child: Text(
             "News",
-            style: TextStyle(color: Color.fromARGB(255, 0, 88, 160)),
+            style: TextStyle(
+                decoration: TextDecoration.underline,
+                color: Color.fromARGB(255, 0, 88, 160),
+                fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfileUser()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => ProfileUser()),
+            // );
           },
         )),
       ),
@@ -501,7 +510,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          child: Image.asset("images/crosslogo.jpeg"),
+                          child: Image.asset("images/icon/newsimg.png"),
                         ),
                         Divider(
                           color: Colors.black54,
