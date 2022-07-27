@@ -6,7 +6,7 @@ class PaketList extends StatelessWidget {
   final String apiUrl = "https://reqres.in/api/users?per_page=15";
   Future<List<dynamic>> _fecthDataUsers() async {
     var result = await http.get(Uri.parse(apiUrl));
-    return json.decode(result.body)['data'];
+    return json.decode(result.body)["data"];
   }
 
   @override
@@ -24,17 +24,7 @@ class PaketList extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundImage:
-                            NetworkImage(snapshot.data[index]['avatar']),
-                      ),
-                      title: Text(snapshot.data[index]['first_name'] +
-                          " " +
-                          snapshot.data[index]['last_name']),
-                      subtitle: Text(snapshot.data[index]['email']),
-                    );
+                    return ListTile(leading: Text("hi"));
                   });
             } else {
               return Center(child: CircularProgressIndicator());

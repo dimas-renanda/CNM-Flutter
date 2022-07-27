@@ -1,19 +1,40 @@
+import 'dart:convert';
+import 'package:firstproject/main.dart';
+import 'package:firstproject/notification.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:firstproject/cobabelajarwidget.dart';
 import 'package:firstproject/jsoncontactlist.dart';
 import 'package:firstproject/paketlistnew.dart';
+import 'package:firstproject/webview_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firstproject/profile.dart';
-
+import 'package:firstproject/oldprofile.dart';
+import 'package:intl/intl.dart';
+import 'globalspublic.dart' as globals;
 import 'detailVoucher.dart';
 
 //mainpage
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
+
+//func news
+  final String apiUrlNews = "http://saurav.tech/NewsAPI/sources.json";
+  Future<List<dynamic>> _fecthDataUsers() async {
+    var result = await http.get(Uri.parse(apiUrlNews));
+    //print(json.decode(result.body)['sources']);
+    return json.decode(result.body)['sources'];
+  }
+
   String nama = "John Doe !";
   String Rolenya = "Customer";
+
+  var harga = 25000;
+
+  late String arrayNews =
+      '[{"name": "dart1","quantity": 12 },{"name": "flutter2","quantity": 25 }]';
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +55,9 @@ class HomePage extends StatelessWidget {
               _news(context),
               _cardnews(
                 context,
+              ),
+              SizedBox(
+                height: 30,
               )
             ],
           ),
@@ -43,17 +67,52 @@ class HomePage extends StatelessWidget {
   }
 
   _appbarnya(context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      //backgroundColor: Color(0x44000000),
-      elevation: 0,
-      leading: Image.asset("images/crosslogo.png"),
-      actions: [
-        Icon(
-          Icons.notifications,
-          color: Colors.black87,
-        )
-      ],
+    // return AppBar(
+    //   backgroundColor: Colors.transparent,
+    //   //backgroundColor: Color(0x44000000),
+    //   elevation: 0,
+    //   leading: Image.asset("images/crosslogo.png"),
+    //   actions: [
+    //     Icon(
+    //       Icons.notifications,
+    //       color: Colors.black87,
+    //     )
+    //   ],
+    // );
+
+    return Container(
+      padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height / 15,
+          right: MediaQuery.of(context).size.width / 30,
+          left: MediaQuery.of(context).size.width / 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Image.asset("images/crosslogo.png", scale: 6),
+            ],
+          ),
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => notificationsGateway()),
+                  );
+                },
+                child: Icon(
+                  Icons.notifications,
+                  size: 32,
+                  color: Color.fromARGB(255, 19, 2, 115),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -78,7 +137,7 @@ class HomePage extends StatelessWidget {
 
   _judul(context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         alignment: Alignment.topLeft,
         child: Column(
           children: [
@@ -87,7 +146,7 @@ class HomePage extends StatelessWidget {
               style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 25,
-                  color: Colors.blue),
+                  color: Color.fromARGB(255, 0, 88, 160)),
             ),
           ],
         ));
@@ -96,20 +155,20 @@ class HomePage extends StatelessWidget {
   _rolenya(context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
-      margin: EdgeInsets.only(top: 5),
+      margin: EdgeInsets.only(top: 2),
       child: Align(
         alignment: Alignment.topLeft,
         child: (GestureDetector(
           child: Text(
             "$Rolenya",
             style: TextStyle(
-                decoration: TextDecoration.underline, color: Colors.blue),
+                decoration: TextDecoration.underline,
+                color: Color.fromARGB(255, 19, 2, 115),
+                fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Profile()),
-            );
+            globals.numpagenya = 4;
+            print(globals.numpagenya);
           },
         )),
       ),
@@ -142,43 +201,54 @@ class HomePage extends StatelessWidget {
   }
 
   _cardpaketnya(context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 160,
-        enableInfiniteScroll: false,
-      ),
-      items: [1, 2].map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => voucherDetail()),
-                );
-              },
-              child: Container(
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        border: Border.all(
-                          color: Colors.blue,
+    return Container(
+      padding: EdgeInsets.only(top: 8),
+      child: CarouselSlider(
+        options: CarouselOptions(
+          height: 160,
+          enableInfiniteScroll: false,
+        ),
+        items: [1, 2].map((i) {
+          return Builder(
+            builder: (BuildContext context) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => voucherDetail()),
+                  );
+                },
+                child: Container(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                        //width: 210,
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border.all(
+                            color: Color.fromARGB(255, 0, 88, 160),
+                          ),
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(20),
+                              topLeft: Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 0, 27, 49),
+                              blurRadius: 4,
+                              offset: Offset(4, 8), // Shadow position
+                            ),
+                          ],
                         ),
-                        borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(20),
-                            topLeft: Radius.circular(20)),
-                      ),
-                      child: _isipaket(context, i)),
+                        child: _isipaket(context, i)),
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-      }).toList(),
+              );
+            },
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -191,7 +261,7 @@ class HomePage extends StatelessWidget {
           Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
-              width: 280,
+              width: double.infinity,
               height: 35,
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -202,18 +272,20 @@ class HomePage extends StatelessWidget {
                     //   //color: Colors.green,
                     //   width: 2.0,
                     // ),
-                    color: Colors.blue),
+                    color: Color.fromARGB(255, 0, 88, 160)),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                    child: Text(
-                      "  Paket Reyna",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          "  Paket Reyna",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      )),
                 ),
               ),
             ),
@@ -282,20 +354,23 @@ class HomePage extends StatelessWidget {
                                 //   //color: Colors.green,
                                 //   width: 2.0,
                                 // ),
-                                color: Color.fromARGB(255, 250, 151, 12)),
+                                color: Color.fromARGB(255, 255, 127, 7)),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 25, vertical: 2),
-                                child: Text(
-                                  " Active until xxxxxx",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 8),
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      " Active | until 30 February 2023",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 8),
+                                    ),
+                                  )),
                             ),
                           ),
                         ),
@@ -315,7 +390,7 @@ class HomePage extends StatelessWidget {
   _rekomended(context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
-      margin: EdgeInsets.only(top: 5),
+      margin: EdgeInsets.only(top: 25),
       child: Align(
         alignment: Alignment.topLeft,
         child: (GestureDetector(
@@ -340,7 +415,7 @@ class HomePage extends StatelessWidget {
   _cardrekomen(context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 160,
+        height: MediaQuery.of(context).size.height * 0.25,
         enableInfiniteScroll: false,
       ),
       items: [1, 2, 3, 4, 5].map((i) {
@@ -350,18 +425,31 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => packetList()),
+                  MaterialPageRoute(
+                      builder: (context) => MainPage(
+                            reqPage: "1",
+                          )),
                 );
               },
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.symmetric(horizontal: 5, vertical: 30),
+                width: MediaQuery.of(context).size.width * 0.75,
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    border: Border.all(
-                      color: Colors.blue,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  border: Border.all(
+                    color: Color.fromARGB(255, 0, 88, 160),
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 0, 27, 49),
+                      blurRadius: 4,
+                      offset: Offset(4, 8), // Shadow position
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                  ],
+                ),
                 child: Container(
                   //padding: EdgeInsets.symmetric(horizontal: 10),
                   //margin: EdgeInsets.only(top: 5),
@@ -370,8 +458,8 @@ class HomePage extends StatelessWidget {
                       Align(
                         alignment: Alignment.topLeft,
                         child: SizedBox(
-                          width: 150,
-                          height: 35,
+                          width: 130,
+                          height: 25,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -381,20 +469,22 @@ class HomePage extends StatelessWidget {
                                 //   //color: Colors.green,
                                 //   width: 2.0,
                                 // ),
-                                color: Colors.blue),
+                                color: Color.fromARGB(255, 0, 88, 160)),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 25, vertical: 10),
-                                child: Text(
-                                  "  Paket Sova",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 5),
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      "  Paket Sova",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )),
                             ),
                           ),
                         ),
@@ -443,7 +533,7 @@ class HomePage extends StatelessWidget {
                             Text(
                               "Rp 25.000",
                               style: TextStyle(
-                                  color: Colors.orange,
+                                  color: Color.fromARGB(255, 225, 140, 13),
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -486,72 +576,111 @@ class HomePage extends StatelessWidget {
   }
 
   _cardnews(context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 180,
-        enableInfiniteScroll: false,
-      ),
-      items: [1, 2, 3, 4, 5].map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    border: Border.all(
-                      color: Colors.blue,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    margin: EdgeInsets.only(top: 5),
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Image.asset("images/icon/newsimg.png"),
+    return Container(
+      padding: EdgeInsets.only(top: 5),
+      // child: CarouselSlider(
+      //   options: CarouselOptions(
+      //     height: 180,
+      //     enableInfiniteScroll: false,
+      //   ),
+
+      // ),
+      child: FutureBuilder<List<dynamic>>(
+        future: _fecthDataUsers(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return CarouselSlider.builder(
+              itemCount: 3,
+              itemBuilder: (BuildContext context, int itemIndex,
+                      int pageViewIndex) =>
+                  Container(
+                      //width: MediaQuery.of(context).size.width,
+                      //height: MediaQuery.of(context).size.height,
+                      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        border: Border.all(
+                          color: Color.fromARGB(255, 0, 88, 160),
                         ),
-                        Divider(
-                          color: Colors.black54,
-                          height: 25,
-                          thickness: 2,
-                          indent: 5,
-                          endIndent: 5,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "News Topic $i",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 255.0,
-                                  child: Text(
-                                    "Putusnya jaringan kabel bawah laut yang membuat layanan internet dan tv kabel milik PT Telkom Indonesia Tbk (TLKM) terganggu.",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.clip,
-                                    softWrap: false,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 0, 27, 49),
+                            blurRadius: 4,
+                            offset: Offset(4, 8), // Shadow position
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.only(top: 5),
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  child: Image.asset("images/icon/newsimg.png"),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    )));
-          },
-        );
-      }).toList(),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => webviewpage(
+                                              urlnya: snapshot.data[itemIndex]
+                                                  ['url'],
+                                              judulnya: 'News',
+                                            )),
+                                  );
+                                },
+                              ),
+                              Divider(
+                                color: Colors.black54,
+                                height: 25,
+                                thickness: 2,
+                                indent: 5,
+                                endIndent: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    snapshot.data[itemIndex]['name'],
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 255.0,
+                                        child: Text(
+                                          snapshot.data[itemIndex]
+                                              ['description'],
+                                          maxLines: 1,
+                                          overflow: TextOverflow.clip,
+                                          softWrap: false,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ))),
+              options: CarouselOptions(
+                height: 180,
+                enableInfiniteScroll: false,
+              ),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }

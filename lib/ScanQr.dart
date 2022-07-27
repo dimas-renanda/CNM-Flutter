@@ -1,11 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
-
+import 'dart:async';
+import 'dart:ui';
+import 'package:firstproject/main.dart';
 import 'package:firstproject/netinfo.dart';
 import 'package:firstproject/webview_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -19,6 +24,14 @@ class _QRViewExampleState extends State<QRViewExample> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
+  void showAlert(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Text("hi"),
+            ));
+  }
+
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -26,6 +39,8 @@ class _QRViewExampleState extends State<QRViewExample> {
     super.reassemble();
     if (Platform.isAndroid) {
       controller!.pauseCamera();
+      //controller?.resumeCamera();
+      //controller!.resumeCamera();
     }
     controller!.resumeCamera();
   }
@@ -35,111 +50,278 @@ class _QRViewExampleState extends State<QRViewExample> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
+          Expanded(flex: 5, child: _buildQrView(context)),
+          Container(
+            child: Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                    Container(
+                      child: Column(
+                        children: [
+                          Text(
+                              'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}'),
+                          // AlertDialog(),
+                          //Text("hi")
+                        ],
+                      ),
+                    )
                   else
-                    const Text('Scan a code'),
+                    Container(
+                      margin: const EdgeInsets.all(15),
+                      padding: EdgeInsets.only(top: 5, bottom: 5),
+                      child: Column(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 15),
+                                    child: Text(
+                                      "Hotspot Access",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 8),
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              await controller?.resumeCamera();
+                                            },
+                                            child: Icon(Icons.qr_code_2_rounded,
+                                                color: Colors.white),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: CircleBorder(),
+                                              padding: EdgeInsets.all(10),
+                                              primary: Colors
+                                                  .blue, // <-- Button color
+                                              onPrimary: Colors
+                                                  .red, // <-- Splash color
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "Scan\nQR",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.orange,
+                                              fontWeight: FontWeight.w300),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (_) {
+                                                  var hcodeController =
+                                                      TextEditingController();
+
+                                                  return AlertDialog(
+                                                    title:
+                                                        Text('Hotspot Connect'),
+                                                    content: ListView(
+                                                      shrinkWrap: true,
+                                                      children: [
+                                                        TextFormField(
+                                                          controller:
+                                                              hcodeController,
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  hintText:
+                                                                      'Hotspot Access'),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        child: Text('Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          // Send them to your email maybe?
+                                                          var hlogin =
+                                                              hcodeController
+                                                                  .text;
+
+                                                          debugPrint(hlogin);
+                                                          //https://www.google.com/search?q=
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      ((context) =>
+                                                                          webviewpage(
+                                                                            judulnya:
+                                                                                "Redirect",
+                                                                            urlnya:
+                                                                                "https://www.google.com/search?q=$hlogin",
+                                                                          ))));
+                                                        },
+                                                        child: Text('Login'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            child: Icon(Icons.edit_note_rounded,
+                                                color: Colors.white),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: CircleBorder(),
+                                              padding: EdgeInsets.all(10),
+                                              primary: Colors
+                                                  .blue, // <-- Button color
+                                              onPrimary: Colors
+                                                  .red, // <-- Splash color
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "Using \nCode",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontWeight: FontWeight.w300),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                VerticalDivider(
+                                  color: Colors.black54,
+                                  thickness: 1,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 10,
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: ((context) =>
+                                                              webviewpage(
+                                                                judulnya:
+                                                                    "Redirect",
+                                                                urlnya:
+                                                                    "https://www.google.com/",
+                                                              ))));
+                                                },
+                                                child: Icon(Icons.group,
+                                                    color: Colors.white),
+                                                style: ElevatedButton.styleFrom(
+                                                  shape: CircleBorder(),
+                                                  padding: EdgeInsets.all(10),
+                                                  primary: Colors
+                                                      .blue, // <-- Button color
+                                                  onPrimary: Colors
+                                                      .red, // <-- Splash color
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              "Hotspot\nStatus",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontWeight: FontWeight.w300),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 15,
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                child: Icon(Icons.login,
+                                                    color: Colors.white),
+                                                style: ElevatedButton.styleFrom(
+                                                  shape: CircleBorder(),
+                                                  padding: EdgeInsets.all(10),
+                                                  primary: Colors
+                                                      .blue, // <-- Button color
+                                                  onPrimary: Colors
+                                                      .red, // <-- Splash color
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              "Logout\nHotspot",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontWeight: FontWeight.w300),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return const Text('loading');
-                                }
-                              },
-                            )),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => webviewpage()),
-                            );
-                          },
-                          child: const Text('Test webview',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => netInfo()),
-                            );
-                          },
-                          child: const Text('Network Information',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                    ],
+                    children: <Widget>[],
                   ),
                 ],
               ),
@@ -162,6 +344,42 @@ class _QRViewExampleState extends State<QRViewExample> {
       appBar: AppBar(
         title: Text("Scan QR"),
         automaticallyImplyLeading: false,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              AwesomeDialog(
+                context: context,
+                dialogType: DialogType.INFO,
+                borderSide: const BorderSide(
+                  color: Colors.green,
+                ),
+                buttonsBorderRadius: const BorderRadius.all(
+                  Radius.circular(2),
+                ),
+                dismissOnTouchOutside: true,
+                dismissOnBackKeyPress: false,
+                // onDissmissCallback: (type) {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     SnackBar(
+                //       content: Text('Dismissed by $type'),
+                //     ),
+                //   );
+                // },
+                headerAnimationLoop: false,
+                animType: AnimType.TOPSLIDE,
+                title: 'Network Info',
+                desc: 'MacAdd\t:\nIP\t:\nGateway\t:\nPublicIP\t:\n',
+                showCloseIcon: true,
+                btnCancelOnPress: () {},
+                btnOkOnPress: () {},
+              ).show();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(Icons.info_outline),
+            ),
+          ),
+        ],
       ),
       body: QRView(
         key: qrKey,
@@ -178,6 +396,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+    int c = 0;
     setState(() {
       this.controller = controller;
     });
@@ -185,6 +404,53 @@ class _QRViewExampleState extends State<QRViewExample> {
       setState(() {
         result = scanData;
       });
+      if (result != null && c == 0) {
+        c = 1;
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          borderSide: const BorderSide(
+            color: Colors.green,
+          ),
+          buttonsBorderRadius: const BorderRadius.all(
+            Radius.circular(2),
+          ),
+          dismissOnTouchOutside: true,
+          dismissOnBackKeyPress: false,
+          // onDissmissCallback: (type) {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(
+          //       content: Text('Dismissed by $type'),
+          //     ),
+          //   );
+          // },
+          headerAnimationLoop: false,
+          animType: AnimType.TOPSLIDE,
+          title: 'SUCCESS',
+          desc: 'Connect this device ?',
+          showCloseIcon: true,
+          btnCancelOnPress: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) => MainPage(
+                          reqPage: "2",
+                        ))));
+          },
+          btnOkOnPress: () {
+            c = 1;
+            print("Hasil Result: $result");
+            print("Hasil Result: ${result!.code.toString()}");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) => webviewpage(
+                          judulnya: "Redirect",
+                          urlnya: result!.code.toString(),
+                        ))));
+          },
+        ).show();
+      }
     });
   }
 
@@ -201,5 +467,18 @@ class _QRViewExampleState extends State<QRViewExample> {
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+  static Route<Object?> _dialogBuilder(
+      BuildContext context, Object? arguments) {
+    return RawDialogRoute<void>(
+      pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) {
+        return const AlertDialog(title: Text('Alert!'));
+      },
+    );
   }
 }

@@ -1,19 +1,26 @@
+import 'package:firstproject/CustomerService.dart';
 import 'package:firstproject/Login.dart';
 import 'package:firstproject/LoginOld.dart';
 import 'package:firstproject/ScanQr.dart';
+import 'package:firstproject/cobaprofile.dart';
 import 'package:firstproject/contact_list.dart';
 import 'package:firstproject/cobabelajarwidget.dart';
 import 'package:firstproject/main_page.dart';
 import 'package:firstproject/new_list_paket.dart';
 import 'package:firstproject/jsoncontactlist.dart';
-import 'package:firstproject/profile.dart';
+import 'package:firstproject/oldprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
+import 'globalspublic.dart';
+import 'package:flutter/services.dart';
 import 'paketlistnew.dart';
 
 //run myapp
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   runApp(MyApp());
 }
 
@@ -37,7 +44,8 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
+  String? reqPage;
+  MainPage({Key? key, this.reqPage}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -51,19 +59,30 @@ class _MainPageState extends State<MainPage> {
     packetList(),
     //const MyLogin(title: 'Login Page'),
     QRViewExample(),
-    ProfileUser(),
-    Profile(),
+    //ProfileUser(),
+    customerCareGateway(),
+    profileFix(),
   ];
+
+  @override
+  void initState() {
+    CurPage = int.parse(widget.reqPage!);
+    if (CurPage == null) {
+      CurPage = 0;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: pages[CurPage],
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            debugPrint('floating di klik');
-          },
-          child: Icon(Icons.add_box_outlined),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     debugPrint('floating di klik');
+        //   },
+        //   child: Icon(Icons.add_box_outlined),
+        // ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -82,20 +101,39 @@ class _MainPageState extends State<MainPage> {
               destinations: [
                 NavigationDestination(
                     icon: Icon(
-                      Icons.home_filled,
+                      Icons.home_outlined,
                       color: Colors.white,
+                      size: 35,
                     ),
                     label: ''),
                 NavigationDestination(
-                    icon: Icon(Icons.list_alt_rounded, color: Colors.white),
+                    icon: ImageIcon(
+                      AssetImage("images/navbaricon/paket.png"),
+                      color: Colors.white,
+                      size: 30,
+                    ),
                     label: ''),
                 NavigationDestination(
-                    icon: Image.asset('images/icon/Vector-9.png'), label: ''),
-                NavigationDestination(
-                    icon: Icon(Icons.chat_bubble, color: Colors.white),
+                    icon: ImageIcon(
+                      AssetImage("images/navbaricon/qr.png"),
+                      color: Colors.white,
+                      size: 40,
+                    ),
                     label: ''),
                 NavigationDestination(
-                    icon: Icon(Icons.person, color: Colors.white), label: ''),
+                    icon: ImageIcon(
+                      AssetImage("images/navbaricon/cs.png"),
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                    label: ''),
+                NavigationDestination(
+                    icon: ImageIcon(
+                      AssetImage("images/navbaricon/profile.png"),
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    label: ''),
               ],
               onDestinationSelected: (int index) {
                 setState(() {

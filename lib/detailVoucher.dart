@@ -9,162 +9,175 @@ class voucherDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             body: Center(
                 child: Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-            Color.fromARGB(255, 19, 2, 115),
-            Color.fromARGB(255, 196, 118, 2)
-          ])),
-      child:
-          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Container(
-          margin: EdgeInsets.only(top: 16),
-          alignment: Alignment.centerLeft,
-          child: Icon(
-            Icons.keyboard_arrow_left_rounded,
-            color: Colors.white,
-            size: 32,
-          ),
-        ),
-        Container(
-          child: Column(children: [
-            Text(
-              "Voucher Details",
-              style: TextStyle(
-                  fontSize: 15, foreground: Paint()..color = Colors.white),
-            ),
-            Container(
-              margin: EdgeInsets.only(bottom: 32),
-              child: Text(
-                "Speed 2 Mb",
-                style: TextStyle(
-                  fontSize: 35,
-                  foreground: Paint()..color = Colors.white,
-                ),
-              ),
-            ),
-          ]),
-        ),
-        // Container(
-        //   height: 50,
-        //   decoration: BoxDecoration(
-        //       borderRadius: BorderRadius.only(
-        //         topLeft: Radius.circular(60),
-        //         topRight: Radius.circular(60),
-        //       ),
-        //       color: Colors.white,
-        //       border: Border.all(color: Colors.white)),
-        // ),
-        Expanded(
-          child: Stack(children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 16),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(60),
-                    topRight: Radius.circular(60),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                Color.fromARGB(255, 19, 2, 115),
+                Color.fromARGB(255, 196, 118, 2)
+              ])),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 16),
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      color: Colors.white,
+                    ),
                   ),
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white)),
-              child: ListView(
-                children: [
-                  Container(
-                      margin: EdgeInsets.only(top: 32, left: 16, right: 16),
-                      child: Column(
+                ),
+                Container(
+                  child: Column(children: [
+                    Text(
+                      "Voucher Details",
+                      style: TextStyle(
+                          fontSize: 15,
+                          foreground: Paint()..color = Colors.white),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 32),
+                      child: Text(
+                        "Speed 2 Mb",
+                        style: TextStyle(
+                          fontSize: 35,
+                          foreground: Paint()..color = Colors.white,
+                        ),
+                      ),
+                    ),
+                  ]),
+                ),
+                // Container(
+                //   height: 50,
+                //   decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.only(
+                //         topLeft: Radius.circular(60),
+                //         topRight: Radius.circular(60),
+                //       ),
+                //       color: Colors.white,
+                //       border: Border.all(color: Colors.white)),
+                // ),
+                Expanded(
+                  child: Stack(children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(60),
+                            topRight: Radius.circular(60),
+                          ),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.white)),
+                      child: ListView(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(bottom: 5),
-                            child: Text(
-                              "Today's Usage",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          ),
-                          createCard(
-                            downloadValue: 1500,
-                            uploadValue: 800,
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            margin: EdgeInsets.only(left: 16, top: 8),
-                            child: Text(
-                              "Total: " +
-                                  ((1500 + 800) / 1000).toString() +
-                                  " Gb",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      )),
-                  Container(
-                      margin: EdgeInsets.only(top: 32, left: 16, right: 16),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 5),
-                            child: Text(
-                              "Total Usage",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          ),
-                          createCard(
-                            downloadValue: 8750,
-                            uploadValue: 1000000,
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            margin: EdgeInsets.only(left: 16, top: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: Text(
-                                    "Total: " +
-                                        ((8750 + 1000000) / 1000).toString() +
-                                        " Gb",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                              margin:
+                                  EdgeInsets.only(top: 32, left: 16, right: 16),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 5),
+                                    child: Text(
+                                      "Today's Usage",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          decoration: TextDecoration.underline),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  child: Text(
-                                    "Active until 31/07/2022",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10,
-                                        decoration: TextDecoration.underline),
+                                  createCard(
+                                    downloadValue: 1500,
+                                    uploadValue: 800,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    margin: EdgeInsets.only(left: 16, top: 8),
+                                    child: Text(
+                                      "Total: " +
+                                          ((1500 + 800) / 1000).toString() +
+                                          " Gb",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              margin:
+                                  EdgeInsets.only(top: 32, left: 16, right: 16),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 5),
+                                    child: Text(
+                                      "Total Usage",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          decoration: TextDecoration.underline),
+                                    ),
+                                  ),
+                                  createCard(
+                                    downloadValue: 8750,
+                                    uploadValue: 1000000,
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    margin: EdgeInsets.only(left: 16, top: 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            "Total: " +
+                                                ((8750 + 1000000) / 1000)
+                                                    .toString() +
+                                                " Gb",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: Text(
+                                            "Active until 31/07/2022",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 10,
+                                                decoration:
+                                                    TextDecoration.underline),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(top: 16),
+                              child: createMRTG()),
                         ],
-                      )),
-                  Container(
-                      margin: EdgeInsets.only(top: 16), child: createMRTG()),
-                ],
-              ),
-            ),
-          ]),
-        ),
-      ]),
-    ))));
+                      ),
+                    ),
+                  ]),
+                ),
+              ]),
+        ))));
   }
 }
 
@@ -294,7 +307,7 @@ class createMRTG extends StatelessWidget {
               decoration: TextDecoration.underline,
             ),
           ),
-          Image.asset("lib/assets/images/sampleSNMPGraph.png"),
+          Image.asset("images/crosslogo.png"),
         ],
       ),
     );

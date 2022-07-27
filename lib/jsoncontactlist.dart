@@ -1,3 +1,4 @@
+import 'package:firstproject/new_list_paket.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -19,7 +20,16 @@ class _ProfileUserState extends State<ProfileUser> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text(mapObject["name"] + ' ' + mapObject["age"].toString())
+            SizedBox(height: 50),
+            Text(mapObject["name"] + ' ' + mapObject["age"].toString()),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PaketList()),
+                  );
+                },
+                child: Text("Json from URL"))
           ],
         ),
       ),
