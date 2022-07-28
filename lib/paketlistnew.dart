@@ -32,7 +32,7 @@ class packetList extends StatelessWidget {
                   ),
                 )),
             actions: [
-              Image.asset("images/crosslogo.png", scale: 8),
+              Image.asset("images/crosslogo.png", scale: 6),
             ],
           ),
           SliverList(
