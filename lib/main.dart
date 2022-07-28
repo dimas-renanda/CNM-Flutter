@@ -73,6 +73,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
   }
 
+  //Bottom Navbar
   @override
   Widget build(BuildContext context) {
     return Scaffold(
