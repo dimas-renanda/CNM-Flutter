@@ -153,7 +153,7 @@ class customerCareGateway extends StatelessWidget {
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: Color.fromARGB(255, 5, 8, 69),
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20))),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(19))),
             child: Container(
               margin: EdgeInsets.only(left: 16),
               child: Text(
@@ -185,7 +185,7 @@ class customerCareGateway extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
+                      bottomRight: Radius.circular(19),
                     ),
                   ),
                   primary: Color.fromARGB(255, 5, 8, 69),

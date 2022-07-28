@@ -52,42 +52,56 @@ class _MyLoginState extends State<MyLogin> {
 
   _Username(context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
+      margin: EdgeInsets.only(bottom: 20),
+      padding: EdgeInsets.symmetric(horizontal: 5),
       child: Column(children: [
         TextField(
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-          labelText: "Email or username",
-          labelStyle: TextStyle(color: Colors.white),
-          // enabledBorder: OutlineInputBorder(
-          //     borderRadius: BorderRadius.circular(18),
-          //     borderSide: BorderSide(color: Colors.white, width: 2)),
-        )),
+              labelText: "Email or username",
+              labelStyle: TextStyle(color: Colors.white),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2)),
+              border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2)),
+            )),
       ]),
     );
   }
 
   _Password(context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5),
       child: Column(children: [
         TextField(
+            autocorrect: false,
+            enableSuggestions: false,
+            obscureText: true,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-          labelText: "Password",
-          labelStyle: TextStyle(color: Colors.white),
-          // enabledBorder: OutlineInputBorder(
-          //     borderRadius: BorderRadius.circular(18),
-          //     borderSide: BorderSide(color: Colors.white, width: 2)),
-        )),
+              labelText: "Password",
+              labelStyle: TextStyle(color: Colors.white),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2)),
+              border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2)),
+            )),
       ]),
     );
   }
 
   _buttonLogin(context) {
     return Container(
-      padding: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.2),
       child: Column(
         children: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
+                primary: Colors.white,
                 minimumSize: const Size.fromHeight(40),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
@@ -102,7 +116,11 @@ class _MyLoginState extends State<MyLogin> {
             },
             child: Text(
               "Login",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 4, 32, 107),
+              ),
             ),
           ),
         ],
@@ -117,6 +135,7 @@ class _MyLoginState extends State<MyLogin> {
         children: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
+                primary: Colors.white,
                 minimumSize: const Size.fromHeight(40),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
@@ -128,7 +147,11 @@ class _MyLoginState extends State<MyLogin> {
             },
             child: Text(
               "QR",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 4, 32, 107),
+              ),
             ),
           ),
         ],
@@ -161,16 +184,19 @@ class _MyLoginState extends State<MyLogin> {
         ),
       ),
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            _Username(context),
-            _Password(context),
-            _buttonLogin(context),
-            _buttonQR(
-              context,
-            )
-          ],
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              _Username(context),
+              _Password(context),
+              _buttonLogin(context),
+              _buttonQR(
+                context,
+              )
+            ],
+          ),
         ),
       ),
     );

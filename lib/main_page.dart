@@ -66,20 +66,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  //Fix
   _appbarnya(context) {
-    // return AppBar(
-    //   backgroundColor: Colors.transparent,
-    //   //backgroundColor: Color(0x44000000),
-    //   elevation: 0,
-    //   leading: Image.asset("images/crosslogo.png"),
-    //   actions: [
-    //     Icon(
-    //       Icons.notifications,
-    //       color: Colors.black87,
-    //     )
-    //   ],
-    // );
-
     return Container(
       padding: EdgeInsets.only(
           top: MediaQuery.of(context).size.height / 15,
@@ -88,34 +76,37 @@ class HomePage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Image.asset("images/crosslogo.png", scale: 6),
-            ],
+          //Logo Aplikasi / Application Logo
+          Container(
+            margin:
+                EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02),
+            child: Image.asset("images/crosslogo.png", scale: 5),
           ),
-          Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => notificationsGateway()),
-                  );
-                },
-                child: Icon(
-                  Icons.notifications,
-                  size: 32,
-                  color: Color.fromARGB(255, 19, 2, 115),
-                ),
-              )
-            ],
+          //Lonceng Notifikasi / Notifications Bell
+          Container(
+            margin: EdgeInsets.only(
+                right: MediaQuery.of(context).size.width * 0.02),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => notificationsGateway()),
+                );
+              },
+              child: Icon(
+                Icons.notifications,
+                size: 32,
+                color: Color.fromARGB(255, 4, 32, 107),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
+  //Fix
   _notifikasi(context) {
     return Container(
       padding: EdgeInsets.only(top: 20),
@@ -135,9 +126,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  //Tunggu hex
   _judul(context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        margin: EdgeInsets.only(
+            left: MediaQuery.of(context).size.width * 0.1, top: 20),
         alignment: Alignment.topLeft,
         child: Column(
           children: [
@@ -152,10 +145,11 @@ class HomePage extends StatelessWidget {
         ));
   }
 
+  //Tunggu hex
   _rolenya(context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      margin: EdgeInsets.only(top: 2),
+      margin: EdgeInsets.only(
+          left: MediaQuery.of(context).size.width * 0.1, top: 5),
       child: Align(
         alignment: Alignment.topLeft,
         child: (GestureDetector(
@@ -175,12 +169,14 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  //Section Title
   _paketAktif(context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
       margin: EdgeInsets.only(top: 20),
-      child: Align(
-        alignment: Alignment.topLeft,
+      child: Container(
+        alignment: Alignment.centerLeft,
+        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1),
         child: (GestureDetector(
           child: Text(
             "Aktive Package",
@@ -237,7 +233,7 @@ class HomePage extends StatelessWidget {
                             BoxShadow(
                               color: Color.fromARGB(255, 0, 27, 49),
                               blurRadius: 4,
-                              offset: Offset(4, 8), // Shadow position
+                              offset: Offset(2, 4), // Shadow position
                             ),
                           ],
                         ),
@@ -272,7 +268,7 @@ class HomePage extends StatelessWidget {
                     //   //color: Colors.green,
                     //   width: 2.0,
                     // ),
-                    color: Color.fromARGB(255, 0, 88, 160)),
+                    color: Color.fromARGB(255, 4, 32, 107)),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Container(
@@ -280,7 +276,7 @@ class HomePage extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          "  Paket Reyna",
+                          "Paket Reyna",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
@@ -293,49 +289,78 @@ class HomePage extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(top: 5),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Icon(Icons.speed_rounded),
-                    ),
-                    Text("Bandwith "),
+                    //Logo
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "2MB",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Icon(Icons.speed_rounded),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Icon(Icons.phone_android_rounded),
                         ),
                       ],
-                    )
+                    ),
+                    //Bandwith & Total Connections
+                    Container(
+                      margin: EdgeInsets.only(
+                          right: MediaQuery.of(context).size.width * 0.01),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(bottom: 4),
+                            child: Text(
+                              "Bandwith ",
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 4),
+                            child: Text(
+                              "Total Connection ",
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    //Isi dari Bandwith & Total Connections
+                    Container(
+                      margin: EdgeInsets.only(right: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(bottom: 4),
+                            child: Text(
+                              ": 2MB",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 4),
+                            child: Text(
+                              ": 2 Device(s)",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Icon(Icons.phone_android_rounded),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text("Total Connection "),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          "2 Device(s)",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
+                Container(
+                  alignment: Alignment.bottomRight,
+                  margin: const EdgeInsets.only(top: 25),
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
@@ -361,14 +386,14 @@ class HomePage extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(
                                       horizontal: 25, vertical: 8),
                                   child: FittedBox(
-                                    fit: BoxFit.contain,
+                                    fit: BoxFit.cover,
                                     child: Text(
                                       " Active | until 30 February 2023",
-                                      textAlign: TextAlign.left,
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 8),
+                                          fontSize: 15),
                                     ),
                                   )),
                             ),
@@ -390,7 +415,8 @@ class HomePage extends StatelessWidget {
   _rekomended(context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
-      margin: EdgeInsets.only(top: 25),
+      margin: EdgeInsets.only(
+          top: 25, left: MediaQuery.of(context).size.width * 0.1),
       child: Align(
         alignment: Alignment.topLeft,
         child: (GestureDetector(
@@ -440,13 +466,13 @@ class HomePage extends StatelessWidget {
                     color: Color.fromARGB(255, 0, 88, 160),
                   ),
                   borderRadius: BorderRadius.all(
-                    Radius.circular(20),
+                    Radius.circular(10),
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: Color.fromARGB(255, 0, 27, 49),
                       blurRadius: 4,
-                      offset: Offset(4, 8), // Shadow position
+                      offset: Offset(2, 4), // Shadow position
                     ),
                   ],
                 ),
@@ -464,12 +490,12 @@ class HomePage extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                     bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(15)),
+                                    topLeft: Radius.circular(9)),
                                 // border: Border.all(
                                 //   //color: Colors.green,
                                 //   width: 2.0,
                                 // ),
-                                color: Color.fromARGB(255, 0, 88, 160)),
+                                color: Color.fromARGB(255, 4, 32, 107)),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Container(
@@ -506,7 +532,13 @@ class HomePage extends StatelessWidget {
                                 ],
                               ),
                               Row(
-                                children: [Text(" | ")],
+                                children: [
+                                  Text(
+                                    " | ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w100),
+                                  )
+                                ],
                               ),
                               Row(
                                 children: [
@@ -519,7 +551,12 @@ class HomePage extends StatelessWidget {
                                 ],
                               ),
                               Row(
-                                children: [Icon(Icons.phone_android)],
+                                children: [
+                                  Icon(
+                                    Icons.phone_android,
+                                    color: Colors.grey,
+                                  )
+                                ],
                               ),
                             ],
                           ),
@@ -553,7 +590,8 @@ class HomePage extends StatelessWidget {
   _news(context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
-      margin: EdgeInsets.only(top: 5),
+      margin: EdgeInsets.only(
+          top: 5, left: MediaQuery.of(context).size.width * 0.1),
       child: Align(
         alignment: Alignment.topLeft,
         child: (GestureDetector(

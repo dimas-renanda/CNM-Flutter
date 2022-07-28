@@ -79,7 +79,6 @@ class _notificationsGatewayState extends State<notificationsGateway> {
                   child: Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(bottom: 16),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -98,25 +97,22 @@ class _notificationsGatewayState extends State<notificationsGateway> {
                                   style: TextStyle(
                                       color: curPage == 0
                                           ? Colors.white
-                                          : Color.fromARGB(255, 3, 52, 91)),
+                                          : Color.fromARGB(255, 4, 32, 107)),
                                 ),
                                 style: ButtonStyle(
                                     backgroundColor: curPage == 0
                                         ? MaterialStateProperty.all<Color>(
-                                            Colors.black)
+                                            Color.fromARGB(255, 4, 32, 107))
                                         : MaterialStateProperty.all<Color>(
                                             Colors.white),
                                     padding: MaterialStateProperty.all<EdgeInsets>(
                                         EdgeInsets.symmetric(
-                                            horizontal: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
+                                            horizontal: MediaQuery.of(context).size.width *
                                                 0.05)),
                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            side: BorderSide(color: Color.fromARGB(255, 4, 50, 87))))),
+                                            borderRadius: BorderRadius.circular(10),
+                                            side: BorderSide(color: Color.fromARGB(255, 4, 32, 107))))),
                               ),
                             ),
                             Container(
@@ -134,25 +130,22 @@ class _notificationsGatewayState extends State<notificationsGateway> {
                                   style: TextStyle(
                                       color: curPage == 1
                                           ? Colors.white
-                                          : Color.fromARGB(255, 3, 52, 91)),
+                                          : Color.fromARGB(255, 4, 32, 107)),
                                 ),
                                 style: ButtonStyle(
                                     backgroundColor: curPage == 1
                                         ? MaterialStateProperty.all<Color>(
-                                            Colors.black)
+                                            Color.fromARGB(255, 4, 32, 107))
                                         : MaterialStateProperty.all<Color>(
                                             Colors.white),
                                     padding: MaterialStateProperty.all<EdgeInsets>(
                                         EdgeInsets.symmetric(
-                                            horizontal: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
+                                            horizontal: MediaQuery.of(context).size.width *
                                                 0.05)),
                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            side: BorderSide(color: Color.fromARGB(255, 4, 50, 87))))),
+                                            borderRadius: BorderRadius.circular(10),
+                                            side: BorderSide(color: Color.fromARGB(255, 4, 32, 107))))),
                               ),
                             ),
                           ],

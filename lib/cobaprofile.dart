@@ -221,7 +221,7 @@ class _profileFixState extends State<profileFix> {
         children: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 40, 52, 189),
+                primary: Color.fromARGB(255, 4, 32, 107),
                 minimumSize: const Size.fromHeight(40),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
@@ -248,7 +248,7 @@ class _profileFixState extends State<profileFix> {
         children: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 40, 52, 189),
+                primary: Color.fromARGB(255, 4, 32, 107),
                 minimumSize: const Size.fromHeight(40),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
