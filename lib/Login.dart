@@ -32,7 +32,7 @@ class _MyLoginState extends State<MyLogin> {
     var plainText = utf8.encode(passwordController.text);
     var hashedVal = sha512.convert(plainText);
     String url =
-        "http://10.5.50.22:38500/login?email=${usernameController.text}&&password=${hashedVal}";
+        "http://phoenix.crossnet.co.id:38600/login?email=${usernameController.text}&&password=${hashedVal}";
     final response = await get(Uri.parse(url));
     print(Uri.parse(url));
 

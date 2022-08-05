@@ -65,7 +65,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future _fetchUsersInfo() async {
-    String url = "http://10.5.50.22:38500/users?userID=${globals.getUserID()}";
+    String url =
+        "http://phoenix.crossnet.co.id:38600/users?userID=${globals.getUserID()}";
     final response = await http.get(Uri.parse(url));
 
     final data = jsonDecode(response.body);
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<Null> _fetchActivePackages() async {
     String activePackURL =
-        "http://10.5.50.22:38500/GetUserPackage?uid=${globals.getUserID()}";
+        "http://phoenix.crossnet.co.id:38600/GetUserPackage?uid=${globals.getUserID()}";
 
     final response = await http.get(Uri.parse(activePackURL));
     if (response.statusCode == 200) {
@@ -339,7 +340,7 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   //width: 210,
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  margin: EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 255, 255, 255),
                     border: Border.all(
@@ -362,7 +363,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           options: CarouselOptions(
-            height: 160,
+            height: MediaQuery.of(context).size.height * 0.1989,
             enableInfiniteScroll: false,
           ),
         ));

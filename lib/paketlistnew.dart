@@ -21,7 +21,7 @@ class _packetListState extends State<packetList> {
   List<Packages> listPackages = [];
 
   Future<Null> _fetchDataProduct() async {
-    String url = "http://10.5.50.22:38500/packages";
+    String url = "http://phoenix.crossnet.co.id:38600/packages";
 
     var loading = true;
     final response = await get(Uri.parse(url));
@@ -153,7 +153,7 @@ class _packetListState extends State<packetList> {
                           Container(
                               margin: EdgeInsets.only(left: 18, top: 6),
                               child: Text(
-                                packetDuration,
+                                "$packetDuration Days",
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
