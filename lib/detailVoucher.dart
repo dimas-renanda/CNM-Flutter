@@ -3,9 +3,19 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class voucherDetail extends StatelessWidget {
-  const voucherDetail({Key? key}) : super(key: key);
+class voucherDetail extends StatefulWidget {
+  final String packetName, expireDate;
+  const voucherDetail({
+    Key? key,
+    required this.packetName,
+    required this.expireDate,
+  }) : super(key: key);
 
+  @override
+  State<voucherDetail> createState() => _voucherDetailState();
+}
+
+class _voucherDetailState extends State<voucherDetail> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,7 +58,7 @@ class voucherDetail extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.only(bottom: 32),
                       child: Text(
-                        "Speed 2 Mb",
+                        widget.packetName,
                         style: TextStyle(
                           fontSize: 35,
                           foreground: Paint()..color = Colors.white,
@@ -57,16 +67,6 @@ class voucherDetail extends StatelessWidget {
                     ),
                   ]),
                 ),
-                // Container(
-                //   height: 50,
-                //   decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.only(
-                //         topLeft: Radius.circular(60),
-                //         topRight: Radius.circular(60),
-                //       ),
-                //       color: Colors.white,
-                //       border: Border.all(color: Colors.white)),
-                // ),
                 Expanded(
                   child: Stack(children: [
                     Container(
@@ -155,7 +155,7 @@ class voucherDetail extends StatelessWidget {
                                         Container(
                                           margin: EdgeInsets.only(right: 10),
                                           child: Text(
-                                            "Active until 31/07/2022",
+                                            "Active until ${widget.expireDate}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 10,

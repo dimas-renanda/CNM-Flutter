@@ -45,6 +45,7 @@ dependencies:
   dart_ipify: ^1.1.1
   user_profile_avatar: ^0.1.1
   awesome_dialog: ^2.2.1
+  crypt: ^4.2.1
   
 
 dev_dependencies:

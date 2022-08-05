@@ -9,6 +9,7 @@ import 'package:firstproject/main_page.dart';
 import 'package:firstproject/new_list_paket.dart';
 import 'package:firstproject/jsoncontactlist.dart';
 import 'package:firstproject/oldprofile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'globalspublic.dart';
@@ -53,24 +54,24 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   // ignore: non_constant_identifier_names
+
   int CurPage = 0;
   List<Widget> pages = [
     HomePage(),
     packetList(),
-    //const MyLogin(title: 'Login Page'),
     QRViewExample(),
-    //ProfileUser(),
     customerCareGateway(),
     profileFix(),
   ];
 
   @override
   void initState() {
+    super.initState();
+
     CurPage = int.parse(widget.reqPage!);
     if (CurPage == null) {
       CurPage = 0;
     }
-    super.initState();
   }
 
   //Bottom Navbar

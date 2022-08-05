@@ -1,6 +1,10 @@
 import 'package:firstproject/connecteddevice.dart';
 import 'package:firstproject/linkeddevice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'globalspublic.dart' as globals;
+import 'package:mac_address/mac_address.dart';
+import 'package:flutter/services.dart';
 
 class profileFix extends StatefulWidget {
   profileFix({Key? key}) : super(key: key);
@@ -13,9 +17,30 @@ class _profileFixState extends State<profileFix> {
   final myControllerstatus = TextEditingController();
   final myControlleremail = TextEditingController();
   final myControllerphone = TextEditingController();
+  String? macAdd;
+
+  Future<void> getMac() async {
+    String gotMacAdd = "";
+    try {
+      gotMacAdd = await GetMac.macAddress;
+    } on PlatformException {
+      macAdd = "Error fetching Mac Address";
+    }
+
+    setState(() {
+      macAdd = gotMacAdd;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getMac();
+  }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(macAdd);
     return Scaffold(
         body: Stack(
       alignment: Alignment.center,
@@ -116,7 +141,7 @@ class _profileFixState extends State<profileFix> {
                 height: 60,
               ),
               Text(
-                "Another John Doe",
+                globals.getUsername(),
                 style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w900,
@@ -174,7 +199,7 @@ class _profileFixState extends State<profileFix> {
       child: Column(children: [
         TextField(
             enabled: false,
-            controller: myControlleremail..text = "dxxxx@crossnet.co.id",
+            controller: myControlleremail..text = globals.email,
             readOnly: true,
             decoration: InputDecoration(
               labelText: "Email",
@@ -197,7 +222,7 @@ class _profileFixState extends State<profileFix> {
       child: Column(children: [
         TextField(
             enabled: false,
-            controller: myControllerphone..text = "0812345678123",
+            controller: myControllerphone..text = globals.phoneNum,
             readOnly: true,
             decoration: InputDecoration(
               labelText: "Phone Number",

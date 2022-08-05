@@ -1,19 +1,14 @@
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:firstproject/ScanQr.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'globalspublic.dart' as globals;
 
 import 'main.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -22,14 +17,43 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
+  bool _isObscure = true;
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscure = true;
+  }
+
+  void loginToAPI() async {
+    //Encoding
+    var plainText = utf8.encode(passwordController.text);
+    var hashedVal = sha512.convert(plainText);
+    String url =
+        "http://10.5.50.22:38500/login?email=${usernameController.text}&&password=${hashedVal}";
+    final response = await get(Uri.parse(url));
+    print(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      debugPrint("First " + data['Data']['Id'].toString());
+      globals.setUserID(data['Data']['Id']);
+      if (data['Data']['Message'] == "Success") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainPage(
+                    reqPage: "0",
+                  )),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: Center(
           child: Column(
@@ -43,7 +67,7 @@ class _MyLoginState extends State<MyLogin> {
 
   _icon(context) {
     return Container(
-      margin: EdgeInsets.all(50),
+      margin: EdgeInsets.only(left: 50, right: 50, bottom: 50, top: 50),
       child: Column(children: [
         Image.asset('images/crosslogo.png'),
       ]),
@@ -56,10 +80,13 @@ class _MyLoginState extends State<MyLogin> {
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Column(children: [
         TextField(
+            controller: usernameController,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: "Email or username",
-              labelStyle: TextStyle(color: Colors.white),
+              labelStyle: TextStyle(
+                color: Colors.white,
+              ),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white, width: 2)),
               focusedBorder: UnderlineInputBorder(
@@ -76,12 +103,24 @@ class _MyLoginState extends State<MyLogin> {
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Column(children: [
         TextField(
+            controller: passwordController,
             autocorrect: false,
             enableSuggestions: false,
-            obscureText: true,
+            obscureText: _isObscure,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: "Password",
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isObscure == false ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isObscure = !_isObscure;
+                  });
+                },
+              ),
               labelStyle: TextStyle(color: Colors.white),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white, width: 2)),
@@ -106,13 +145,14 @@ class _MyLoginState extends State<MyLogin> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MainPage(
-                          reqPage: "0",
-                        )),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => MainPage(
+              //             reqPage: "0",
+              //           )),
+              // );
+              loginToAPI();
             },
             child: Text(
               "Login",
@@ -169,18 +209,10 @@ class _MyLoginState extends State<MyLogin> {
             colors: [
               Color.fromARGB(255, 19, 2, 115),
               Color.fromARGB(255, 196, 118, 2)
-              // Color(0xff1f005c),
-              // Color(0xff5b0060),
-              // Color(0xff870160),
-              // Color(0xffac255e),
-              // Color(0xffca485c),
-              // Color(0xffe16b5c),
-              // Color(0xfff39060),
-              // Color(0xffffb56b),
             ]),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(18),
-          topRight: Radius.circular(18),
+          topLeft: Radius.circular(40),
+          topRight: Radius.circular(40),
         ),
       ),
       child: SingleChildScrollView(
@@ -188,7 +220,7 @@ class _MyLoginState extends State<MyLogin> {
           margin: EdgeInsets.symmetric(horizontal: 5),
           child: Column(
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               _Username(context),
               _Password(context),
               _buttonLogin(context),

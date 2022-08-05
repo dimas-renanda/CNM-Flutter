@@ -19,6 +19,7 @@ class ticketingForm extends StatelessWidget {
             Color.fromARGB(255, 196, 118, 2)
           ])),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        //Back Button
         Container(
           margin: EdgeInsets.only(top: 16),
           alignment: Alignment.centerLeft,
@@ -40,6 +41,7 @@ class ticketingForm extends StatelessWidget {
             ),
           ),
         ),
+        //Page Placeholder
         Container(
           alignment: Alignment.center,
           padding: EdgeInsets.only(bottom: 48, top: 32),
@@ -54,6 +56,7 @@ class ticketingForm extends StatelessWidget {
             ),
           ]),
         ),
+        //Main Form
         Expanded(
           child: Container(
             height: MediaQuery.of(context).size.height * 0.5,
