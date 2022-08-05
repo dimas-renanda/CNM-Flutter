@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
         margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1),
         child: (GestureDetector(
           child: Text(
-            "Aktive Package",
+            "Active Package",
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 0, 88, 160),
