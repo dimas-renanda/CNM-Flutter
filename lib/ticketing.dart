@@ -19,6 +19,7 @@ class ticketingForm extends StatelessWidget {
             Color.fromARGB(255, 196, 118, 2)
           ])),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        //Back Button
         Container(
           margin: EdgeInsets.only(top: 16),
           alignment: Alignment.centerLeft,
@@ -40,6 +41,7 @@ class ticketingForm extends StatelessWidget {
             ),
           ),
         ),
+        //Page Placeholder
         Container(
           alignment: Alignment.center,
           padding: EdgeInsets.only(bottom: 48, top: 32),
@@ -54,145 +56,83 @@ class ticketingForm extends StatelessWidget {
             ),
           ]),
         ),
+        //Main Form
         Expanded(
           child: Container(
+            height: MediaQuery.of(context).size.height * 0.5,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(40), topRight: Radius.circular(40)),
             ),
-            child: Container(
-              margin: EdgeInsets.all(32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 5),
-                    child: Text(
-                      "ID",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.all(32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    createTicketingIndividualForm(
+                        "ID", Color.fromARGB(255, 223, 219, 219)),
+                    createTicketingIndividualForm(
+                        "Package SID", Color.fromARGB(255, 223, 219, 219)),
+                    createTicketingIndividualForm(
+                        "Topic", Color.fromARGB(255, 223, 219, 219)),
+                    createTicketingIndividualForm(
+                        "Description", Color.fromARGB(255, 223, 219, 219)),
+                    Container(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          primary: Colors.blueGrey,
+                        ),
+                        child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 32),
+                            child: Text("Submit")),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 16),
-                    height: 30,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Color.fromARGB(255, 223, 219, 219),
-                          contentPadding:
-                              EdgeInsets.only(left: 8, bottom: 1, right: 8),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ))),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 5),
-                    child: Text(
-                      "Package SID",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 16),
-                    height: 30,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Color.fromARGB(255, 223, 219, 219),
-                          contentPadding:
-                              EdgeInsets.only(left: 8, bottom: 1, right: 8),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ))),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 5),
-                    child: Text(
-                      "Topic",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 16),
-                    height: 30,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Color.fromARGB(255, 223, 219, 219),
-                          contentPadding:
-                              EdgeInsets.only(left: 8, bottom: 1, right: 8),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ))),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 5),
-                    child: Text(
-                      "Description",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Color.fromARGB(255, 223, 219, 219),
-                          contentPadding:
-                              EdgeInsets.only(left: 8, bottom: 1, right: 8),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ))),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        primary: Colors.blueGrey,
-                      ),
-                      child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 32),
-                          child: Text("Submit")),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ]),
     ))));
+  }
+
+  Widget createTicketingIndividualForm(String formTitle, Color bgColor) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 5),
+            child: Text(
+              formTitle,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 16),
+            height: 30,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: bgColor,
+                  contentPadding: EdgeInsets.only(left: 8, bottom: 1, right: 8),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ))),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

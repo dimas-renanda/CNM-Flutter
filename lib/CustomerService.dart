@@ -37,107 +37,100 @@ class customerCareGateway extends StatelessWidget {
                 ),
               )),
           Expanded(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 32),
-              child: ListView(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(right: 90, bottom: 16),
-                    child: Text(
-                      "How Can We Help You ?",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 35,
-                      ),
-                      softWrap: true,
-                      maxLines: 2,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20))),
-                    child: createFAQContainer(),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20))),
-                    child: createFAQContainer(),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20))),
-                    child: createFAQContainer(),
-                  ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          margin: EdgeInsets.only(
-                              left: 64, right: 64, top: 32, bottom: 16),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ticketingForm()));
-                            },
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 5, 8, 69)),
-                            ),
-                            child: Text(
-                              "Create Ticket",
-                            ),
-                          ),
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 90, bottom: 16),
+                      child: Text(
+                        "How Can We Help You ?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 35,
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          margin:
-                              EdgeInsets.only(left: 64, right: 64, bottom: 128),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => customerCareChat(
-                                            userRole: 0,
-                                            username: "Budi",
-                                          )));
-                            },
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 5, 8, 69)),
-                            ),
-                            child: Text(
-                              "Customer Care ",
+                        softWrap: true,
+                        maxLines: 2,
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.48,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: 10,
+                          itemBuilder: (BuildContext context, int index) {
+                            return createFAQContainer(
+                                "Title ${index + 1}", "AHAHAAHAHA");
+                          },
+                        ),
+                      ),
+                    ),
+                    //Create Ticket & Customer Chat Buttons
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ticketingForm()));
+                              },
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10))),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color.fromARGB(255, 5, 8, 69)),
+                              ),
+                              child: Text(
+                                "Create Ticket",
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
-                        )
-                      ],
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => customerCareChat(
+                                              userRole: 1,
+                                              username: "Budi",
+                                            )));
+                              },
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10))),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color.fromARGB(255, 5, 8, 69)),
+                              ),
+                              child: Text(
+                                "Customer Care",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -145,61 +138,62 @@ class customerCareGateway extends StatelessWidget {
       ),
     );
   }
-}
 
-class createFAQContainer extends StatelessWidget {
-  createFAQContainer({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 5, 8, 69),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(20))),
-          child: Container(
-            margin: EdgeInsets.only(left: 16),
-            child: Text(
-              "Lorem ipsum dolor sit amet",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+  Widget createFAQContainer(String faqTitle, String faqContent) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+          border: Border.all(width: 1),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Color.fromARGB(255, 5, 8, 69),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(19))),
+            child: Container(
+              margin: EdgeInsets.only(left: 16),
+              child: Text(
+                faqTitle,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-        Container(
-          child: Container(
+          Container(
             padding: EdgeInsets.all(16),
             child: Text(
-              "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet ",
+              faqContent,
               textAlign: TextAlign.left,
             ),
           ),
-        ),
-        Container(
-          alignment: Alignment.bottomRight,
-          padding: EdgeInsets.only(top: 16),
-          child: ElevatedButton(
-              onPressed: () {},
-              child: Container(
-                child: Icon(Icons.support_agent),
-              ),
-              style: ElevatedButton.styleFrom(
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
+          Container(
+            alignment: Alignment.bottomRight,
+            padding: EdgeInsets.only(top: 16),
+            child: ElevatedButton(
+                onPressed: () {},
+                child: Container(
+                  child: Icon(Icons.support_agent),
                 ),
-                primary: Color.fromARGB(255, 5, 8, 69),
-              )),
-        ),
-      ],
+                style: ElevatedButton.styleFrom(
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(19),
+                    ),
+                  ),
+                  primary: Color.fromARGB(255, 5, 8, 69),
+                )),
+          ),
+        ],
+      ),
     );
+    ;
   }
 }

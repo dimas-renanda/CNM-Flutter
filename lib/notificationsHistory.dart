@@ -34,14 +34,14 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
     Random rng = new Random();
     int historyContentCount = rng.nextInt(5) + 1;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.only(bottom: 15),
       child: Column(
         children: [
           Container(
             padding: EdgeInsets.all(5),
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 1, 31, 56),
+              color: Color.fromARGB(255, 4, 32, 107),
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
             ),
             child: Container(
@@ -88,6 +88,7 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
       child: Column(
         children: [
           Container(
+            margin: EdgeInsets.only(bottom: 4),
             alignment: Alignment.centerLeft,
             child: Text(
               "Packet ${historyIndex++}",
@@ -99,12 +100,14 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
             ),
           ),
           Container(
+            margin: EdgeInsets.only(bottom: 2),
             alignment: Alignment.centerLeft,
             child: rng.nextInt(5) == 0
                 ? Text("Boost  :  No")
                 : Text("Boost  :  Yes"),
           ),
           Container(
+            margin: EdgeInsets.only(bottom: 2),
             alignment: Alignment.centerLeft,
             child: Text(
                 "Price  :   Rp. ${f.format(rng.nextInt(1000000) + 50000)}"),
