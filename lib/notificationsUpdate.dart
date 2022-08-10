@@ -44,6 +44,7 @@ class _createUpdateCardState extends State<createUpdateCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(left: 10, right: 10),
       padding: EdgeInsets.only(
         bottom: 15,
       ),
