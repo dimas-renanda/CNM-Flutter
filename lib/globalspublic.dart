@@ -1,5 +1,8 @@
 library my_prj.globals;
 
+//API URL
+String uriString = "http://10.5.50.22:38500";
+
 bool isLoggedIn = false;
 int numpagenya = 0;
 String ipv4nya = "";
@@ -26,3 +29,8 @@ void setUsername(String fn, String ln) {
 String getUsername() {
   return firstName + " " + lastName;
 }
+
+//Payments Options
+
+bool userChoice = false;
+String paymentChoice = "";

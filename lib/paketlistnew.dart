@@ -1,12 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 import 'dart:convert';
-import 'package:firstproject/cobabelajarwidget.dart';
+import 'package:firstproject/paymentGateway.dart';
 import 'package:http/http.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/number_symbols_data.dart';
 
 class packetList extends StatefulWidget {
   const packetList({Key? key}) : super(key: key);
@@ -83,6 +80,7 @@ class _packetListState extends State<packetList> {
                 margin: EdgeInsets.only(left: 20, right: 20, top: 16),
                 child: loadPackages(
                   context,
+                  getData.packetId,
                   getData.packetName,
                   getData.packetPrice,
                   getData.packetDuration,
@@ -96,7 +94,7 @@ class _packetListState extends State<packetList> {
     );
   }
 
-  Widget loadPackages(BuildContext context, String packetName,
+  Widget loadPackages(BuildContext context, int packetID, String packetName,
       String packetPrice, String packetDuration) {
     return Card(
         shape: RoundedRectangleBorder(
@@ -169,7 +167,17 @@ class _packetListState extends State<packetList> {
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     primary: Colors.orangeAccent),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => paymentGateway(
+                                                packetID: packetID.toInt(),
+                                                packetName: packetName,
+                                                packetPrice: packetPrice,
+                                                packetDuration: packetDuration,
+                                              )));
+                                },
                                 child: Container(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 20),
