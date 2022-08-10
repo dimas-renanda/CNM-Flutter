@@ -1,19 +1,13 @@
 import 'dart:convert';
 import 'package:firstproject/main.dart';
 import 'package:firstproject/notification.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firstproject/sampleNotifications.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:firstproject/cobabelajarwidget.dart';
-import 'package:firstproject/jsoncontactlist.dart';
 import 'package:firstproject/paketlistnew.dart';
 import 'package:firstproject/webview_page.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firstproject/oldprofile.dart';
-import 'package:intl/intl.dart';
 import 'globalspublic.dart' as globals;
 import 'detailVoucher.dart';
 
@@ -165,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => notificationsGateway()),
+                      builder: (context) => sampleNotifications()),
                 );
               },
               child: Icon(

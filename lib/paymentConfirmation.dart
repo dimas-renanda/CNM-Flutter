@@ -1,10 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'globalspublic.dart' as globals;
+import 'package:http/http.dart';
 
 class paymentConfirmation extends StatefulWidget {
-  const paymentConfirmation({Key? key}) : super(key: key);
+  paymentConfirmation({
+    Key? key,
+    required this.totalPrice,
+    required this.transactionID,
+  }) : super(key: key);
+  int totalPrice, transactionID;
 
   @override
   State<paymentConfirmation> createState() => _paymentConfirmationState();
@@ -12,7 +21,7 @@ class paymentConfirmation extends StatefulWidget {
 
 class _paymentConfirmationState extends State<paymentConfirmation> {
   Timer? countdownTimer;
-  Duration timerDuration = Duration(minutes: 0, seconds: 2);
+  Duration timerDuration = Duration(minutes: 0, seconds: 5);
 
   @override
   void initState() {
@@ -20,9 +29,38 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
     startTimer();
   }
 
+  void putToAPI(String status) async {
+    var response = await put(
+        Uri.parse(globals.uriString + "/UpdateTransactionStatus"),
+        body: {
+          "uid": globals.getUserID().toString(),
+          "id": widget.transactionID.toString(),
+          "status": status,
+        });
+
+    debugPrint("User ID: " +
+        globals.getUserID().toString() +
+        "\nTransaction ID: " +
+        widget.transactionID.toString() +
+        "\nNew Status : " +
+        status);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      debugPrint(data["Data"]["Rows"].toString());
+    }
+  }
+
   void startTimer() {
     countdownTimer =
         Timer.periodic(Duration(seconds: 1), (_) => setCountDown());
+  }
+
+  void cancelTimer() {
+    setState(() {
+      countdownTimer!.cancel();
+
+      putToAPI("Cancelled");
+    });
   }
 
   void setCountDown() {
@@ -34,6 +72,7 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
       if (seconds < 0) {
         countdownTimer!.cancel();
 
+        putToAPI("Approved");
         Alert(
           context: context,
           title: "Sample Alert",
@@ -51,7 +90,13 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
               fontSize: 40,
             ),
           ),
-        ).show();
+        ).show().then((value) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MainPage(
+                        reqPage: "0",
+                      )),
+            ));
       } else {
         timerDuration = Duration(seconds: seconds);
       }
@@ -63,6 +108,8 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
     String strDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = strDigits(timerDuration.inMinutes.remainder(60));
     final seconds = strDigits(timerDuration.inSeconds.remainder(60));
+
+    debugPrint(globals.paymentChoice);
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -101,7 +148,7 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
                 Container(
                   margin: EdgeInsets.only(bottom: 15),
                   child: Text(
-                    "Rp. Harga Disini",
+                    "Rp. ${widget.totalPrice}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -140,7 +187,38 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
                 ),
               ],
             ),
-          )
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+              ),
+              onPressed: () {
+                if (countdownTimer == null || countdownTimer!.isActive) {
+                  cancelTimer();
+
+                  Alert(
+                    context: context,
+                    type: AlertType.error,
+                    title: "Payment Cancelled",
+                    desc: "Redirrecting you to packet list",
+                    buttons: [],
+                  ).show().then((value) => Navigator.pop(context));
+                }
+              },
+              child: Text(
+                "Cancel Payment",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

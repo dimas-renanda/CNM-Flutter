@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firstproject/Payment.dart';
 import 'package:firstproject/paymentConfirmation.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'dart:math';
 import 'package:timelines/timelines.dart';
 import 'globalspublic.dart' as globals;
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:http/http.dart';
 
 const kTileHeight = 50.0;
 
@@ -13,17 +16,26 @@ const inProgressColor = Color(0xff5ec792);
 const todoColor = Color(0xffd1d2d7);
 
 class paymentGateway extends StatefulWidget {
-  const paymentGateway({Key? key}) : super(key: key);
+  paymentGateway({
+    Key? key,
+    required this.packetID,
+    required this.packetName,
+    required this.packetPrice,
+    required this.packetDuration,
+  }) : super(key: key);
+  String packetName, packetPrice, packetDuration;
+  int packetID;
 
   @override
   State<paymentGateway> createState() => _paymentGatewayState();
 }
 
 class _paymentGatewayState extends State<paymentGateway> {
+  int transactionID = 0;
+  int _packetPrice = 0;
   int curPage = 0;
   List<Widget> pages = [
     Payments(),
-    paymentConfirmation(),
   ];
 
   int _processIndex = 0;
@@ -31,6 +43,34 @@ class _paymentGatewayState extends State<paymentGateway> {
     'Payment',
     'Confirmation',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _packetPrice = int.parse(widget.packetPrice);
+    pages.add(paymentConfirmation(
+        totalPrice: _packetPrice, transactionID: transactionID));
+  }
+
+  void postToAPI() async {
+    var response =
+        await post(Uri.parse(globals.uriString + "/Transaction"), body: {
+      "uid": globals.getUserID().toString(),
+      "pid": widget.packetID.toString(),
+      "payment": globals.paymentChoice.toString(),
+      "status": "Waiting",
+    });
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      debugPrint("Last inserted ID: " + data["Data"]["getIDLast"].toString());
+      setState(() {
+        transactionID = data["Data"]["getIDLast"];
+        pages[1] = paymentConfirmation(
+            totalPrice: _packetPrice, transactionID: transactionID);
+      });
+    }
+  }
 
   Color getColor(int index) {
     if (index == _processIndex) {
@@ -252,7 +292,7 @@ class _paymentGatewayState extends State<paymentGateway> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("Price Here"),
+              Text(widget.packetPrice),
               Container(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: TextButton(
@@ -267,6 +307,7 @@ class _paymentGatewayState extends State<paymentGateway> {
                     setState(() {
                       debugPrint(globals.userChoice.toString());
                       if (globals.userChoice == true) {
+                        postToAPI();
                         curPage = 1;
                         _processIndex = (_processIndex + 1) % _processes.length;
                       } else {
@@ -277,7 +318,7 @@ class _paymentGatewayState extends State<paymentGateway> {
                           desc:
                               "Please choose one of the payment options in order to proceed",
                           buttons: [],
-                        );
+                        ).show();
                       }
                     });
                   },

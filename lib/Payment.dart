@@ -16,6 +16,13 @@ class _PaymentsState extends State<Payments> {
   };
   bool userChose = false;
 
+  @override
+  void initState() {
+    super.initState();
+    userChose = false;
+    globals.userChoice = false;
+  }
+
   Widget createChoice(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
@@ -57,7 +64,7 @@ class _PaymentsState extends State<Payments> {
   }
 
   Widget sampleRadio(int index) {
-    final entryList = paymentOptions.entries.toList();
+    var entryList = paymentOptions.entries.toList();
 
     return LabeledCheckbox(
       label: entryList[index].key,
@@ -68,24 +75,20 @@ class _PaymentsState extends State<Payments> {
             paymentOptions.update(entryList[i].key, (value) => false);
           }
           paymentOptions.update(entryList[index].key, (value) => newValue);
-          userChose = true;
+
+          //Check if options are checked
+          entryList = paymentOptions.entries.toList();
+          for (int i = 0; i < paymentOptions.length; i++) {
+            if (entryList[i].value == true) {
+              userChose = true;
+              globals.userChoice = true;
+              globals.paymentChoice = entryList[index].key.toString();
+              break;
+            }
+          }
         });
       },
     );
-  }
-
-  void checkOptions() {
-    if (userChose == false) {
-      setState(() {
-        globals.userChoice = false;
-        debugPrint(globals.userChoice.toString());
-      });
-    } else {
-      setState(() {
-        globals.userChoice = true;
-        debugPrint(globals.userChoice.toString());
-      });
-    }
   }
 
   @override

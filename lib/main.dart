@@ -1,15 +1,8 @@
 import 'package:firstproject/CustomerService.dart';
 import 'package:firstproject/Login.dart';
-import 'package:firstproject/LoginOld.dart';
 import 'package:firstproject/ScanQr.dart';
 import 'package:firstproject/cobaprofile.dart';
-import 'package:firstproject/contact_list.dart';
-import 'package:firstproject/cobabelajarwidget.dart';
 import 'package:firstproject/main_page.dart';
-import 'package:firstproject/new_list_paket.dart';
-import 'package:firstproject/jsoncontactlist.dart';
-import 'package:firstproject/oldprofile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'globalspublic.dart';
