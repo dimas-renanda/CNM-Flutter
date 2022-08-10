@@ -319,7 +319,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget packetCard(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 8),
+        width: double.infinity,
+        padding: EdgeInsets.only(
+          top: 8,
+        ),
         child: CarouselSlider.builder(
           itemCount: acPack.length,
           itemBuilder:
@@ -335,35 +338,44 @@ class _HomePageState extends State<HomePage> {
                         )),
               );
             },
-            child: Container(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  //width: 210,
-                  margin: EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    border: Border.all(
-                      color: Color.fromARGB(255, 0, 88, 160),
-                    ),
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(20),
-                        topLeft: Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(255, 0, 27, 49),
-                        blurRadius: 4,
-                        offset: Offset(2, 4), // Shadow position
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      //width: 200,
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        border: Border.all(
+                          color: Color.fromARGB(255, 0, 88, 160),
+                        ),
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(20),
+                            topLeft: Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 0, 27, 49),
+                            blurRadius: 4,
+                            offset: Offset(2, 4), // Shadow position
+                          ),
+                        ],
                       ),
-                    ],
+                      child: _isipaket(context, acPack, itemIndex),
+                    ),
                   ),
-                  child: _isipaket(context, acPack, itemIndex),
                 ),
-              ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
             ),
           ),
           options: CarouselOptions(
-            height: MediaQuery.of(context).size.height * 0.1989,
+            height: MediaQuery.of(context).size.height * 0.256, //0.1989,
             enableInfiniteScroll: false,
           ),
         ));
@@ -391,7 +403,7 @@ class _HomePageState extends State<HomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
@@ -406,7 +418,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 5),
+            margin: EdgeInsets.only(
+              top: 5,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -452,7 +466,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     //Isi dari Bandwith & Total Connections
                     Container(
-                      margin: EdgeInsets.only(right: 10),
+                      margin: EdgeInsets.only(right: 0.5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -492,7 +506,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.only(
                                     //bottomRight: Radius.circular(20),
                                     topLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(19)),
+                                    bottomLeft: Radius.circular(3)),
 
                                 // border: Border.all(
                                 //   //color: Colors.green,
