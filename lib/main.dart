@@ -79,13 +79,8 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: pages[CurPage],
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     debugPrint('floating di klik');
-        //   },
-        //   child: Icon(Icons.add_box_outlined),
-        // ),
         bottomNavigationBar: Container(
+          height: MediaQuery.of(context).size.height * 0.1,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(30), topLeft: Radius.circular(30)),

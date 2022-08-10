@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 import 'dart:convert';
+import 'package:firstproject/paymentGateway.dart';
 import 'package:firstproject/cobabelajarwidget.dart';
 import 'package:http/http.dart';
 import 'package:flutter/foundation.dart';
@@ -169,7 +170,13 @@ class _packetListState extends State<packetList> {
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     primary: Colors.orangeAccent),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              paymentGateway()));
+                                },
                                 child: Container(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 20),

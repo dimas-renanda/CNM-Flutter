@@ -250,7 +250,8 @@ class _HomePageState extends State<HomePage> {
       margin: EdgeInsets.only(top: 20),
       child: Container(
         alignment: Alignment.centerLeft,
-        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1),
+        margin:
+            EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.085),
         child: (GestureDetector(
           child: Text(
             "Active Package",
@@ -264,58 +265,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // _cardpaketnya(context) {
-  //   return Container(
-  //     padding: EdgeInsets.only(top: 8),
-  //     child: CarouselSlider(
-  //       options: CarouselOptions(
-  //         height: 160,
-  //         enableInfiniteScroll: false,
-  //       ),
-  //       items: [1, 2].map((i) {
-  //         return Builder(
-  //           builder: (BuildContext context) {
-  //             return InkWell(
-  //               onTap: () {
-  //                 Navigator.push(
-  //                   context,
-  //                   MaterialPageRoute(builder: (context) => voucherDetail()),
-  //                 );
-  //               },
-  //               child: Container(
-  //                 child: Align(
-  //                   alignment: Alignment.topLeft,
-  //                   child: Container(
-  //                       //width: 210,
-  //                       margin:
-  //                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-  //                       decoration: BoxDecoration(
-  //                         color: Color.fromARGB(255, 255, 255, 255),
-  //                         border: Border.all(
-  //                           color: Color.fromARGB(255, 0, 88, 160),
-  //                         ),
-  //                         borderRadius: BorderRadius.only(
-  //                             bottomRight: Radius.circular(20),
-  //                             topLeft: Radius.circular(20)),
-  //                         boxShadow: [
-  //                           BoxShadow(
-  //                             color: Color.fromARGB(255, 0, 27, 49),
-  //                             blurRadius: 4,
-  //                             offset: Offset(2, 4), // Shadow position
-  //                           ),
-  //                         ],
-  //                       ),
-  //                       child: _isipaket(context, acPack, i)),
-  //                 ),
-  //               ),
-  //             );
-  //           },
-  //         );
-  //       }).toList(),
-  //     ),
-  //   );
-  // }
 
   Widget packetCard(BuildContext context) {
     return Container(
@@ -339,7 +288,6 @@ class _HomePageState extends State<HomePage> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Container(
-                  //width: 210,
                   margin: EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 255, 255, 255),
@@ -363,7 +311,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           options: CarouselOptions(
-            height: MediaQuery.of(context).size.height * 0.1989,
+            height: MediaQuery.of(context).size.height * 0.25,
             enableInfiniteScroll: false,
           ),
         ));
@@ -372,7 +320,10 @@ class _HomePageState extends State<HomePage> {
   _isipaket(context, List<activePackages> data, int index) {
     return Container(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          //Paket Name / Card Header
           Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
@@ -380,13 +331,8 @@ class _HomePageState extends State<HomePage> {
               height: 35,
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        //bottomRight: Radius.circular(20),
-                        topLeft: Radius.circular(15)),
-                    // border: Border.all(
-                    //   //color: Colors.green,
-                    //   width: 2.0,
-                    // ),
+                    borderRadius:
+                        BorderRadius.only(topLeft: Radius.circular(15)),
                     color: Color.fromARGB(255, 4, 32, 107)),
                 child: Align(
                   alignment: Alignment.topLeft,
@@ -398,23 +344,30 @@ class _HomePageState extends State<HomePage> {
                           data[index].packageName.toString(),
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                       )),
                 ),
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    //Logo
-                    Column(
+          //Paket Details / Content
+          Expanded(
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  //Logo
+                  Container(
+                    margin: EdgeInsets.only(
+                      bottom: 12,
+                      top: 12,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
@@ -426,106 +379,88 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    //Bandwith & Total Connections
-                    Container(
-                      margin: EdgeInsets.only(
-                          right: MediaQuery.of(context).size.width * 0.01),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              "Bandwith ",
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 4),
-                            child: Text(
-                              "Total Connection ",
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                        ],
-                      ),
+                  ),
+                  //Bandwith & Total Connections
+                  Container(
+                    margin: EdgeInsets.only(
+                      right: MediaQuery.of(context).size.width * 0.01,
+                      bottom: 15,
+                      top: 15,
                     ),
-                    //Isi dari Bandwith & Total Connections
-                    Container(
-                      margin: EdgeInsets.only(right: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              ": ${data[index].packageBandwith.toString()}MB",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 4),
-                            child: Text(
-                              ": ${data[index].packageTotalDevices.toString()} Device(s)",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  margin: const EdgeInsets.only(top: 25),
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          height: 25,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    //bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(19)),
-
-                                // border: Border.all(
-                                //   //color: Colors.green,
-                                //   width: 2.0,
-                                // ),
-                                color: Color.fromARGB(255, 255, 127, 7)),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 25, vertical: 8),
-                                  child: FittedBox(
-                                    fit: BoxFit.cover,
-                                    child: Text(
-                                      " Active | until ${data[index].packageExpireDate.toString()}",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                  )),
-                            ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 4),
+                          child: Text(
+                            "Bandwith ",
+                            textAlign: TextAlign.left,
                           ),
                         ),
-                      ]),
-                ),
-              ],
+                        Container(
+                          margin: EdgeInsets.only(top: 4),
+                          child: Text(
+                            "Total Connection ",
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //Isi dari Bandwith & Total Connections
+                  Container(
+                    margin: EdgeInsets.only(right: 10, bottom: 15, top: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 4),
+                          child: Text(
+                            ": ${data[index].packageBandwith.toString()}MB",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 4),
+                          child: Text(
+                            ": ${data[index].packageTotalDevices.toString()} Device(s)",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-
-          //Image.asset("images/crosslogo.jpeg"),
-          //Text("Harga $x"),
+          //Active Until
+          Container(
+            width: MediaQuery.of(context).size.width * 0.45,
+            decoration: BoxDecoration(
+              color: Colors.orange[400],
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(19)),
+            ),
+            child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Text(
+                    " Active | until ${data[index].packageExpireDate.toString()}",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
+                )),
+          ),
         ],
       ),
     );
@@ -535,7 +470,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
       margin: EdgeInsets.only(
-          top: 25, left: MediaQuery.of(context).size.width * 0.1),
+          top: 25, left: MediaQuery.of(context).size.width * 0.085),
       child: Align(
         alignment: Alignment.topLeft,
         child: (GestureDetector(

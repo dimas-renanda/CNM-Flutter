@@ -26,3 +26,6 @@ void setUsername(String fn, String ln) {
 String getUsername() {
   return firstName + " " + lastName;
 }
+
+//Form Validations
+bool userChoice = false;
