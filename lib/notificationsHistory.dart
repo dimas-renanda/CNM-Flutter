@@ -34,7 +34,7 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
     Random rng = new Random();
     int historyContentCount = rng.nextInt(5) + 1;
     return Container(
-      margin: EdgeInsets.only(bottom: 15, left: 10, right: 10),
+      margin: EdgeInsets.only(bottom: 15),
       child: Column(
         children: [
           Container(

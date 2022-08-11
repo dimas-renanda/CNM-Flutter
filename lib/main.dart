@@ -1,8 +1,15 @@
 import 'package:firstproject/CustomerService.dart';
 import 'package:firstproject/Login.dart';
+import 'package:firstproject/LoginOld.dart';
 import 'package:firstproject/ScanQr.dart';
 import 'package:firstproject/cobaprofile.dart';
+import 'package:firstproject/contact_list.dart';
+import 'package:firstproject/cobabelajarwidget.dart';
 import 'package:firstproject/main_page.dart';
+import 'package:firstproject/new_list_paket.dart';
+import 'package:firstproject/jsoncontactlist.dart';
+import 'package:firstproject/oldprofile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'globalspublic.dart';
@@ -72,8 +79,13 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: pages[CurPage],
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     debugPrint('floating di klik');
+        //   },
+        //   child: Icon(Icons.add_box_outlined),
+        // ),
         bottomNavigationBar: Container(
-          height: MediaQuery.of(context).size.height * 0.1,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(30), topLeft: Radius.circular(30)),
