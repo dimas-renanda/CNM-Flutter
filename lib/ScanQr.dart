@@ -126,111 +126,90 @@ class _QRViewExampleState extends State<QRViewExample> {
                                 ),
                                 Row(
                                   children: [
-                                    Container(
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (_) {
-                                                    var hcodeController =
-                                                        TextEditingController();
-                                                    return Dialog(
-                                                      backgroundColor:
-                                                          Color(0xFFfafafa),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)),
-                                                      elevation: 20,
-                                                      child: Container(
-                                                        height:
-                                                            120, //use height
-                                                        child: ListView(
-                                                          shrinkWrap: true,
-                                                          children: [
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              10,
-                                                                          right:
-                                                                              10,
-                                                                          bottom:
-                                                                              15),
-                                                                  child: Column(
-                                                                    children: [
-                                                                      TextFormField(
-                                                                        controller:
-                                                                            hcodeController,
-                                                                        decoration: InputDecoration(
-                                                                            label:
-                                                                                Text("Hotspot Login"),
-                                                                            hintText: 'Hotspot Access'),
-                                                                      ),
-                                                                      TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          // Send them to your email maybe?
-                                                                          var hlogin =
-                                                                              hcodeController.text;
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (_) {
+                                                  var hcodeController =
+                                                      TextEditingController();
 
-                                                                          debugPrint(
-                                                                              hlogin);
-                                                                          //https://www.google.com/search?q=
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                                  builder: ((context) => webviewpage(
-                                                                                        judulnya: "Redirect",
-                                                                                        urlnya: "https://www.google.com/search?q=$hlogin",
-                                                                                      ))));
-                                                                        },
-                                                                        child: Text(
-                                                                            'Login'),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
+                                                  return AlertDialog(
+                                                    title:
+                                                        Text('Hotspot Connect'),
+                                                    content: ListView(
+                                                      shrinkWrap: true,
+                                                      children: [
+                                                        TextFormField(
+                                                          controller:
+                                                              hcodeController,
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  hintText:
+                                                                      'Hotspot Access'),
                                                         ),
+                                                      ],
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        child: Text('Cancel'),
                                                       ),
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              child: Icon(
-                                                  Icons.edit_note_rounded,
-                                                  color: Colors.white),
-                                              style: ElevatedButton.styleFrom(
-                                                shape: CircleBorder(),
-                                                padding: EdgeInsets.all(10),
-                                                primary: Colors
-                                                    .blue, // <-- Button color
-                                                onPrimary: Colors
-                                                    .red, // <-- Splash color
-                                              ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          // Send them to your email maybe?
+                                                          var hlogin =
+                                                              hcodeController
+                                                                  .text;
+
+                                                          debugPrint(hlogin);
+                                                          //https://www.google.com/search?q=
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      ((context) =>
+                                                                          webviewpage(
+                                                                            judulnya:
+                                                                                "Redirect",
+                                                                            urlnya:
+                                                                                "https://www.google.com/search?q=$hlogin",
+                                                                          ))));
+                                                        },
+                                                        child: Text('Login'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            child: Icon(Icons.edit_note_rounded,
+                                                color: Colors.white),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: CircleBorder(),
+                                              padding: EdgeInsets.all(10),
+                                              primary: Colors
+                                                  .blue, // <-- Button color
+                                              onPrimary: Colors
+                                                  .red, // <-- Splash color
                                             ),
                                           ),
-                                          Text(
-                                            "Using \nCode",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.w300),
-                                          )
-                                        ],
-                                      ),
+                                        ),
+                                        Text(
+                                          "Using \nCode",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontWeight: FontWeight.w300),
+                                        )
+                                      ],
                                     )
                                   ],
                                 ),
@@ -355,8 +334,8 @@ class _QRViewExampleState extends State<QRViewExample> {
 
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 500 ||
-            MediaQuery.of(context).size.height < 500)
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
+            MediaQuery.of(context).size.height < 400)
         ? 150.0
         : 300.0;
     // To ensure the Scanner view is properly sizes after rotation
