@@ -46,7 +46,8 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
         status);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      debugPrint(data["Data"]["Rows"].toString());
+      debugPrint("Hit :" + data["Data"]["Hit"].toString());
+      debugPrint("UID: " + data["Data"]["UID"].toString());
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:firstproject/paymentGateway.dart';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'globalspublic.dart' as globals;
 
 class packetList extends StatefulWidget {
   const packetList({Key? key}) : super(key: key);
@@ -18,10 +19,10 @@ class _packetListState extends State<packetList> {
   List<Packages> listPackages = [];
 
   Future<Null> _fetchDataProduct() async {
-    String url = "http://phoenix.crossnet.co.id:38600/packages";
+    String urlString = globals.uriString;
 
     var loading = true;
-    final response = await get(Uri.parse(url));
+    final response = await get(Uri.parse(urlString + "/packages"));
     if (response.statusCode == 200) {
       loading = true;
       final data = jsonDecode(response.body);

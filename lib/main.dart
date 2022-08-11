@@ -4,7 +4,6 @@ import 'package:firstproject/ScanQr.dart';
 import 'package:firstproject/cobaprofile.dart';
 import 'package:firstproject/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'globalspublic.dart';
 import 'package:flutter/services.dart';
 import 'paketlistnew.dart';

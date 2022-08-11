@@ -31,14 +31,12 @@ class _MyLoginState extends State<MyLogin> {
     //Encoding
     var plainText = utf8.encode(passwordController.text);
     var hashedVal = sha512.convert(plainText);
-    String url =
-        "http://phoenix.crossnet.co.id:38600/login?email=${usernameController.text}&&password=${hashedVal}";
-    final response = await get(Uri.parse(url));
-    print(Uri.parse(url));
+    String urlString = globals.uriString;
+    final response = await get(Uri.parse(urlString +
+        "/login?email=${usernameController.text}&&password=${hashedVal}"));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      debugPrint("First " + data['Data']['Id'].toString());
       globals.setUserID(data['Data']['Id']);
       if (data['Data']['Message'] == "Success") {
         Navigator.push(

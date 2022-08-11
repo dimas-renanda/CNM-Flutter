@@ -59,9 +59,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future _fetchUsersInfo() async {
-    String url =
-        "http://phoenix.crossnet.co.id:38600/users?userID=${globals.getUserID()}";
-    final response = await http.get(Uri.parse(url));
+    String urlString = globals.uriString;
+    final response = await http
+        .get(Uri.parse(urlString + "/users?userID=${globals.getUserID()}"));
 
     final data = jsonDecode(response.body);
 
@@ -75,13 +75,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<Null> _fetchActivePackages() async {
-    String activePackURL =
-        "http://phoenix.crossnet.co.id:38600/GetUserPackage?uid=${globals.getUserID()}";
+    String urlString = globals.uriString;
 
-    final response = await http.get(Uri.parse(activePackURL));
+    final response = await http.get(
+        Uri.parse(urlString + "/GetUserPackage?uid=${globals.getUserID()}"));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      debugPrint(data['Data'].toString());
       setState(() {
         for (Map i in data['Data']) {
           acPack.add(activePackages.fromJson(i));

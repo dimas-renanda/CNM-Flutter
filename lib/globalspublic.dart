@@ -1,7 +1,7 @@
 library my_prj.globals;
 
 //API URL
-String uriString = "http://10.5.50.22:38500";
+String uriString = "http://192.168.1.4:38600";
 
 bool isLoggedIn = false;
 int numpagenya = 0;

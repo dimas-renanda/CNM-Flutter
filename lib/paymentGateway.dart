@@ -59,6 +59,8 @@ class _paymentGatewayState extends State<paymentGateway> {
       "pid": widget.packetID.toString(),
       "payment": globals.paymentChoice.toString(),
       "status": "Waiting",
+      "duration": widget.packetDuration * 24 * 3600, //Convert it to seconds
+      "price": widget.packetPrice,
     });
 
     if (response.statusCode == 200) {
