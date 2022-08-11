@@ -262,10 +262,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget packetCard(BuildContext context) {
     return Container(
-        width: double.infinity,
-        padding: EdgeInsets.only(
-          top: 8,
-        ),
+        padding: EdgeInsets.only(top: 8),
         child: CarouselSlider.builder(
           itemCount: acPack.length,
           itemBuilder:
@@ -281,33 +278,6 @@ class _HomePageState extends State<HomePage> {
                         )),
               );
             },
-<<<<<<< HEAD
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      //width: 200,
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        border: Border.all(
-                          color: Color.fromARGB(255, 0, 88, 160),
-                        ),
-                        borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(20),
-                            topLeft: Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromARGB(255, 0, 27, 49),
-                            blurRadius: 4,
-                            offset: Offset(2, 4), // Shadow position
-                          ),
-                        ],
-=======
             child: Container(
               child: Align(
                 alignment: Alignment.topLeft,
@@ -326,24 +296,16 @@ class _HomePageState extends State<HomePage> {
                         color: Color.fromARGB(255, 0, 27, 49),
                         blurRadius: 4,
                         offset: Offset(2, 4), // Shadow position
->>>>>>> e57799f3f4ff09aec7ecd27afede34c016276452
                       ),
-                      child: _isipaket(context, acPack, itemIndex),
-                    ),
+                    ],
                   ),
+                  child: _isipaket(context, acPack, itemIndex),
                 ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
+              ),
             ),
           ),
           options: CarouselOptions(
-<<<<<<< HEAD
-            height: MediaQuery.of(context).size.height * 0.256, //0.1989,
-=======
             height: MediaQuery.of(context).size.height * 0.25,
->>>>>>> e57799f3f4ff09aec7ecd27afede34c016276452
             enableInfiniteScroll: false,
           ),
         ));
@@ -369,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
@@ -386,20 +348,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-<<<<<<< HEAD
-          Container(
-            margin: EdgeInsets.only(
-              top: 5,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    //Logo
-                    Column(
-=======
           //Paket Details / Content
           Expanded(
             child: Container(
@@ -414,7 +362,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
->>>>>>> e57799f3f4ff09aec7ecd27afede34c016276452
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
@@ -434,74 +381,6 @@ class _HomePageState extends State<HomePage> {
                       bottom: 15,
                       top: 15,
                     ),
-<<<<<<< HEAD
-                    //Isi dari Bandwith & Total Connections
-                    Container(
-                      margin: EdgeInsets.only(right: 0.5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              ": ${data[index].packageBandwith.toString()}MB",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 4),
-                            child: Text(
-                              ": ${data[index].packageTotalDevices.toString()} Device(s)",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  margin: const EdgeInsets.only(top: 25),
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          height: 25,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    //bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(15),
-                                    bottomLeft: Radius.circular(3)),
-
-                                // border: Border.all(
-                                //   //color: Colors.green,
-                                //   width: 2.0,
-                                // ),
-                                color: Color.fromARGB(255, 255, 127, 7)),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 25, vertical: 8),
-                                  child: FittedBox(
-                                    fit: BoxFit.cover,
-                                    child: Text(
-                                      " Active | until ${data[index].packageExpireDate.toString()}",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                  )),
-                            ),
-=======
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -511,7 +390,6 @@ class _HomePageState extends State<HomePage> {
                           child: Text(
                             "Bandwith ",
                             textAlign: TextAlign.left,
->>>>>>> e57799f3f4ff09aec7ecd27afede34c016276452
                           ),
                         ),
                         Container(
