@@ -434,7 +434,7 @@ class _HomePageState extends State<HomePage> {
           ),
           //Active Until
           Container(
-            width: MediaQuery.of(context).size.width * 0.45,
+            //width: MediaQuery.of(context).size.width * 0.45,
             decoration: BoxDecoration(
               color: Colors.orange[400],
               borderRadius: BorderRadius.only(
@@ -442,18 +442,16 @@ class _HomePageState extends State<HomePage> {
                   bottomRight: Radius.circular(19)),
             ),
             child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Text(
-                    " Active | until ${data[index].packageExpireDate.toString()}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                  ),
-                )),
+              margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+              child: Text(
+                " Active | until ${data[index].packageExpireDate.toString()}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
+              ),
+            ),
           ),
         ],
       ),

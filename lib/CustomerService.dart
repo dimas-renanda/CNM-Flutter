@@ -121,7 +121,7 @@ class customerCareGateway extends StatelessWidget {
                                         Color.fromARGB(255, 5, 8, 69)),
                               ),
                               child: Text(
-                                "Customer Care",
+                                "Chat with us",
                                 textAlign: TextAlign.center,
                               ),
                             ),

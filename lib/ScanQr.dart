@@ -138,54 +138,72 @@ class _QRViewExampleState extends State<QRViewExample> {
                                                 builder: (_) {
                                                   var hcodeController =
                                                       TextEditingController();
+                                                  return Dialog(
+                                                    backgroundColor:
+                                                        Color(0xFFfafafa),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                    elevation: 20,
+                                                    child: Container(
+                                                      height: 120, //use height
+                                                      child: ListView(
+                                                        shrinkWrap: true,
+                                                        children: [
+                                                          Column(
+                                                            children: [
+                                                              Container(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10,
+                                                                        right:
+                                                                            10,
+                                                                        bottom:
+                                                                            15),
+                                                                child: Column(
+                                                                  children: [
+                                                                    TextFormField(
+                                                                      controller:
+                                                                          hcodeController,
+                                                                      decoration: InputDecoration(
+                                                                          label: Text(
+                                                                              "Hotspot Login"),
+                                                                          hintText:
+                                                                              'Hotspot Access'),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        // Send them to your email maybe?
+                                                                        var hlogin =
+                                                                            hcodeController.text;
 
-                                                  return AlertDialog(
-                                                    title:
-                                                        Text('Hotspot Connect'),
-                                                    content: ListView(
-                                                      shrinkWrap: true,
-                                                      children: [
-                                                        TextFormField(
-                                                          controller:
-                                                              hcodeController,
-                                                          decoration:
-                                                              InputDecoration(
-                                                                  hintText:
-                                                                      'Hotspot Access'),
-                                                        ),
-                                                      ],
+                                                                        debugPrint(
+                                                                            hlogin);
+                                                                        //https://www.google.com/search?q=
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                                builder: ((context) => webviewpage(
+                                                                                      judulnya: "Redirect",
+                                                                                      urlnya: "https://www.google.com/search?q=$hlogin",
+                                                                                    ))));
+                                                                      },
+                                                                      child: Text(
+                                                                          'Login'),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                                context),
-                                                        child: Text('Cancel'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          // Send them to your email maybe?
-                                                          var hlogin =
-                                                              hcodeController
-                                                                  .text;
-
-                                                          debugPrint(hlogin);
-                                                          //https://www.google.com/search?q=
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      ((context) =>
-                                                                          webviewpage(
-                                                                            judulnya:
-                                                                                "Redirect",
-                                                                            urlnya:
-                                                                                "https://www.google.com/search?q=$hlogin",
-                                                                          ))));
-                                                        },
-                                                        child: Text('Login'),
-                                                      ),
-                                                    ],
                                                   );
                                                 },
                                               );

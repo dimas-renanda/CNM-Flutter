@@ -1,3 +1,4 @@
+import 'package:firstproject/Login.dart';
 import 'package:firstproject/connecteddevice.dart';
 import 'package:firstproject/linkeddevice.dart';
 import 'package:flutter/material.dart';
@@ -162,6 +163,10 @@ class _profileFixState extends State<profileFix> {
                   context,
                 ),
                 _connectedDevice(context),
+                SizedBox(
+                  height: 50,
+                ),
+                _Logout(context)
               ],
             ),
           )
@@ -285,6 +290,36 @@ class _profileFixState extends State<profileFix> {
             },
             child: Text(
               "Connected Device",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _Logout(context) {
+    return Container(
+      padding: EdgeInsets.only(top: 6),
+      child: Column(
+        children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(255, 4, 32, 107),
+                minimumSize: const Size.fromHeight(40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20))),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyLogin(
+                          title: 'login',
+                        )),
+              );
+            },
+            child: Text(
+              "Logout",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
