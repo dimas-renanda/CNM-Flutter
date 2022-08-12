@@ -111,8 +111,8 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
 
     debugPrint(globals.paymentChoice);
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -170,7 +170,7 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  "xyz - 12313131323213231231",
+                  "xyz - 12313131323",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

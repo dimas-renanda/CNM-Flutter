@@ -14,7 +14,12 @@ class packetList extends StatefulWidget {
 
 class _packetListState extends State<packetList> {
   int index = 0;
-  var _numFormat = NumberFormat("#,##0", "en_US");
+  var _numFormat = NumberFormat(
+    "#,##",
+    "en_US",
+  );
+  final formatCurrency =
+      new NumberFormat.currency(locale: "id_ID", symbol: "Rp ");
   List<Packages> listPackages = [];
 
   Future<Null> _fetchDataProduct() async {
@@ -134,12 +139,15 @@ class _packetListState extends State<packetList> {
                               )),
                           //Packet Price
                           Container(
-                              margin: EdgeInsets.only(right: 28),
-                              child: Text(
-                                packetPrice,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
+                              margin: EdgeInsets.only(right: 20),
+                              child: FittedBox(
+                                fit: BoxFit.cover,
+                                child: Text(
+                                  "${formatCurrency.format(int.parse(packetPrice))}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
                                 ),
                               )),
                         ],

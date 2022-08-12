@@ -52,16 +52,19 @@ class _sampleNotificationsState extends State<sampleNotifications> {
             ),
             //Page Title
             Container(
-              padding: EdgeInsets.only(top: 10, bottom: 40),
-              alignment: Alignment.center,
-              child: Text(
-                "Notifications",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50,
-                    color: Colors.white),
-              ),
-            ),
+                padding: EdgeInsets.only(top: 10, bottom: 40),
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Text(
+                    "Notifications",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                )),
             //Page Content
             Expanded(
               child: Container(

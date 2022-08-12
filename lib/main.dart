@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
         body: pages[CurPage],
         bottomNavigationBar: Container(
-          height: MediaQuery.of(context).size.height * 0.1,
+          height: MediaQuery.of(context).size.height * 0.10,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(30), topLeft: Radius.circular(30)),
@@ -107,7 +107,7 @@ class _MainPageState extends State<MainPage> {
                     icon: ImageIcon(
                       AssetImage("images/navbaricon/qr.png"),
                       color: Colors.white,
-                      size: 40,
+                      size: 45,
                     ),
                     label: ''),
                 NavigationDestination(

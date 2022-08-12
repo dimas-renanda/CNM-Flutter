@@ -262,7 +262,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget packetCard(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 8),
+        width: double.infinity,
+        padding: EdgeInsets.only(
+          top: 8,
+        ),
         child: CarouselSlider.builder(
           itemCount: acPack.length,
           itemBuilder:
@@ -279,6 +282,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
             child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 1),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Container(
@@ -305,7 +309,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           options: CarouselOptions(
-            height: MediaQuery.of(context).size.height * 0.25,
+            height: MediaQuery.of(context).size.height * 0.28,
             enableInfiniteScroll: false,
           ),
         ));
@@ -419,7 +423,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           margin: EdgeInsets.only(top: 4),
                           child: Text(
-                            ": ${data[index].packageTotalDevices.toString()} Device(s)",
+                            ": ${data[index].packageTotalDevices.toString()} Device",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
