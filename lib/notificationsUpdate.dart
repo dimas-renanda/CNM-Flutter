@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_interpolation_to_compose_strings
 import 'dart:convert';
+import 'package:firstproject/main.dart';
+import 'package:firstproject/ticketingDetails.dart';
 import 'package:flutter/material.dart';
 import 'globalspublic.dart' as globals;
 import 'package:http/http.dart';
@@ -44,10 +46,21 @@ class _notificationsUpdatePageState extends State<notificationsUpdatePage> {
     return ListView.builder(
       itemCount: listUpdates.length,
       itemBuilder: (BuildContext context, int index) {
-        return createUpdateCard(
-          cardTitle: listUpdates[index].updateTitle,
-          cardContent: listUpdates[index].updateDescription,
-          cardTimestamp: listUpdates[index].updateDate,
+        debugPrint(listUpdates[index].updateCategory);
+        return InkWell(
+          onTap: listUpdates[index].updateCategory == "Ticketing"
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ticketingDetails()),
+                  );
+                }
+              : () {},
+          child: createUpdateCard(
+            cardTitle: listUpdates[index].updateTitle,
+            cardContent: listUpdates[index].updateDescription,
+            cardTimestamp: listUpdates[index].updateDate,
+          ),
         );
       },
     );
@@ -58,12 +71,12 @@ class createUpdateCard extends StatefulWidget {
   final String cardTitle;
   final String cardContent;
   final String cardTimestamp;
-  createUpdateCard(
-      {Key? key,
-      required this.cardTitle,
-      required this.cardContent,
-      required this.cardTimestamp})
-      : super(key: key);
+  createUpdateCard({
+    Key? key,
+    required this.cardTitle,
+    required this.cardContent,
+    required this.cardTimestamp,
+  }) : super(key: key);
 
   @override
   State<createUpdateCard> createState() => _createUpdateCardState();
@@ -134,18 +147,20 @@ class _createUpdateCardState extends State<createUpdateCard> {
 }
 
 class Updates {
-  String updateTitle, updateDescription, updateDate;
+  String updateTitle, updateDescription, updateDate, updateCategory;
 
   Updates({
     required this.updateTitle,
     required this.updateDescription,
     required this.updateDate,
+    required this.updateCategory,
   });
 
   factory Updates.fromJson(Map<dynamic, dynamic> json) => Updates(
         updateTitle: json["Title"],
         updateDescription: json["Description"],
         updateDate: json["Date"],
+        updateCategory: json["Category"],
       );
 
   Map<String, dynamic> toJson() => {
