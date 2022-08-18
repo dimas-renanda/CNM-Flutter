@@ -41,28 +41,38 @@ class _notificationsUpdatePageState extends State<notificationsUpdatePage> {
     _fetchUserUpdates();
   }
 
+  Function() getDestination(int index) {
+    if (listUpdates[index].updateCategory == "Ticketing") {
+      return () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ticketingDetails(
+                    userID: globals.getUserID(),
+                    ticketID: int.parse(listUpdates[index].updateRefID),
+                  )),
+        );
+      };
+    } else
+      return () {};
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: listUpdates.length,
-      itemBuilder: (BuildContext context, int index) {
-        debugPrint(listUpdates[index].updateCategory);
-        return InkWell(
-          onTap: listUpdates[index].updateCategory == "Ticketing"
-              ? () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ticketingDetails()),
-                  );
-                }
-              : () {},
-          child: createUpdateCard(
-            cardTitle: listUpdates[index].updateTitle,
-            cardContent: listUpdates[index].updateDescription,
-            cardTimestamp: listUpdates[index].updateDate,
-          ),
-        );
-      },
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: listUpdates.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: getDestination(index),
+            child: createUpdateCard(
+              cardTitle: listUpdates[index].updateTitle,
+              cardContent: listUpdates[index].updateDescription,
+              cardTimestamp: listUpdates[index].updateDate,
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -147,13 +157,18 @@ class _createUpdateCardState extends State<createUpdateCard> {
 }
 
 class Updates {
-  String updateTitle, updateDescription, updateDate, updateCategory;
+  String updateTitle,
+      updateDescription,
+      updateDate,
+      updateCategory,
+      updateRefID;
 
   Updates({
     required this.updateTitle,
     required this.updateDescription,
     required this.updateDate,
     required this.updateCategory,
+    required this.updateRefID,
   });
 
   factory Updates.fromJson(Map<dynamic, dynamic> json) => Updates(
@@ -161,6 +176,7 @@ class Updates {
         updateDescription: json["Description"],
         updateDate: json["Date"],
         updateCategory: json["Category"],
+        updateRefID: json["ReferenceID"],
       );
 
   Map<String, dynamic> toJson() => {

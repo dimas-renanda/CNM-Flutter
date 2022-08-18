@@ -82,8 +82,10 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
-        for (Map i in data['Data']) {
-          acPack.add(activePackages.fromJson(i));
+        if (data['Data'] is Iterable<dynamic>) {
+          for (Map i in data['Data']) {
+            acPack.add(activePackages.fromJson(i));
+          }
         }
       });
     } else {
@@ -260,54 +262,60 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget packetCard(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.only(top: 8),
-        child: CarouselSlider.builder(
-          itemCount: acPack.length,
-          itemBuilder:
-              (BuildContext context, int itemIndex, int pageViewIndex) =>
-                  InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => voucherDetail(
-                          packetName: acPack[itemIndex].packageName,
-                          expireDate: acPack[itemIndex].packageExpireDate,
-                        )),
-              );
-            },
-            child: Container(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    border: Border.all(
-                      color: Color.fromARGB(255, 0, 88, 160),
-                    ),
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(20),
-                        topLeft: Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(255, 0, 27, 49),
-                        blurRadius: 4,
-                        offset: Offset(2, 4), // Shadow position
+    if (acPack.length == 0) {
+      return Container(
+        child: Text("Currently No Active Package :)"),
+      );
+    } else {
+      return Container(
+          padding: EdgeInsets.only(top: 8),
+          child: CarouselSlider.builder(
+            itemCount: acPack.length,
+            itemBuilder:
+                (BuildContext context, int itemIndex, int pageViewIndex) =>
+                    InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => voucherDetail(
+                            packetName: acPack[itemIndex].packageName,
+                            expireDate: acPack[itemIndex].packageExpireDate,
+                          )),
+                );
+              },
+              child: Container(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border.all(
+                        color: Color.fromARGB(255, 0, 88, 160),
                       ),
-                    ],
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(20),
+                          topLeft: Radius.circular(20)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 0, 27, 49),
+                          blurRadius: 4,
+                          offset: Offset(2, 4), // Shadow position
+                        ),
+                      ],
+                    ),
+                    child: _isipaket(context, acPack, itemIndex),
                   ),
-                  child: _isipaket(context, acPack, itemIndex),
                 ),
               ),
             ),
-          ),
-          options: CarouselOptions(
-            height: MediaQuery.of(context).size.height * 0.25,
-            enableInfiniteScroll: false,
-          ),
-        ));
+            options: CarouselOptions(
+              height: MediaQuery.of(context).size.height * 0.25,
+              enableInfiniteScroll: false,
+            ),
+          ));
+    }
   }
 
   _isipaket(context, List<activePackages> data, int index) {

@@ -59,18 +59,6 @@ class _ticketingFormState extends State<ticketingForm> {
       "description": descController.text,
       "status": "Waiting",
     });
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      var addNotif =
-          await http.post(Uri.parse(urlString + "/AddNotif?"), body: {
-        "uid": globals.getUserID().toString(),
-        "category": "Ticketing",
-        "title": "New Ticket Created",
-        "description":
-            "Your new ticket is : ${data["Data"]["Last Inserted ID"]}"
-      });
-    }
   }
 
   @override
