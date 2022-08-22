@@ -70,9 +70,9 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
     int historyContentCount = listHistory
         .where((x) => x.paymentCreationDate.toString() == currentIndex)
         .length;
-    debugPrint(
-        "Length for ${currentIndex} : " + historyContentCount.toString());
-    debugPrint("Total Length: " + listHistory.length.toString());
+    // debugPrint(
+    //     "Length for ${currentIndex} : " + historyContentCount.toString());
+    // debugPrint("Total Length: " + listHistory.length.toString());
     currentArrayIndex += historyContentCount;
     return Container(
       margin: EdgeInsets.only(bottom: 15, left: 10, right: 10),

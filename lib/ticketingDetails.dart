@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -17,7 +18,16 @@ class ticketingDetails extends StatefulWidget {
 }
 
 class _ticketingDetailsState extends State<ticketingDetails> {
-  List<Ticket> currentTicket = [];
+  Ticket currentTicket = new Ticket(
+    ticketID: "",
+    ticketSID: "",
+    ticketTopic: "",
+    ticketDescription: "",
+  );
+  List<TicketProgress> tckProgress = [];
+  int currentArrayIndex = 0;
+
+  var loading = false;
 
   @override
   void initState() {
@@ -34,15 +44,27 @@ class _ticketingDetailsState extends State<ticketingDetails> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      setState(() {
-        debugPrint("Here");
-        debugPrint(data["Data"].toString());
-        for (Map i in data["Data"]) {
-          currentTicket.add(Ticket.fromJson(i));
-        }
-      });
+      final ticketingProgressQuery = await get(
+        Uri.parse(urlString + "/GetTicketProgress?ref_id=${widget.ticketID}"),
+      );
+
+      if (ticketingProgressQuery.statusCode == 200) {
+        final progressData = jsonDecode(ticketingProgressQuery.body);
+        setState(() {
+          currentTicket = Ticket.fromJson(data["Data"]);
+
+          for (Map i in progressData["Data"]) {
+            tckProgress.add(TicketProgress.fromJson(i));
+            debugPrint(i.values.toString());
+          }
+          loading = true;
+        });
+      } else {
+        debugPrint(
+            "Something went wrong while trying to fetch ticketing progress");
+      }
     } else {
-      debugPrint("Something went wrong");
+      debugPrint("Something went wrong while trying to get specific ticket");
     }
   }
 
@@ -50,118 +72,107 @@ class _ticketingDetailsState extends State<ticketingDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: FutureBuilder(
-      future: _fetchSpecificTicket(),
-      builder: (BuildContext context, AsyncSnapshot<Null> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Container(child: Text("Loading"));
-          default:
-            if (snapshot.hasError) {
-              return new Text("Error");
-            } else {
-              debugPrint(currentTicket.length.toString());
-              return Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                      Color.fromARGB(255, 19, 2, 115),
-                      Color.fromARGB(255, 196, 118, 2)
-                    ])),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      //Back Button
-                      Container(
-                        margin: EdgeInsets.only(top: 16),
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              icon: Icon(
-                                Icons.arrow_back_ios_rounded,
-                                color: Colors.white,
-                                size: 30,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      //Page Placeholder
-                      Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.only(bottom: 16, top: 32),
-                        child: Column(children: [
-                          Text(
-                            "Detail Ticketing",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 35,
-                              foreground: Paint()..color = Colors.white,
-                            ),
-                          ),
-                        ]),
-                      ),
-                      //Main Form
-                      Expanded(
+            child: Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.centerRight,
+              colors: [
+            Color.fromARGB(255, 19, 2, 115),
+            Color.fromARGB(255, 196, 118, 2)
+          ])),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        //Back Button
+        Container(
+          margin: EdgeInsets.only(top: 16),
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+        ),
+        //Page Placeholder
+        Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.only(bottom: 16, top: 32),
+          child: Column(children: [
+            Text(
+              "Detail Ticketing",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 35,
+                foreground: Paint()..color = Colors.white,
+              ),
+            ),
+          ]),
+        ),
+        //Main Form
+        Expanded(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.5,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+            ),
+            child: SingleChildScrollView(
+                child: loading == false
+                    ? Container(
+                        margin: EdgeInsets.all(32),
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40)),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Container(
-                              margin: EdgeInsets.all(32),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // createTicketingIndividualForm(
-                                  //   "Ticket ID",
-                                  //   Colors.grey,
-                                  //   currentTicket[0].ticketID,
-                                  //   true,
-                                  // ),
-                                  // createTicketingIndividualForm(
-                                  //   "Package SID",
-                                  //   Colors.grey,
-                                  //   currentTicket[0].ticketSID,
-                                  //   true,
-                                  // ),
-                                  // createTicketingIndividualForm(
-                                  //   "Topic",
-                                  //   Colors.grey,
-                                  //   currentTicket[0].ticketTopic,
-                                  //   false,
-                                  // ),
-                                  // createTicketingIndividualForm(
-                                  //   "Description",
-                                  //   Colors.grey,
-                                  //   currentTicket[0].ticketDescription,
-                                  //   false,
-                                  // ),
-                                ],
-                              ),
+                          child: Text("Loading...."),
+                        ))
+                    : Container(
+                        margin: EdgeInsets.all(32),
+                        child: Column(
+                          children: [
+                            //Ticket Credentials
+                            createTicketingIndividualForm(
+                              "Ticket ID",
+                              Colors.grey,
+                              currentTicket.ticketID,
+                              true,
                             ),
-                          ),
+                            createTicketingIndividualForm(
+                              "Package SID",
+                              Colors.grey,
+                              currentTicket.ticketSID,
+                              true,
+                            ),
+                            createTicketingIndividualForm(
+                              "Topic",
+                              Colors.grey,
+                              currentTicket.ticketTopic,
+                              false,
+                            ),
+                            createTicketingIndividualForm(
+                              "Description",
+                              Colors.grey,
+                              currentTicket.ticketDescription,
+                              false,
+                            ),
+
+                            createTicketingProgress(context, tckProgress),
+                          ],
                         ),
-                      ),
-                    ]),
-              );
-            }
-        }
-      },
+                      )),
+          ),
+        ),
+      ]),
     )));
   }
 }
@@ -202,6 +213,110 @@ Widget createTicketingIndividualForm(
   );
 }
 
+Widget createTicketingProgress(
+    BuildContext context, List<TicketProgress> progress) {
+  var uniques = new LinkedHashMap<String, bool>();
+  for (var s in progress) {
+    uniques[s.progressDate] = true;
+  }
+
+  return Container(
+    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
+    decoration: BoxDecoration(
+        border: Border.all(width: 1),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(20),
+          topLeft: Radius.circular(22),
+        )),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        //Process Header / Title
+        Container(
+          height: MediaQuery.of(context).size.height * 0.05,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+              ),
+              color: Color.fromARGB(255, 4, 32, 107)),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(left: 10),
+            child: Text(
+              "Process",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ),
+        //Process Details / Content
+        Container(
+            child: Column(
+          children: [
+            ListView.builder(
+              padding: EdgeInsets.only(top: 10),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: uniques.length,
+              itemBuilder: (BuildContext context, int index) {
+                return createTicketingProgressContainer(
+                    context, progress, uniques.keys.elementAt(index));
+              },
+            ),
+          ],
+        ))
+      ],
+    ),
+  );
+}
+
+Widget createTicketingProgressContainer(
+    BuildContext context, List<TicketProgress> progress, String currentIndex) {
+  int contentLength =
+      progress.where((x) => x.progressDate.toString() == currentIndex).length;
+
+  return Container(
+    padding: EdgeInsets.only(bottom: 15),
+    margin: EdgeInsets.only(left: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: EdgeInsets.only(bottom: 5),
+          child: Text(
+            currentIndex,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (int i = 0; i < contentLength; i++)
+                createTicketingProgressAction(context, progress[i]),
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget createTicketingProgressAction(BuildContext context, TicketProgress obj) {
+  return Container(
+    padding: EdgeInsets.only(bottom: 5),
+    margin: EdgeInsets.only(left: 20),
+    child: Text(
+      obj.progressAction,
+    ),
+  );
+}
+
 class Ticket {
   String ticketID, ticketSID, ticketTopic, ticketDescription;
 
@@ -217,5 +332,19 @@ class Ticket {
         ticketSID: json["SID"],
         ticketTopic: json["Topic"],
         ticketDescription: json["Description"],
+      );
+}
+
+class TicketProgress {
+  String progressDate, progressAction;
+
+  TicketProgress({
+    required this.progressDate,
+    required this.progressAction,
+  });
+
+  factory TicketProgress.fromJson(Map<dynamic, dynamic> json) => TicketProgress(
+        progressDate: json["ProgressDate"],
+        progressAction: json["ProgressAction"],
       );
 }
