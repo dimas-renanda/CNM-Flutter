@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 import 'dart:convert';
+import 'package:firstproject/packetDetails.dart';
 import 'package:firstproject/paymentGateway.dart';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
@@ -85,6 +86,8 @@ class _packetListState extends State<packetList> {
                   getData.packetName,
                   getData.packetPrice,
                   getData.packetDuration,
+                  getData.packetDownloadSpeed,
+                  getData.packetDesc,
                 ),
               );
             },
@@ -95,102 +98,125 @@ class _packetListState extends State<packetList> {
     );
   }
 
-  Widget loadPackages(BuildContext context, int packetID, String packetName,
-      String packetPrice, String packetDuration) {
-    return Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-        elevation: 5,
-        child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                //Package Logo
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    child: Image.asset("images/crosslogo.png")),
-                //Package Details
-                Container(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  decoration:
-                      BoxDecoration(border: Border(top: BorderSide(width: 1))),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          //Packet Name
-                          Container(
-                              margin: EdgeInsets.only(left: 16),
-                              child: Text(
-                                packetName,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              )),
-                          //Packet Price
-                          Container(
-                              margin: EdgeInsets.only(right: 28),
-                              child: Text(
-                                packetPrice,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              )),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          //Packet Duration
-                          Container(
-                              margin: EdgeInsets.only(left: 18, top: 6),
-                              child: Text(
-                                "$packetDuration Days",
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )),
-                          //Buy Button
-                          Container(
-                              margin: EdgeInsets.only(right: 18),
-                              height: 25,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    primary: Colors.orangeAccent),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => paymentGateway(
-                                                packetID: packetID.toInt(),
-                                                packetName: packetName,
-                                                packetPrice: packetPrice,
-                                                packetDuration: packetDuration,
-                                              )));
-                                },
-                                child: Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    child: Text("Buy")),
-                              )),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )));
+  Widget loadPackages(
+      BuildContext context,
+      int packetID,
+      String packetName,
+      String packetPrice,
+      String packetDuration,
+      String packetSpeed,
+      String packetDesc) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => packetDetails(
+                      packetName: packetName,
+                      packetPrice: packetPrice,
+                      packetDuration: packetDuration,
+                      packetSpeed: packetSpeed,
+                      packetDesc: packetDesc,
+                      packetID: packetID,
+                    )));
+      },
+      child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          elevation: 5,
+          child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  //Package Logo
+                  Container(
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: Image.asset("images/crosslogo.png")),
+                  //Package Details
+                  Container(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    decoration: BoxDecoration(
+                        border: Border(top: BorderSide(width: 1))),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //Packet Name
+                            Container(
+                                margin: EdgeInsets.only(left: 16),
+                                child: Text(
+                                  packetName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                )),
+                            //Packet Price
+                            Container(
+                                margin: EdgeInsets.only(right: 28),
+                                child: Text(
+                                  packetPrice,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                )),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //Packet Duration
+                            Container(
+                                margin: EdgeInsets.only(left: 18, top: 6),
+                                child: Text(
+                                  "$packetDuration Days",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )),
+                            //Buy Button
+                            Container(
+                                margin: EdgeInsets.only(right: 18),
+                                height: 25,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      primary: Colors.orangeAccent),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                paymentGateway(
+                                                  packetID: packetID.toInt(),
+                                                  packetName: packetName,
+                                                  packetPrice: packetPrice,
+                                                  packetDuration:
+                                                      packetDuration,
+                                                )));
+                                  },
+                                  child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Text("Buy")),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ))),
+    );
   }
 }
 
@@ -201,7 +227,8 @@ class Packages {
       packetType,
       packetDownloadSpeed,
       packetUploadSpeed,
-      packetDuration;
+      packetDuration,
+      packetDesc;
 
   Packages({
     required this.packetId,
@@ -212,6 +239,7 @@ class Packages {
     required this.packetDownloadSpeed,
     required this.packetUploadSpeed,
     required this.packetDuration,
+    required this.packetDesc,
   });
 
   factory Packages.fromJson(Map<dynamic, dynamic> json) => Packages(
@@ -223,6 +251,7 @@ class Packages {
         packetUploadSpeed: json["SUpload"],
         totalDevices: json["TotalDevices"],
         packetDuration: json["Duration"],
+        packetDesc: json["Description"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -234,5 +263,6 @@ class Packages {
         "s_download": packetDownloadSpeed,
         "s_upload": packetUploadSpeed,
         "duration_days": packetDuration,
+        "description": packetDesc,
       };
 }
