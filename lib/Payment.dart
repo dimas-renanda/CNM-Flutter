@@ -103,7 +103,7 @@ class _PaymentsState extends State<Payments> {
             "Payment Method",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 30,
+              fontSize: 15,
               color: Colors.black,
             ),
           ),

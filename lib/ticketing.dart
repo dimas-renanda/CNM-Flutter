@@ -1,8 +1,72 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_interpolation_to_compose_strings
+import 'package:firstproject/main.dart';
 import 'package:flutter/material.dart';
+import 'globalspublic.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
-class ticketingForm extends StatelessWidget {
+class ticketingForm extends StatefulWidget {
   const ticketingForm({Key? key}) : super(key: key);
+
+  @override
+  State<ticketingForm> createState() => _ticketingFormState();
+}
+
+class _ticketingFormState extends State<ticketingForm> {
+  String? dropdownValue = null;
+  String? selectedIndexSID = null;
+  TextEditingController topicController = new TextEditingController(),
+      descController = new TextEditingController();
+  final List<DropdownMenuItem> dropList = [];
+
+  Future<Null> _fetchActivePackages() async {
+    String urlString = globals.uriString;
+
+    final response = await http.get(
+        Uri.parse(urlString + "/GetUserPackage?uid=${globals.getUserID()}"));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        for (Map i in data['Data']) {
+          dropList.add(DropdownMenuItem(
+            value: i["SID"].toString(),
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Package Name: ${i["PackageName"]}"),
+                  Text("SID: ${i["SID"].toString()}")
+                ],
+              ),
+            ),
+          ));
+        }
+      });
+    } else {
+      debugPrint("Something went wrong");
+    }
+    debugPrint(dropList.length.toString());
+  }
+
+  void AddTicketToAPI(BuildContext context) async {
+    String urlString = globals.uriString;
+    var response =
+        await http.post(Uri.parse(urlString + "/AddTicketing?"), body: {
+      "uid": globals.getUserID().toString(),
+      "sid": selectedIndexSID,
+      "topic": topicController.text,
+      "description": descController.text,
+      "status": "Waiting",
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchActivePackages();
+    debugPrint("Loading Done");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,18 +135,41 @@ class ticketingForm extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    createTicketingIndividualForm(
-                        "ID", Color.fromARGB(255, 223, 219, 219)),
-                    createTicketingIndividualForm(
-                        "Package SID", Color.fromARGB(255, 223, 219, 219)),
-                    createTicketingIndividualForm(
-                        "Topic", Color.fromARGB(255, 223, 219, 219)),
-                    createTicketingIndividualForm(
-                        "Description", Color.fromARGB(255, 223, 219, 219)),
+                    createDropdownSID(),
+                    createTicketingIndividualForm("Topic",
+                        Color.fromARGB(255, 223, 219, 219), topicController),
+                    createTicketingIndividualForm("Description",
+                        Color.fromARGB(255, 223, 219, 219), descController),
                     Container(
                       alignment: Alignment.center,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AddTicketToAPI(context);
+                          Alert(
+                            context: context,
+                            title: "Success Creating Ticket",
+                            desc:
+                                "Please check your notifications to view the process of the ticket",
+                            buttons: [],
+                            style: AlertStyle(
+                              animationType: AnimationType.fromBottom,
+                              alertBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              titleStyle: TextStyle(
+                                color: Color.fromARGB(255, 4, 32, 107),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40,
+                              ),
+                            ),
+                          ).show().then((value) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MainPage(
+                                          reqPage: "0",
+                                        )),
+                              ));
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -103,13 +190,14 @@ class ticketingForm extends StatelessWidget {
     ))));
   }
 
-  Widget createTicketingIndividualForm(String formTitle, Color bgColor) {
+  Widget createTicketingIndividualForm(
+      String formTitle, Color bgColor, TextEditingController controller) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.only(left: 5),
+            padding: EdgeInsets.only(bottom: 10),
             child: Text(
               formTitle,
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -117,8 +205,9 @@ class ticketingForm extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(bottom: 16),
-            height: 30,
+            height: 40,
             child: TextFormField(
+              controller: controller,
               decoration: InputDecoration(
                   filled: true,
                   fillColor: bgColor,
@@ -132,6 +221,24 @@ class ticketingForm extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget createDropdownSID() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 10),
+      child: DropdownButton<dynamic>(
+        value: dropdownValue,
+        hint: Text("Please choose from the dropdown list"),
+        icon: Icon(Icons.arrow_drop_down),
+        items: dropList,
+        onChanged: (newValue) {
+          setState(() {
+            dropdownValue = newValue;
+            selectedIndexSID = newValue;
+          });
+        },
       ),
     );
   }

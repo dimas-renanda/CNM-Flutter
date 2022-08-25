@@ -50,19 +50,17 @@ class _notificationsGatewayState extends State<notificationsGateway> {
             ),
             //Page Title
             Container(
-                padding: EdgeInsets.only(top: 16, bottom: 32),
-                alignment: Alignment.center,
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Text(
-                    "Notifications",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                )),
+              padding: EdgeInsets.only(top: 16, bottom: 32),
+              alignment: Alignment.center,
+              child: Text(
+                "Notifications",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
             //Content
             Expanded(
               child: Container(

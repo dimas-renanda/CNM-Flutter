@@ -46,7 +46,8 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
         status);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      debugPrint(data["Data"]["Rows"].toString());
+      debugPrint("Hit :" + data["Data"]["Hit"].toString());
+      debugPrint("UID: " + data["Data"]["UID"].toString());
     }
   }
 
@@ -111,8 +112,8 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
 
     debugPrint(globals.paymentChoice);
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -170,7 +171,7 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  "xyz - 12313131323",
+                  "xyz - 12313131323213231231",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

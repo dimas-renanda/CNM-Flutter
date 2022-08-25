@@ -59,7 +59,7 @@ class _sampleNotificationsState extends State<sampleNotifications> {
                   child: Text(
                     "Notifications",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

@@ -504,7 +504,7 @@ class _HomePageState extends State<HomePage> {
 
   _cardrekomen(context) {
     return Container(
-      padding: EdgeInsets.only(top: 5),
+      //padding: EdgeInsets.only(top: 5),
       // child: CarouselSlider(
       //   options: CarouselOptions(
       //     height: 180,
@@ -532,7 +532,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Container(
                     width: MediaQuery.of(context).size.width * 0.75,
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 255, 255, 255),
                       border: Border.all(
@@ -692,7 +692,7 @@ class _HomePageState extends State<HomePage> {
 
   _cardnews(context) {
     return Container(
-      padding: EdgeInsets.only(top: 5),
+      padding: EdgeInsets.only(top: 15),
       // child: CarouselSlider(
       //   options: CarouselOptions(
       //     height: 180,

@@ -59,6 +59,8 @@ class _paymentGatewayState extends State<paymentGateway> {
       "pid": widget.packetID.toString(),
       "payment": globals.paymentChoice.toString(),
       "status": "Waiting",
+      "duration": widget.packetDuration * 24 * 3600, //Convert it to seconds
+      "price": widget.packetPrice,
     });
 
     if (response.statusCode == 200) {
@@ -237,12 +239,12 @@ class _paymentGatewayState extends State<paymentGateway> {
               //Page Title
               Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.all(10),
+                //margin: EdgeInsets.all(10),
                 child: Text(
-                  "Pembayaran",
+                  "Payment",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 40,
+                    fontSize: 20,
                     color: Colors.white,
                   ),
                 ),

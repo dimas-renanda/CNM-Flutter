@@ -1,5 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_interpolation_to_compose_strings
+import 'dart:convert';
+import 'package:firstproject/main.dart';
+import 'package:firstproject/ticketingDetails.dart';
 import 'package:flutter/material.dart';
+import 'globalspublic.dart' as globals;
+import 'package:http/http.dart';
 
 class notificationsUpdatePage extends StatefulWidget {
   const notificationsUpdatePage({Key? key}) : super(key: key);
@@ -10,17 +15,64 @@ class notificationsUpdatePage extends StatefulWidget {
 }
 
 class _notificationsUpdatePageState extends State<notificationsUpdatePage> {
+  List<Updates> listUpdates = [];
+
+  Future<Null> _fetchUserUpdates() async {
+    String urlString = globals.uriString;
+
+    final response = await get(Uri.parse(
+        urlString + "/GetUserNotifications?uid=${globals.getUserID()}"));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        for (Map i in data['Data']) {
+          listUpdates.add(Updates.fromJson(i));
+        }
+      });
+    } else {
+      debugPrint("Something went wrong");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserUpdates();
+  }
+
+  Function() getDestination(int index) {
+    if (listUpdates[index].updateCategory == "Ticketing") {
+      return () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ticketingDetails(
+                    userID: globals.getUserID(),
+                    ticketID: int.parse(listUpdates[index].updateRefID),
+                  )),
+        );
+      };
+    } else
+      return () {};
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (BuildContext context, int index) {
-        return createUpdateCard(
-          cardTitle: "Lorem Ipsum",
-          cardContent: "Dolor sit amet",
-          cardTimestamp: "24 June 2022",
-        );
-      },
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: listUpdates.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: getDestination(index),
+            child: createUpdateCard(
+              cardTitle: listUpdates[index].updateTitle,
+              cardContent: listUpdates[index].updateDescription,
+              cardTimestamp: listUpdates[index].updateDate,
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -29,12 +81,12 @@ class createUpdateCard extends StatefulWidget {
   final String cardTitle;
   final String cardContent;
   final String cardTimestamp;
-  createUpdateCard(
-      {Key? key,
-      required this.cardTitle,
-      required this.cardContent,
-      required this.cardTimestamp})
-      : super(key: key);
+  createUpdateCard({
+    Key? key,
+    required this.cardTitle,
+    required this.cardContent,
+    required this.cardTimestamp,
+  }) : super(key: key);
 
   @override
   State<createUpdateCard> createState() => _createUpdateCardState();
@@ -102,4 +154,34 @@ class _createUpdateCardState extends State<createUpdateCard> {
       ),
     );
   }
+}
+
+class Updates {
+  String updateTitle,
+      updateDescription,
+      updateDate,
+      updateCategory,
+      updateRefID;
+
+  Updates({
+    required this.updateTitle,
+    required this.updateDescription,
+    required this.updateDate,
+    required this.updateCategory,
+    required this.updateRefID,
+  });
+
+  factory Updates.fromJson(Map<dynamic, dynamic> json) => Updates(
+        updateTitle: json["Title"],
+        updateDescription: json["Description"],
+        updateDate: json["Date"],
+        updateCategory: json["Category"],
+        updateRefID: json["ReferenceID"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "title": updateTitle,
+        "description": updateDescription,
+        "date": updateDate,
+      };
 }

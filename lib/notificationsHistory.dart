@@ -1,16 +1,19 @@
 // ignore_for_file: unused_field, prefer_final_fields, prefer_const_constructors
 
+import 'dart:collection';
 import 'dart:math';
 
-import 'package:flutter/gestures.dart';
+import 'package:firstproject/cobabelajarwidget.dart';
+import 'package:firstproject/linkeddevice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
+import 'globalspublic.dart' as globals;
+import 'package:http/http.dart';
 
 class notificationsHistoryPage extends StatefulWidget {
   notificationsHistoryPage({Key? key}) : super(key: key);
@@ -21,18 +24,56 @@ class notificationsHistoryPage extends StatefulWidget {
 }
 
 class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
+  List<History> listHistory = [];
+  int currentArrayIndex = 0;
+
+  Future<Null> _fetchUserHistory() async {
+    String urlString = globals.uriString;
+
+    final response = await get(
+        Uri.parse(urlString + "/UserHistory?uid=${globals.getUserID()}"));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        for (Map i in data['Data']) {
+          listHistory.add(History.fromJson(i));
+        }
+      });
+    } else {
+      debugPrint("Something went wrong");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserHistory();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var uniques = new LinkedHashMap<String, bool>();
+    for (var s in listHistory) {
+      uniques[s.paymentCreationDate] = true;
+    }
     return ListView.builder(
-        itemCount: 10,
+        itemCount: uniques.length,
         itemBuilder: (BuildContext context, int index) {
-          return createHistoryContainer(context);
+          return createHistoryContainer(
+              context, listHistory, uniques.keys.elementAt(index));
         });
   }
 
-  Widget createHistoryContainer(BuildContext context) {
-    Random rng = new Random();
-    int historyContentCount = rng.nextInt(5) + 1;
+  Widget createHistoryContainer(
+      BuildContext context, List<History> arrHistory, String currentIndex) {
+    int historyContentCount = listHistory
+        .where((x) => x.paymentCreationDate.toString() == currentIndex)
+        .length;
+    // debugPrint(
+    //     "Length for ${currentIndex} : " + historyContentCount.toString());
+    // debugPrint("Total Length: " + listHistory.length.toString());
+    currentArrayIndex += historyContentCount;
     return Container(
       margin: EdgeInsets.only(bottom: 15, left: 10, right: 10),
       child: Column(
@@ -47,7 +88,7 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
             child: Container(
               margin: EdgeInsets.only(left: 10),
               child: Text(
-                "31 Juli 2022",
+                currentIndex,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -65,7 +106,8 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   for (int i = 0; i < historyContentCount; i++)
-                    createHistoryContent(context, historyContentCount, i),
+                    createHistoryContent(
+                        context, historyContentCount, i, arrHistory[i]),
                 ],
               ))
         ],
@@ -73,10 +115,8 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
     );
   }
 
-  Widget createHistoryContent(BuildContext context, int limit, int index) {
-    int historyIndex = 0;
-    Random rng = new Random();
-    historyIndex += index;
+  Widget createHistoryContent(
+      BuildContext context, int limit, int index, History historyObj) {
     var f = NumberFormat("0,000", "en_US");
 
     return Container(
@@ -91,7 +131,7 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
             margin: EdgeInsets.only(bottom: 4),
             alignment: Alignment.centerLeft,
             child: Text(
-              "Packet ${historyIndex++}",
+              historyObj.packageName,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,
@@ -102,18 +142,37 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
           Container(
             margin: EdgeInsets.only(bottom: 2),
             alignment: Alignment.centerLeft,
-            child: rng.nextInt(5) == 0
-                ? Text("Boost  :  No")
-                : Text("Boost  :  Yes"),
+            child: Text(
+              "Payment Option:\t ${historyObj.paymentOption}",
+            ),
           ),
           Container(
             margin: EdgeInsets.only(bottom: 2),
             alignment: Alignment.centerLeft,
             child: Text(
-                "Price  :   Rp. ${f.format(rng.nextInt(1000000) + 50000)}"),
+                "Price  :   Rp. ${f.format(historyObj.historyPaymentValue)}"),
           ),
         ],
       ),
     );
   }
+}
+
+class History {
+  int historyPaymentValue;
+  String packageName, paymentOption, paymentCreationDate;
+
+  History({
+    required this.historyPaymentValue,
+    required this.packageName,
+    required this.paymentOption,
+    required this.paymentCreationDate,
+  });
+
+  factory History.fromJson(Map<dynamic, dynamic> json) => History(
+        historyPaymentValue: json["TotalPayment"],
+        packageName: json["PacketName"],
+        paymentOption: json["PaymentChoice"],
+        paymentCreationDate: json["Date"],
+      );
 }
