@@ -53,7 +53,8 @@ class _HomePageState extends State<HomePage> {
   final formatCurrency =
       new NumberFormat.currency(locale: "id_ID", symbol: "Rp ");
 
-  final String apirekomen = "http://192.168.9.178:38600/rekomenpackages";
+  final String apirekomen =
+      "http://phoenix.crossnet.co.id:38600/rekomenpackages";
 
   Future<List<dynamic>> _fecthRekomen() async {
     var result = await http.get(Uri.parse(apirekomen));
