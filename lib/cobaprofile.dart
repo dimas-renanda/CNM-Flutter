@@ -85,7 +85,7 @@ class _profileFixState extends State<profileFix> {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 30),
+                          fontSize: 20),
                     ),
                     SizedBox(
                       height: 50,
@@ -144,10 +144,11 @@ class _profileFixState extends State<profileFix> {
               Text(
                 globals.getUsername(),
                 style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w900,
-                    color: Color.fromARGB(255, 24, 38, 126),
-                    decoration: TextDecoration.underline),
+                  fontSize: 25,
+                  fontWeight: FontWeight.w900,
+                  color: Color.fromARGB(255, 24, 38, 126),
+                  //decoration: TextDecoration.underline
+                ),
               ),
             ],
           ),
@@ -181,7 +182,7 @@ class _profileFixState extends State<profileFix> {
       child: Column(children: [
         TextField(
             enabled: false,
-            controller: myControllerstatus..text = "Reseller",
+            controller: myControllerstatus..text = "User",
             readOnly: true,
             decoration: InputDecoration(
               labelText: "Status",

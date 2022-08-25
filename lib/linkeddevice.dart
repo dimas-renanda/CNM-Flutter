@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-
+import 'package:http/http.dart' as http;
+import 'globalspublic.dart' as globals;
 import 'detailPaket.dart';
 
 class linkedDevice extends StatefulWidget {
@@ -16,6 +19,14 @@ class _linkedDeviceState extends State<linkedDevice> {
   final myControlleremail = TextEditingController();
   final myControllerphone = TextEditingController();
 
+  final String apimypackage =
+      "http://192.168.9.178:38600/GetUserPackage?uid=${globals.getUserID()}";
+
+  Future<List<dynamic>> _fecthMyPackage() async {
+    var result = await http.get(Uri.parse(apimypackage));
+    return json.decode(result.body)['Data'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,83 +36,87 @@ class _linkedDeviceState extends State<linkedDevice> {
     ));
   }
 
-  Widget covercolour() => Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 1,
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).size.height / 25,
-        ),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment(0.8, 1),
-              colors: [
-                Color.fromARGB(255, 19, 2, 115),
-                Color.fromARGB(255, 196, 118, 2)
-              ]),
-        ),
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Container(
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios_rounded,
-                          color: Colors.white,
+  Widget covercolour() => SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 1,
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height / 25,
+          ),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment(0.8, 1),
+                colors: [
+                  Color.fromARGB(255, 19, 2, 115),
+                  Color.fromARGB(255, 196, 118, 2)
+                ]),
+          ),
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Container(
+              child: Column(
+                children: [
+                  Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "MY PACKAGE",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 1,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
-                    ),
+                      Text(
+                        "MY PACKAGE",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _isibawah(context),
-                        // _isibawah(context),
-                        Column(children: [
-                          SingleChildScrollView(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.85,
-                              height: MediaQuery.of(context).size.height,
-                              child: _cardDevice(context),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 1,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _isibawah(context),
+                          // _isibawah(context),
+                          Column(children: [
+                            SingleChildScrollView(
+                              child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.85,
+                                  height: MediaQuery.of(context).size.height,
+                                  child: _cardDevice(context)),
+                              padding: EdgeInsets.only(bottom: 20),
+
+                              //padding: EdgeInsets.only(bottom: 10),
                             ),
-                            padding: EdgeInsets.only(bottom: 50),
-                          )
-                        ]),
-                      ],
+                            SizedBox(height: 50)
+                          ]),
+                        ],
+                      ),
                     ),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -120,12 +135,12 @@ class _linkedDeviceState extends State<linkedDevice> {
         Column(
           children: [
             SizedBox(
-              height: 20,
+              height: 5,
             ),
             Text(
               "Package List",
               style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 15,
                   fontWeight: FontWeight.w900,
                   color: Color.fromARGB(255, 24, 38, 126),
                   decoration: TextDecoration.underline),
@@ -262,65 +277,81 @@ class _linkedDeviceState extends State<linkedDevice> {
   _cardDevice(context) {
     return SingleChildScrollView(
       physics: ScrollPhysics(),
-      child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: 6,
-          itemBuilder: (BuildContext context, int index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => packetDetail(
-                            namapaket: 'Phoenix ',
-                            activelimit1: '3-12-22',
-                            speedd1: '3',
-                            speedu1: '1',
-                          )),
-                );
-              },
-              child: Card(
-                  child: ListTile(
-                leading: Icon(Icons.laptop),
-                title: Text('SID\t: 15325$index'),
-                subtitle: Text('Phoenix (Hotspot) 2M/1M'),
-                trailing: IconButton(
-                  icon: new Icon(Icons.qr_code_scanner_rounded),
-                  highlightColor: Colors.pink,
-                  onPressed: () {
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.INFO,
-                      borderSide: const BorderSide(
-                        color: Colors.blue,
+      child: FutureBuilder<List<dynamic>>(
+        future: _fecthMyPackage(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int itemIndex) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => packetDetail(
+                                  namapaket:
+                                      "${snapshot.data[itemIndex]['PackageName']}",
+                                  activelimit1: '3-12-22',
+                                  speedd1: '3',
+                                  speedu1: '1',
+                                )),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Card(
+                        child: ListTile(
+                          leading: Icon(Icons.laptop),
+                          title: Text(
+                              "${snapshot.data[itemIndex]['PackageName']}"),
+                          subtitle: Text(
+                              "${snapshot.data[itemIndex]['PackageName']}"),
+                          trailing: IconButton(
+                            icon: new Icon(Icons.qr_code_scanner_rounded),
+                            highlightColor: Colors.pink,
+                            onPressed: () {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.INFO,
+                                borderSide: const BorderSide(
+                                  color: Colors.blue,
+                                ),
+                                buttonsBorderRadius: const BorderRadius.all(
+                                  Radius.circular(2),
+                                ),
+                                dismissOnTouchOutside: true,
+                                dismissOnBackKeyPress: false,
+                                // onDissmissCallback: (type) {
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     SnackBar(
+                                //       content: Text('Dismissed by $type'),
+                                //     ),
+                                //   );
+                                // },
+                                headerAnimationLoop: false,
+                                animType: AnimType.TOPSLIDE,
+                                title: 'Package Info ',
+                                desc:
+                                    "${snapshot.data[itemIndex]['PackageName']}",
+                                showCloseIcon: true,
+                                btnCancelOnPress: () {},
+                                btnOkOnPress: () {},
+                              ).show();
+                            },
+                          ),
+                        ),
                       ),
-                      buttonsBorderRadius: const BorderRadius.all(
-                        Radius.circular(2),
-                      ),
-                      dismissOnTouchOutside: true,
-                      dismissOnBackKeyPress: false,
-                      // onDissmissCallback: (type) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //       content: Text('Dismissed by $type'),
-                      //     ),
-                      //   );
-                      // },
-                      headerAnimationLoop: false,
-                      animType: AnimType.TOPSLIDE,
-                      title: 'Package Info ',
-                      desc:
-                          'Credential : ncrst$index \n Active duration : ${index + 5}h \n ',
-                      showCloseIcon: true,
-                      btnCancelOnPress: () {},
-                      btnOkOnPress: () {},
-                    ).show();
-                  },
-                ),
-              )),
-            );
-          }),
+                    ),
+                  );
+                });
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }

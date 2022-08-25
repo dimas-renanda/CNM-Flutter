@@ -70,6 +70,7 @@ class _packetListState extends State<packetList> {
                     style: TextStyle(
                       foreground: Paint()..color = Colors.black,
                       fontWeight: FontWeight.bold,
+                      fontSize: 15,
                     ),
                   ),
                 )),

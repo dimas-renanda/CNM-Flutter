@@ -56,7 +56,7 @@ class _packetDetailState extends State<packetDetail> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 1),
                     ],
                   ),
                 ),
@@ -73,7 +73,7 @@ class _packetDetailState extends State<packetDetail> {
                       child: Text(
                         widget.namapaket,
                         style: TextStyle(
-                          fontSize: 35,
+                          fontSize: 20,
                           foreground: Paint()..color = Colors.white,
                         ),
                       ),
@@ -133,7 +133,7 @@ class _createDetailSectionState extends State<createDetailSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 32, left: 16, right: 16),
+      margin: EdgeInsets.only(left: 16, right: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -141,7 +141,7 @@ class _createDetailSectionState extends State<createDetailSection> {
             child: Text(
               "Bandwith",
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,
               ),
@@ -253,7 +253,7 @@ class createMRTG extends StatelessWidget {
             "Daily Graph",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 15,
               decoration: TextDecoration.underline,
             ),
           ),

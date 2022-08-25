@@ -60,7 +60,7 @@ class _voucherDetailState extends State<voucherDetail> {
                       child: Text(
                         widget.packetName,
                         style: TextStyle(
-                          fontSize: 35,
+                          fontSize: 20,
                           foreground: Paint()..color = Colors.white,
                         ),
                       ),
@@ -86,7 +86,7 @@ class _voucherDetailState extends State<voucherDetail> {
                         children: [
                           Container(
                               margin:
-                                  EdgeInsets.only(top: 32, left: 16, right: 16),
+                                  EdgeInsets.only(top: 5, left: 16, right: 16),
                               child: Column(
                                 children: [
                                   Container(
@@ -95,7 +95,7 @@ class _voucherDetailState extends State<voucherDetail> {
                                       "Today's Usage",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                          fontSize: 15,
                                           decoration: TextDecoration.underline),
                                     ),
                                   ),
@@ -127,7 +127,7 @@ class _voucherDetailState extends State<voucherDetail> {
                                       "Total Usage",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                          fontSize: 15,
                                           decoration: TextDecoration.underline),
                                     ),
                                   ),
@@ -303,7 +303,7 @@ class createMRTG extends StatelessWidget {
             "Daily Graph",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 15,
               decoration: TextDecoration.underline,
             ),
           ),

@@ -8,6 +8,7 @@ import 'package:firstproject/paketlistnew.dart';
 import 'package:firstproject/webview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:intl/intl.dart';
 import 'globalspublic.dart' as globals;
 import 'detailVoucher.dart';
 
@@ -49,6 +50,15 @@ class _HomePageState extends State<HomePage> {
   String nama = "";
   String Rolenya = "Customer";
   List<activePackages> acPack = [];
+  final formatCurrency =
+      new NumberFormat.currency(locale: "id_ID", symbol: "Rp ");
+
+  final String apirekomen = "http://192.168.9.178:38600/rekomenpackages";
+
+  Future<List<dynamic>> _fecthRekomen() async {
+    var result = await http.get(Uri.parse(apirekomen));
+    return json.decode(result.body)['Data'];
+  }
 
   //func news
   final String apiUrlNews = "http://saurav.tech/NewsAPI/sources.json";
@@ -222,9 +232,9 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.topLeft,
         child: (GestureDetector(
           child: Text(
-            "$Rolenya",
+            "Status: $Rolenya",
             style: TextStyle(
-                decoration: TextDecoration.underline,
+                //decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 19, 2, 115),
                 fontWeight: FontWeight.bold),
           ),
@@ -365,15 +375,18 @@ class _HomePageState extends State<HomePage> {
                       top: 12,
                     ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
                           child: Icon(Icons.speed_rounded),
                         ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Icon(Icons.phone_android_rounded),
+                        Padding(
+                          padding: EdgeInsets.only(top: 7),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Icon(Icons.phone_android_rounded),
+                          ),
                         ),
                       ],
                     ),
@@ -387,17 +400,17 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: 4),
+                          margin: EdgeInsets.only(),
                           child: Text(
                             "Bandwith ",
                             textAlign: TextAlign.left,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 4),
+                          margin: EdgeInsets.only(top: 10),
                           child: Text(
                             "Total Connection ",
                             textAlign: TextAlign.left,
@@ -411,17 +424,17 @@ class _HomePageState extends State<HomePage> {
                     margin: EdgeInsets.only(right: 10, bottom: 15, top: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: 4),
+                          //margin: EdgeInsets.only(bottom: 4),
                           child: Text(
                             ": ${data[index].packageBandwith.toString()}MB",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 4),
+                          margin: EdgeInsets.only(top: 10),
                           child: Text(
                             ": ${data[index].packageTotalDevices.toString()} Device",
                             style: TextStyle(
@@ -489,151 +502,164 @@ class _HomePageState extends State<HomePage> {
   }
 
   _cardrekomen(context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: MediaQuery.of(context).size.height * 0.25,
-        enableInfiniteScroll: false,
-      ),
-      items: [1, 2, 3, 4, 5].map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MainPage(
-                            reqPage: "1",
-                          )),
-                );
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  border: Border.all(
-                    color: Color.fromARGB(255, 0, 88, 160),
-                  ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 0, 27, 49),
-                      blurRadius: 4,
-                      offset: Offset(2, 4), // Shadow position
-                    ),
-                  ],
-                ),
+    return Container(
+      padding: EdgeInsets.only(top: 5),
+      // child: CarouselSlider(
+      //   options: CarouselOptions(
+      //     height: 180,
+      //     enableInfiniteScroll: false,
+      //   ),
+
+      // ),
+      child: FutureBuilder<List<dynamic>>(
+        future: _fecthRekomen(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return CarouselSlider.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder:
+                  (BuildContext context, int itemIndex, int pageViewIndex) =>
+                      InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MainPage(
+                              reqPage: "1",
+                            )),
+                  );
+                },
                 child: Container(
-                  //padding: EdgeInsets.symmetric(horizontal: 10),
-                  //margin: EdgeInsets.only(top: 5),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          width: 130,
-                          height: 25,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(9)),
-                                // border: Border.all(
-                                //   //color: Colors.green,
-                                //   width: 2.0,
-                                // ),
-                                color: Color.fromARGB(255, 4, 32, 107)),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 25, vertical: 5),
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text(
-                                      "  Paket Sova",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )),
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border.all(
+                        color: Color.fromARGB(255, 0, 88, 160),
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 0, 27, 49),
+                          blurRadius: 4,
+                          offset: Offset(2, 4), // Shadow position
+                        ),
+                      ],
+                    ),
+                    child: Container(
+                      // padding: EdgeInsets.symmetric(horizontal: 10),
+                      // margin: EdgeInsets.only(top: 5),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: SizedBox(
+                              width: 130,
+                              height: 25,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(20),
+                                        topLeft: Radius.circular(9)),
+                                    // border: Border.all(
+                                    //   //color: Colors.green,
+                                    //   width: 2.0,
+                                    // ),
+                                    color: Color.fromARGB(255, 4, 32, 107)),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 25, vertical: 5),
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          snapshot.data[itemIndex]['Name'],
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            children: [
-                              Row(
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    "2 Mbps ",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  )
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "${snapshot.data[itemIndex]['SDownload']} Mbps",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        " | ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w100),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        " ${snapshot.data[itemIndex]['Duration']} Days ",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.phone_android,
+                                        color: Colors.grey,
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    " | ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w100),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    " 30 Days ",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.phone_android,
-                                    color: Colors.grey,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        padding: EdgeInsets.only(top: 8),
-                        child: Row(
-                          children: [
-                            Text(
-                              "Rp 25.000",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 225, 140, 13),
-                                  fontWeight: FontWeight.bold),
                             ),
-                          ],
-                        ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.only(top: 8),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "${formatCurrency.format(int.parse(snapshot.data[itemIndex]['Price']))} ",
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 225, 140, 13),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    )),
+              ),
+              options: CarouselOptions(
+                height: 180,
+                enableInfiniteScroll: false,
               ),
             );
-          },
-        );
-      }).toList(),
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 
