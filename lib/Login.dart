@@ -28,13 +28,13 @@ class _MyLoginState extends State<MyLogin> {
   }
 
   void loginToAPI() async {
+    String urlString = globals.uriString;
     //Encoding
     var plainText = utf8.encode(passwordController.text);
     var hashedVal = sha512.convert(plainText);
-    String url =
-        "http://phoenix.crossnet.co.id:38600/login?email=${usernameController.text}&&password=${hashedVal}";
+    String url = urlString +
+        "/login?email=${usernameController.text}&password=${hashedVal}";
     final response = await get(Uri.parse(url));
-    print(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

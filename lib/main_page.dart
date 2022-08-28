@@ -49,14 +49,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String nama = "";
   String Rolenya = "Customer";
+  String urlString = globals.uriString;
   List<activePackages> acPack = [];
   final formatCurrency =
       new NumberFormat.currency(locale: "id_ID", symbol: "Rp ");
 
-  final String apirekomen =
-      "http://phoenix.crossnet.co.id:38600/rekomenpackages";
-
   Future<List<dynamic>> _fecthRekomen() async {
+    String apirekomen = urlString + "/rekomenpackages";
     var result = await http.get(Uri.parse(apirekomen));
     return json.decode(result.body)['Data'];
   }
@@ -70,8 +69,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future _fetchUsersInfo() async {
-    String url =
-        "http://phoenix.crossnet.co.id:38600/users?userID=${globals.getUserID()}";
+    String url = urlString + "/users?userID=${globals.getUserID()}";
     final response = await http.get(Uri.parse(url));
 
     final data = jsonDecode(response.body);
@@ -87,12 +85,11 @@ class _HomePageState extends State<HomePage> {
 
   Future<Null> _fetchActivePackages() async {
     String activePackURL =
-        "http://phoenix.crossnet.co.id:38600/GetUserPackage?uid=${globals.getUserID()}";
+        urlString + "/GetUserPackage?uid=${globals.getUserID()}";
 
     final response = await http.get(Uri.parse(activePackURL));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      debugPrint(data['Data'].toString());
       setState(() {
         for (Map i in data['Data']) {
           acPack.add(activePackages.fromJson(i));

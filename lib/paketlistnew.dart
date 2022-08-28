@@ -27,7 +27,6 @@ class _packetListState extends State<packetList> {
     if (response.statusCode == 200) {
       loading = true;
       final data = jsonDecode(response.body);
-      print(data);
       setState(() {
         for (Map i in data['Data']) {
           listPackages.add(Packages.fromJson(i));

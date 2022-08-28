@@ -1,7 +1,7 @@
 library my_prj.globals;
 
 //API URL
-String uriString = "http://phoenix.crossnet.co.id:38600";
+String uriString = "http://10.10.10.226:38600";
 
 bool isLoggedIn = false;
 int numpagenya = 0;

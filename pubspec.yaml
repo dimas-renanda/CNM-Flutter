@@ -49,6 +49,7 @@ dependencies:
   timelines: ^0.1.0
   font_awesome_flutter: '>= 4.7.0'
   rflutter_alert: ^2.0.4
+  connectivity_plus_web: ^1.2.3
 
   
 

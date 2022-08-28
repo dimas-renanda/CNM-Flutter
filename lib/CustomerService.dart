@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'customerCare.dart';
 import 'notification.dart';
 import 'ticketing.dart';
+import 'globalspublic.dart' as globals;
 
 class customerCareGateway extends StatelessWidget {
   customerCareGateway({Key? key}) : super(key: key);
@@ -105,9 +106,9 @@ class customerCareGateway extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => customerCareChat(
+                                        builder: (context) => customerChat(
                                               userRole: 1,
-                                              username: "Budi",
+                                              username: globals.getUsername(),
                                             )));
                               },
                               style: ButtonStyle(
