@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:firstproject/main.dart';
 import 'package:firstproject/netinfo.dart';
+import 'package:firstproject/sampleNetInfo.dart';
 import 'package:firstproject/webview_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -347,6 +348,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   Widget _buildQrView(BuildContext context) {
+    final temp = new sampleNetInfo();
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
@@ -382,7 +384,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                 headerAnimationLoop: false,
                 animType: AnimType.TOPSLIDE,
                 title: 'Network Info',
-                desc: 'MacAdd\t:\nIP\t:\nGateway\t:\nPublicIP\t:\n',
+                desc:
+                    'MacAdd\t:${temp.macaddnya}\nIP\t:${temp.wifiIPv4}\nGateway\t:${temp.wifiGatewayIP}\nAP Name\t:${temp.wifiName}\n',
                 showCloseIcon: true,
                 btnCancelOnPress: () {},
                 btnOkOnPress: () {},

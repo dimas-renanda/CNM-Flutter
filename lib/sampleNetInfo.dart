@@ -11,21 +11,10 @@ import 'dart:io';
 import 'package:mac_address/mac_address.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dart_ipify/dart_ipify.dart';
 
-class netInfo extends StatefulWidget {
-  const netInfo({Key? key, this.title}) : super(key: key);
-
-  final String? title;
-
-  @override
-  _netInfoState createState() => _netInfoState();
-}
-
-class _netInfoState extends State<netInfo> {
-  String _connectionStatus = 'Loading Information...';
+class sampleNetInfo {
   final NetworkInfo _networkInfo = NetworkInfo();
   String? wifiName,
       wifiBSSID,
@@ -36,22 +25,6 @@ class _netInfoState extends State<netInfo> {
       wifiSubmask,
       macaddnya,
       pipnya;
-
-  @override
-  void initState() {
-    super.initState();
-    _initNetworkInfo();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Network Info '),
-      ),
-      body: Center(child: Text('Connection Status: $_connectionStatus')),
-    );
-  }
 
   Future<void> _initNetworkInfo() async {
     try {
@@ -147,17 +120,9 @@ class _netInfoState extends State<netInfo> {
     } on PlatformException {
       pipnya = 'Failed to get Device Public IP.';
     }
+  }
 
-    setState(() {
-      _connectionStatus = 'Wifi Name: $wifiName\n'
-          'Wifi BSSID : $wifiBSSID\n'
-          'Wifi IPv4: $wifiIPv4\n'
-          // 'Wifi IPv6: $wifiIPv6\n'
-          'Wifi Broadcast: $wifiBroadcast\n'
-          'Wifi Gateway: $wifiGatewayIP\n'
-          'MacAdress: $macaddnya\n'
-          'Publik IPnya: $pipnya\n'
-          'Wifi Submask: $wifiSubmask\n';
-    });
+  sampleNetInfo() {
+    _initNetworkInfo();
   }
 }
