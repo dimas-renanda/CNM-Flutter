@@ -34,6 +34,9 @@ class _customerChatState extends State<customerChat> {
   final Stream<Map<String, dynamic>> chatStream = (() {
     late final StreamController<Map<String, dynamic>> controller;
     controller = StreamController<Map<String, dynamic>>(
+      onCancel: () async {
+        controller.close();
+      },
       onListen: () async {
         String urlString = globals.uriString;
 
@@ -244,7 +247,6 @@ class _customerChatState extends State<customerChat> {
                               break;
                           }
                         }
-
                         return Column(
                           children: _children,
                         );
