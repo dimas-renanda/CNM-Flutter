@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -34,23 +33,27 @@ class _customerChatState extends State<customerChat> {
   final Stream<Map<String, dynamic>> chatStream = (() {
     late final StreamController<Map<String, dynamic>> controller;
     controller = StreamController<Map<String, dynamic>>(
-      onCancel: () async {
-        controller.close();
-      },
       onListen: () async {
-        String urlString = globals.uriString;
+        while (globals.inChatSession == true) {
+          await Future.delayed(Duration(milliseconds: 500));
+          String urlString = globals.uriString;
 
-        final response = await get(
-            Uri.parse(urlString + "/GetChat?uid=${globals.getUserID()}"));
+          final response = await get(
+              Uri.parse(urlString + "/GetChat?uid=${globals.getUserID()}"));
 
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          controller.add(data);
-        } else {
-          debugPrint("Something went wrong while trying to get the chat logs");
+          if (controller.isClosed == false) {
+            if (response.statusCode == 200) {
+              final data = jsonDecode(response.body);
+              controller.add(data);
+            } else {
+              debugPrint(
+                  "Something went wrong while trying to get the chat logs");
+            }
+          }
         }
       },
     );
+    // controller.close();
     return controller.stream;
   })();
 
@@ -121,7 +124,10 @@ class _customerChatState extends State<customerChat> {
   @override
   void initState() {
     super.initState();
-    _fetchChatLogs();
+    //_fetchChatLogs();
+    setState(() {
+      globals.inChatSession = true;
+    });
   }
 
   @override
@@ -151,6 +157,9 @@ class _customerChatState extends State<customerChat> {
             child: TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                setState(() {
+                  globals.inChatSession = false;
+                });
               },
               child: Align(
                 alignment: Alignment.topLeft,
@@ -238,6 +247,7 @@ class _customerChatState extends State<customerChat> {
                                 }
                               }
                               ;
+
                               break;
                             case ConnectionState.done:
                               debugPrint("Done loading data");

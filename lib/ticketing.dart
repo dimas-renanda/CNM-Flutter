@@ -227,6 +227,7 @@ class _ticketingFormState extends State<ticketingForm> {
 
   Widget createDropdownSID() {
     return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
       padding: EdgeInsets.only(bottom: 10),
       child: DropdownButton<dynamic>(
         value: dropdownValue,

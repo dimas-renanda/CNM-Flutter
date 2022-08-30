@@ -34,3 +34,6 @@ String getUsername() {
 
 bool userChoice = false;
 String paymentChoice = "";
+
+//Chatting
+bool inChatSession = false;
