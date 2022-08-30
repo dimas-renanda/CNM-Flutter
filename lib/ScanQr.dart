@@ -56,286 +56,282 @@ class _QRViewExampleState extends State<QRViewExample> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
-                    Container(
-                      child: Column(
-                        children: [
-                          Text(
-                              'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}'),
-                          // AlertDialog(),
-                          //Text("hi")
-                        ],
-                      ),
-                    )
-                  else
-                    Container(
-                      margin: const EdgeInsets.all(15),
-                      padding: EdgeInsets.only(top: 5, bottom: 5),
-                      child: Column(
-                        children: [
-                          Column(
+                  Container(
+                    margin: const EdgeInsets.all(15),
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: Text(
+                                    "Hotspot Access",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                )),
+                          ],
+                        ),
+                        IntrinsicHeight(
+                          child: Row(
                             children: [
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 15),
-                                    child: Text(
-                                      "Hotspot Access",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )),
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8),
+                                        child: ElevatedButton(
+                                          onPressed: () async {
+                                            await controller?.resumeCamera();
+                                          },
+                                          child: Icon(Icons.qr_code_2_rounded,
+                                              color: Colors.white),
+                                          style: ElevatedButton.styleFrom(
+                                            shape: CircleBorder(),
+                                            padding: EdgeInsets.all(10),
+                                            primary:
+                                                Colors.blue, // <-- Button color
+                                            onPrimary:
+                                                Colors.red, // <-- Splash color
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        "Scan\nQR",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.orange,
+                                            fontWeight: FontWeight.w300),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) {
+                                                var hcodeController =
+                                                    TextEditingController();
+                                                return Dialog(
+                                                  backgroundColor:
+                                                      Color(0xFFfafafa),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  elevation: 20,
+                                                  child: Container(
+                                                    height: 120, //use height
+                                                    child: ListView(
+                                                      shrinkWrap: true,
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            Container(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 10,
+                                                                      right: 10,
+                                                                      bottom:
+                                                                          15),
+                                                              child: Column(
+                                                                children: [
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        hcodeController,
+                                                                    decoration: InputDecoration(
+                                                                        label: Text(
+                                                                            "Hotspot Login"),
+                                                                        hintText:
+                                                                            'Hotspot Access'),
+                                                                  ),
+                                                                  TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      // Send them to your email maybe?
+                                                                      var hlogin =
+                                                                          hcodeController
+                                                                              .text;
+
+                                                                      debugPrint(
+                                                                          hlogin);
+                                                                      //https://www.google.com/search?q=
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: ((context) => webviewpage(
+                                                                                    judulnya: "Redirect",
+                                                                                    urlnya: "http://crossradius.net/login?username=$hlogin&password=$hlogin",
+                                                                                  ))));
+                                                                    },
+                                                                    child: Text(
+                                                                        'Login'),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Icon(Icons.edit_note_rounded,
+                                              color: Colors.white),
+                                          style: ElevatedButton.styleFrom(
+                                            shape: CircleBorder(),
+                                            padding: EdgeInsets.all(10),
+                                            primary:
+                                                Colors.blue, // <-- Button color
+                                            onPrimary:
+                                                Colors.red, // <-- Splash color
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        "Using \nCode",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.w300),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              VerticalDivider(
+                                color: Colors.black54,
+                                thickness: 1,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 10,
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: ((context) =>
+                                                            webviewpage(
+                                                              judulnya:
+                                                                  "Redirect",
+                                                              urlnya:
+                                                                  "http://crossradius.net/",
+                                                            ))));
+                                              },
+                                              child: Icon(Icons.group,
+                                                  color: Colors.white),
+                                              style: ElevatedButton.styleFrom(
+                                                shape: CircleBorder(),
+                                                padding: EdgeInsets.all(10),
+                                                primary: Colors
+                                                    .blue, // <-- Button color
+                                                onPrimary: Colors
+                                                    .red, // <-- Splash color
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            "Hotspot\nStatus",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.w300),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 15,
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: ((context) =>
+                                                            webviewpage(
+                                                              judulnya:
+                                                                  "Redirect",
+                                                              urlnya:
+                                                                  " http://crossradius.net/logout",
+                                                            ))));
+                                              },
+                                              child: Icon(Icons.login,
+                                                  color: Colors.white),
+                                              style: ElevatedButton.styleFrom(
+                                                shape: CircleBorder(),
+                                                padding: EdgeInsets.all(10),
+                                                primary: Colors
+                                                    .blue, // <-- Button color
+                                                onPrimary: Colors
+                                                    .red, // <-- Splash color
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            "Logout\nHotspot",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.w300),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                          IntrinsicHeight(
-                            child: Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 8),
-                                          child: ElevatedButton(
-                                            onPressed: () async {
-                                              await controller?.resumeCamera();
-                                            },
-                                            child: Icon(Icons.qr_code_2_rounded,
-                                                color: Colors.white),
-                                            style: ElevatedButton.styleFrom(
-                                              shape: CircleBorder(),
-                                              padding: EdgeInsets.all(10),
-                                              primary: Colors
-                                                  .blue, // <-- Button color
-                                              onPrimary: Colors
-                                                  .red, // <-- Splash color
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "Scan\nQR",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.orange,
-                                              fontWeight: FontWeight.w300),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (_) {
-                                                  var hcodeController =
-                                                      TextEditingController();
-                                                  return Dialog(
-                                                    backgroundColor:
-                                                        Color(0xFFfafafa),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)),
-                                                    elevation: 20,
-                                                    child: Container(
-                                                      height: 120, //use height
-                                                      child: ListView(
-                                                        shrinkWrap: true,
-                                                        children: [
-                                                          Column(
-                                                            children: [
-                                                              Container(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            10,
-                                                                        right:
-                                                                            10,
-                                                                        bottom:
-                                                                            15),
-                                                                child: Column(
-                                                                  children: [
-                                                                    TextFormField(
-                                                                      controller:
-                                                                          hcodeController,
-                                                                      decoration: InputDecoration(
-                                                                          label: Text(
-                                                                              "Hotspot Login"),
-                                                                          hintText:
-                                                                              'Hotspot Access'),
-                                                                    ),
-                                                                    TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        // Send them to your email maybe?
-                                                                        var hlogin =
-                                                                            hcodeController.text;
-
-                                                                        debugPrint(
-                                                                            hlogin);
-                                                                        //https://www.google.com/search?q=
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                                builder: ((context) => webviewpage(
-                                                                                      judulnya: "Redirect",
-                                                                                      urlnya: "https://www.google.com/search?q=$hlogin",
-                                                                                    ))));
-                                                                      },
-                                                                      child: Text(
-                                                                          'Login'),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            child: Icon(Icons.edit_note_rounded,
-                                                color: Colors.white),
-                                            style: ElevatedButton.styleFrom(
-                                              shape: CircleBorder(),
-                                              padding: EdgeInsets.all(10),
-                                              primary: Colors
-                                                  .blue, // <-- Button color
-                                              onPrimary: Colors
-                                                  .red, // <-- Splash color
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "Using \nCode",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black54,
-                                              fontWeight: FontWeight.w300),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                VerticalDivider(
-                                  color: Colors.black54,
-                                  thickness: 1,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 10,
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: ((context) =>
-                                                              webviewpage(
-                                                                judulnya:
-                                                                    "Redirect",
-                                                                urlnya:
-                                                                    "https://www.google.com/",
-                                                              ))));
-                                                },
-                                                child: Icon(Icons.group,
-                                                    color: Colors.white),
-                                                style: ElevatedButton.styleFrom(
-                                                  shape: CircleBorder(),
-                                                  padding: EdgeInsets.all(10),
-                                                  primary: Colors
-                                                      .blue, // <-- Button color
-                                                  onPrimary: Colors
-                                                      .red, // <-- Splash color
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              "Hotspot\nStatus",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontWeight: FontWeight.w300),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 15,
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8.0),
-                                              child: ElevatedButton(
-                                                onPressed: () {},
-                                                child: Icon(Icons.login,
-                                                    color: Colors.white),
-                                                style: ElevatedButton.styleFrom(
-                                                  shape: CircleBorder(),
-                                                  padding: EdgeInsets.all(10),
-                                                  primary: Colors
-                                                      .blue, // <-- Button color
-                                                  onPrimary: Colors
-                                                      .red, // <-- Splash color
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              "Logout\nHotspot",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontWeight: FontWeight.w300),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -464,7 +460,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                 MaterialPageRoute(
                     builder: ((context) => webviewpage(
                           judulnya: "Redirect",
-                          urlnya: result!.code.toString(),
+                          urlnya:
+                              "http://crossradius.net/login?username=${result!.code.toString()}&password=${result!.code.toString()} ",
                         ))));
           },
         ).show();
