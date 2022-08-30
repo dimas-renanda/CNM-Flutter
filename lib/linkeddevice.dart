@@ -20,7 +20,7 @@ class _linkedDeviceState extends State<linkedDevice> {
   final myControllerphone = TextEditingController();
 
   final String apimypackage =
-      "http://192.168.9.178:38600/GetUserPackage?uid=${globals.getUserID()}";
+      globals.uriString + "/GetUserPackage?uid=${globals.getUserID()}";
 
   Future<List<dynamic>> _fecthMyPackage() async {
     var result = await http.get(Uri.parse(apimypackage));
