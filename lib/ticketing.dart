@@ -231,7 +231,7 @@ class _ticketingFormState extends State<ticketingForm> {
       padding: EdgeInsets.only(bottom: 10),
       child: DropdownButton<dynamic>(
         value: dropdownValue,
-        hint: Text("Please choose from the dropdown list"),
+        hint: Text("Dropdown"),
         icon: Icon(Icons.arrow_drop_down),
         items: dropList,
         onChanged: (newValue) {
