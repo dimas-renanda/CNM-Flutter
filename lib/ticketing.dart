@@ -70,10 +70,9 @@ class _ticketingFormState extends State<ticketingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            body: Center(
-                child: Container(
+    return Scaffold(
+        body: Center(
+            child: Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -187,7 +186,7 @@ class _ticketingFormState extends State<ticketingForm> {
           ),
         ),
       ]),
-    ))));
+    )));
   }
 
   Widget createTicketingIndividualForm(
@@ -227,7 +226,6 @@ class _ticketingFormState extends State<ticketingForm> {
 
   Widget createDropdownSID() {
     return Container(
-      decoration: BoxDecoration(border: Border.all(width: 1)),
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.only(bottom: 10),
       child: DropdownButton<dynamic>(
