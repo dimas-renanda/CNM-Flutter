@@ -220,64 +220,76 @@ class _paymentGatewayState extends State<paymentGateway> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              //Back Button
+              //Back Button + Page Title
               Container(
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.05),
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.navigate_before,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-              //Page Title
-              Container(
-                alignment: Alignment.center,
-                //margin: EdgeInsets.all(10),
-                child: Text(
-                  "Payment",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                  padding: EdgeInsets.only(bottom: 10),
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.05),
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.navigate_before,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(top: 10),
+                          child: Text(
+                            "Payment",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.1,
+                      )
+                    ],
+                  )),
               //Page Content
               Expanded(
                 child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(40),
-                            topLeft: Radius.circular(
-                              40,
-                            ))),
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        left: 5,
-                        right: 5,
-                        top: 5,
-                      ),
-                      child: Column(
-                        children: [
-                          //Progress Bar / Timelines
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            child: createTimeline(context),
-                          ),
-                          Expanded(
-                            child: pages[curPage],
-                          )
-                        ],
-                      ),
-                    )),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(40),
+                          topLeft: Radius.circular(
+                            40,
+                          ))),
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      left: 5,
+                      right: 5,
+                      top: 5,
+                    ),
+                    child: Column(
+                      children: [
+                        //Progress Bar / Timelines
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          child: createTimeline(context),
+                        ),
+                        Expanded(
+                          child: pages[curPage],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

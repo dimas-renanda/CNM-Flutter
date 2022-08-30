@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/rendering.dart';
+
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -21,7 +23,7 @@ class paymentConfirmation extends StatefulWidget {
 
 class _paymentConfirmationState extends State<paymentConfirmation> {
   Timer? countdownTimer;
-  Duration timerDuration = Duration(minutes: 0, seconds: 5);
+  Duration timerDuration = Duration(minutes: 60, seconds: 0);
 
   @override
   void initState() {
@@ -112,115 +114,143 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
 
     debugPrint(globals.paymentChoice);
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          //Section Title
-          Container(
-            child: Text(
-              "Payment Confirmation",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 20,
+        ),
+        child: Column(
+          children: [
+            //Section Title
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Payment Confirmation",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-              width: 1,
-            ))),
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    "Total Pembayaran",
-                    style: TextStyle(
-                      fontSize: 20,
+            Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                width: 1,
+              ))),
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      "Total Pembayaran",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  child: Text(
-                    "Rp. ${widget.totalPrice}",
+                  Container(
+                    margin: EdgeInsets.only(bottom: 15),
+                    child: Text(
+                      "Rp. ${widget.totalPrice}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              alignment: Alignment.center,
+              height: MediaQuery.of(context).size.height * 0.25,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 4, 32, 107),
+                borderRadius: BorderRadius.all(Radius.circular(25)),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                      bottom: 30,
+                      top: 22,
+                    ),
+                    child: Text(
+                      "xyz - 1231231231",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      "Berakhir Dalam :",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "$minutes:$seconds",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 26,
+                      color: Colors.white,
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            alignment: Alignment.center,
-            height: MediaQuery.of(context).size.height * 0.25,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 4, 32, 107),
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  "xyz - 12313131323213231231",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "$minutes:$seconds",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 60,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))),
+                ],
               ),
-              onPressed: () {
-                if (countdownTimer == null || countdownTimer!.isActive) {
-                  cancelTimer();
+            ),
+            //Cancel Button
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              margin: EdgeInsets.only(top: 10),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
+                onPressed: () {
+                  if (countdownTimer == null || countdownTimer!.isActive) {
+                    cancelTimer();
 
-                  Alert(
-                    context: context,
-                    type: AlertType.error,
-                    title: "Payment Cancelled",
-                    desc: "Redirrecting you to packet list",
-                    buttons: [],
-                  ).show().then((value) => Navigator.pop(context));
-                }
-              },
-              child: Text(
-                "Cancel Payment",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
+                    Alert(
+                      context: context,
+                      type: AlertType.error,
+                      title: "Payment Cancelled",
+                      desc: "Redirrecting you to packet list",
+                      buttons: [],
+                    ).show().then((value) => Navigator.pop(context));
+                  }
+                },
+                child: Text(
+                  "Cancel Payment",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            Container(
+              child: SizedBox(
+                height: 50,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
