@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +31,26 @@ class _customerChatState extends State<customerChat> {
   final textController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  final Stream<Map<String, dynamic>> chatStream = (() {
+    late final StreamController<Map<String, dynamic>> controller;
+    controller = StreamController<Map<String, dynamic>>(
+      onListen: () async {
+        String urlString = globals.uriString;
+
+        final response = await get(
+            Uri.parse(urlString + "/GetChat?uid=${globals.getUserID()}"));
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          controller.add(data);
+        } else {
+          debugPrint("Something went wrong while trying to get the chat logs");
+        }
+      },
+    );
+    return controller.stream;
+  })();
+
   //Fetch Chat Data from API
   Future<Null> _fetchChatLogs() async {
     String urlString = globals.uriString;
@@ -40,6 +61,7 @@ class _customerChatState extends State<customerChat> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
+        chatLog.clear();
         if (data["Data"] != null) {
           for (Map i in data["Data"]) {
             chatLog.add(Chats.fromJson(i));
@@ -80,6 +102,7 @@ class _customerChatState extends State<customerChat> {
     }
   }
 
+  //To API, NOT TO Chat Bubble !!!
   Future<Null> _AddChat(String timestamp, String chat) async {
     String urlString = globals.uriString;
 
@@ -168,15 +191,65 @@ class _customerChatState extends State<customerChat> {
               child: SingleChildScrollView(
                 reverse: true,
                 child: Container(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < chatLog.length; i++)
-                        createChatBubble(chatLog[i].sendBy,
-                            chatLog[i].senderName, chatLog[i].chatContent)
-                    ],
-                  ),
-                ),
+                    padding: EdgeInsets.only(top: 16),
+                    child: StreamBuilder<Map<String, dynamic>>(
+                      stream: chatStream,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                        List<Widget> _children = [];
+                        if (snapshot.hasError) {
+                          debugPrint("Error in Accessing Snapshots");
+                        } else {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              debugPrint("Waiting for data");
+                              break;
+                            case ConnectionState.active:
+                              debugPrint("Connection is Active");
+                              chatLog.clear();
+                              if (snapshot.data!["Data"] != null) {
+                                for (Map i in snapshot.data!["Data"]) {
+                                  chatLog.add(Chats.fromJson(i));
+
+                                  if (i["CSID"] != "-1") {
+                                    currentCSID = int.parse(i["CSID"]);
+                                  }
+                                }
+                              }
+                              for (int i = 0; i < chatLog.length; i++) {
+                                //User who receives
+                                if (chatLog[i].sendBy == 2) {
+                                  _children.add(createChatBubble(
+                                    2,
+                                    chatLog[i].senderName,
+                                    chatLog[i].chatContent,
+                                  ));
+                                }
+                                //User who sends
+                                else {
+                                  _children.add(createChatBubble(
+                                    1,
+                                    chatLog[i].senderName,
+                                    chatLog[i].chatContent,
+                                  ));
+                                }
+                              }
+                              ;
+                              break;
+                            case ConnectionState.done:
+                              debugPrint("Done loading data");
+                              break;
+                            case ConnectionState.none:
+                              debugPrint("None triggered");
+                              break;
+                          }
+                        }
+
+                        return Column(
+                          children: _children,
+                        );
+                      },
+                    )),
               ),
             )),
           ),
@@ -241,10 +314,8 @@ class _customerChatState extends State<customerChat> {
                                   _startNewCSSession(
                                       DateFormat('yyyy-MM-dd HH:mm:ss')
                                           .format(DateTime.now()));
-                                  setState(() {
-                                    chatLog.clear();
-                                  });
-                                  _fetchChatLogs();
+                                  setState(() {});
+                                  //_fetchChatLogs();
                                   textController.clear();
                                 }
                               }
@@ -269,7 +340,9 @@ class _customerChatState extends State<customerChat> {
 
   Widget createChatBubble(int userRole, String username, String content) {
     return userRole == 2
-        ? Container(
+        ?
+        //User who receives
+        Container(
             margin:
                 EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.2),
             child: Row(children: [
@@ -320,7 +393,9 @@ class _customerChatState extends State<customerChat> {
                 ),
               ),
             ]))
-        : Container(
+        :
+        //User who sends
+        Container(
             margin: EdgeInsets.only(
               left: MediaQuery.of(context).size.width * 0.2,
             ),
