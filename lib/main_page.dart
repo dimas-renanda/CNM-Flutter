@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:firstproject/main.dart';
-import 'package:firstproject/notification.dart';
 import 'package:firstproject/sampleNotifications.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,6 +46,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var loadingPackage = false;
   String nama = "";
   String Rolenya = "Customer";
   String urlString = globals.uriString;
@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<Null> _fetchActivePackages() async {
+    loadingPackage = true;
     String activePackURL =
         urlString + "/GetUserPackage?uid=${globals.getUserID()}";
 
@@ -94,6 +95,7 @@ class _HomePageState extends State<HomePage> {
         for (Map i in data['Data']) {
           acPack.add(activePackages.fromJson(i));
         }
+        loadingPackage = false;
       });
     } else {
       debugPrint("Something went wrong");
@@ -182,7 +184,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //Fix
+  //Fix (Unused)
   _notifikasi(context) {
     return Container(
       padding: EdgeInsets.only(top: 20),
@@ -276,46 +278,57 @@ class _HomePageState extends State<HomePage> {
         ),
         child: CarouselSlider.builder(
           itemCount: acPack.length,
-          itemBuilder:
-              (BuildContext context, int itemIndex, int pageViewIndex) =>
-                  InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => voucherDetail(
-                          packetName: acPack[itemIndex].packageName,
-                          expireDate: acPack[itemIndex].packageExpireDate,
-                        )),
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 1),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.5, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    border: Border.all(
-                      color: Color.fromARGB(255, 0, 88, 160),
-                    ),
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(20),
-                        topLeft: Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(255, 0, 27, 49),
-                        blurRadius: 4,
-                        offset: Offset(2, 4), // Shadow position
+          itemBuilder: (BuildContext context, int itemIndex,
+                  int pageViewIndex) =>
+              loadingPackage == true
+                  ? Container(
+                      margin: EdgeInsets.all(50),
+                      child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(),
                       ),
-                    ],
-                  ),
-                  child: _isipaket(context, acPack, itemIndex),
-                ),
-              ),
-            ),
-          ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => voucherDetail(
+                                    packetName: acPack[itemIndex].packageName,
+                                    expireDate:
+                                        acPack[itemIndex].packageExpireDate,
+                                  )),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 1),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 5.5, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              border: Border.all(
+                                color: Color.fromARGB(255, 0, 88, 160),
+                              ),
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromARGB(255, 0, 27, 49),
+                                  blurRadius: 4,
+                                  offset: Offset(2, 4), // Shadow position
+                                ),
+                              ],
+                            ),
+                            child: _isipaket(context, acPack, itemIndex),
+                          ),
+                        ),
+                      ),
+                    ),
           options: CarouselOptions(
             height: MediaQuery.of(context).size.height * 0.28,
             enableInfiniteScroll: false,
@@ -654,7 +667,16 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: Container(
+                margin: EdgeInsets.all(50),
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
           }
         },
       ),

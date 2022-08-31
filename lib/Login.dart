@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:crypto/crypto.dart';
 import 'package:firstproject/ScanQr.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'globalspublic.dart' as globals;
@@ -23,10 +25,44 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   void initState() {
+    debugPrint(globals.tokenString);
     super.initState();
     _isObscure = true;
+    _loadUserID();
+    _loadTokenString().then((value) => verifyToken());
   }
 
+  //File Handling
+  Future<void> _loadUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      globals.setUserID((prefs.getInt("UID") ?? 0));
+    });
+  }
+
+  Future<void> _saveUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setInt("UID", globals.getUserID());
+    });
+  }
+
+  Future<void> _loadTokenString() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      globals.tokenString = (prefs.getString("tokenString") ?? "0");
+    });
+  }
+
+  Future<void> _saveTokenString() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString("tokenString", globals.tokenString);
+    });
+  }
+
+  //No Token
   void loginToAPI() async {
     String urlString = globals.uriString;
     //Encoding
@@ -38,7 +74,6 @@ class _MyLoginState extends State<MyLogin> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      debugPrint("First " + data['Data']['Id'].toString());
       globals.setUserID(data['Data']['Id']);
       if (data['Data']['Message'] == "Success") {
         Navigator.push(
@@ -49,6 +84,54 @@ class _MyLoginState extends State<MyLogin> {
                   )),
         );
       }
+    }
+  }
+
+  //With Token
+  void verifyToken() async {
+    String urlString = globals.uriString;
+    final response = await get(Uri.parse(
+        urlString + "/VerifyToken?tokenString=${globals.tokenString}"));
+
+    //Verify if token is still valid
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      //Yes then redirect to main page with saved info
+      if (data["Data"] == "Token is still valid") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainPage(
+                    reqPage: "0",
+                  )),
+        );
+      }
+      //No, then try and create a new token
+      else {
+        //Encoding
+        var plainText = utf8.encode(passwordController.text);
+        var hashedVal = sha512.convert(plainText);
+        var altResponse = await get(Uri.parse(urlString +
+            "/TestToken?email=${usernameController.text}&password=${hashedVal}"));
+
+        if (altResponse.statusCode == 200) {
+          final altData = jsonDecode(altResponse.body);
+          if (altData["Message"] == "Login Success") {
+            globals.tokenString = altData["Data"]["Token"];
+            globals.setUserID(int.parse(altData["Data"]["Obj"]["Id"]));
+
+            //Write to local file for further uses
+            _saveTokenString();
+            _saveUserID();
+          } else {
+            debugPrint("Login Failed !");
+          }
+        } else {
+          debugPrint("Something went wrong while trying to create new token");
+        }
+      }
+    } else {
+      debugPrint("Something happened while trying to verify token");
     }
   }
 
@@ -152,7 +235,7 @@ class _MyLoginState extends State<MyLogin> {
               //             reqPage: "0",
               //           )),
               // );
-              loginToAPI();
+              verifyToken();
             },
             child: Text(
               "Login",

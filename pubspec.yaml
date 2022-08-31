@@ -50,6 +50,8 @@ dependencies:
   font_awesome_flutter: '>= 4.7.0'
   rflutter_alert: ^2.0.4
   connectivity_plus_web: ^1.2.3
+  path_provider: ^2.0.11
+  shared_preferences: ^2.0.15
 
   
 

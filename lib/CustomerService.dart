@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sort_child_properties_last
+import 'package:firstproject/sampleNotifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -28,7 +29,7 @@ class customerCareGateway extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => notificationsGateway()),
+                        builder: (context) => sampleNotifications()),
                   );
                 },
                 child: Icon(
