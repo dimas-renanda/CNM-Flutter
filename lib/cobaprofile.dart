@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'globalspublic.dart' as globals;
 import 'package:mac_address/mac_address.dart';
 import 'package:flutter/services.dart';
+import 'Login.dart';
 
 class profileFix extends StatefulWidget {
   profileFix({Key? key}) : super(key: key);
@@ -311,6 +312,8 @@ class _profileFixState extends State<profileFix> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
             onPressed: () {
+              globals.tokenString = "";
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
