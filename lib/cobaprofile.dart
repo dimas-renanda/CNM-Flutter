@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'globalspublic.dart' as globals;
 import 'package:mac_address/mac_address.dart';
-import 'package:flutter/services.dart';
 import 'Login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class profileFix extends StatefulWidget {
   profileFix({Key? key}) : super(key: key);
@@ -32,6 +32,34 @@ class _profileFixState extends State<profileFix> {
     setState(() {
       macAdd = gotMacAdd;
     });
+  }
+
+  //File Handling
+  //File Handler
+  Future<void> _loadUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    globals.setUserID((prefs.getInt("UID") ?? 0));
+  }
+
+  Future<void> _saveUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt("UID", globals.getUserID());
+  }
+
+  Future<void> _loadTokenString() async {
+    final prefs = await SharedPreferences.getInstance();
+    globals.tokenString = (prefs.getString("tokenString") ?? "0");
+  }
+
+  Future<void> _saveTokenString() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("tokenString", globals.tokenString);
+  }
+
+  Future<void> _modifyTokenString(String newValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("tokenString", newValue);
   }
 
   @override
@@ -312,8 +340,10 @@ class _profileFixState extends State<profileFix> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
             onPressed: () {
-              globals.tokenString = "";
-
+              setState(() {
+                globals.tokenString = "";
+              });
+              _modifyTokenString("");
               Navigator.push(
                 context,
                 MaterialPageRoute(

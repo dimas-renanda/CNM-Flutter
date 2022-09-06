@@ -33,10 +33,11 @@ class _packetDetailsState extends State<packetDetails> {
                 ]),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               //Back Button + Page Title
               Container(
-                margin: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(bottom: 15, top: 45),
                 child: Row(
                   children: [
                     Container(
@@ -53,7 +54,7 @@ class _packetDetailsState extends State<packetDetails> {
                       child: Container(
                         alignment: Alignment.center,
                         child: Text(
-                          "Page Title",
+                          "Package Details",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -65,289 +66,280 @@ class _packetDetailsState extends State<packetDetails> {
                   ],
                 ),
               ),
+              //Page Content
               Expanded(
                 child: SingleChildScrollView(
                   child: Container(
-                    decoration: BoxDecoration(
+                    child: //Packet Detail
+                        Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    )),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        //Packet Detail
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            children: [
-                              //Packet Name & Price
-                              Container(
-                                padding: EdgeInsets.only(bottom: 20),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                    color: Color.fromARGB(255, 118, 115, 115),
-                                    width: 1,
-                                  )),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.05),
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        widget.packetName,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          top: 10,
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.05),
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Rp. " + widget.packetPrice,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              //Packet Detail goes here
-                              Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.25,
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          //Packet Name & Price
+                          Container(
+                            padding: EdgeInsets.only(bottom: 20, top: 20),
+                            child: Column(
+                              children: [
+                                Container(
                                   margin: EdgeInsets.only(
-                                    top: 3,
-                                    left: 10,
-                                    right: 10,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: 10),
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                bottom: BorderSide(
-                                          color: Color.fromARGB(
-                                              255, 118, 115, 115),
-                                          width: 1,
-                                        ))),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.hourglass_empty,
-                                              size: 25,
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(left: 10),
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.4,
-                                              child: Text(
-                                                "Packet Duration",
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(
-                                                  widget.packetDuration +
-                                                      " Days",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: 10),
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                bottom: BorderSide(
-                                          color: Color.fromARGB(
-                                              255, 118, 115, 115),
-                                          width: 1,
-                                        ))),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.signal_wifi_0_bar,
-                                              size: 25,
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(left: 10),
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.4,
-                                              child: Text(
-                                                "Internet",
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(
-                                                  "Unlimited",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.speed,
-                                            size: 25,
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(left: 10),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.4,
-                                            child: Text(
-                                              "Speed",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              alignment: Alignment.centerRight,
-                                              child: Text(
-                                                widget.packetSpeed + " Mbps",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                            ],
-                          ),
-                        ),
-
-                        //Packet Description
-                        Container(
-                          padding: EdgeInsets.only(top: 10),
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                    left: MediaQuery.of(context).size.width *
-                                        0.05),
-                                child: Text(
-                                  "Packet Description",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: 10,
-                                    left: MediaQuery.of(context).size.width *
-                                        0.05),
-                                child: Text("Detail Paket Phoenix : "),
-                              ),
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          top: 10,
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.05),
-                                      child: Text(widget.packetDesc +
-                                          widget.packetDesc +
-                                          widget.packetDesc),
+                                      left: MediaQuery.of(context).size.width *
+                                          0.05),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    widget.packetName,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: 10,
+                                      left: MediaQuery.of(context).size.width *
+                                          0.05,
+                                      bottom: 10),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Rp. " + widget.packetPrice,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                //Packet Detail goes here
+                                Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    margin: EdgeInsets.only(
+                                      top: 3,
+                                      left: 10,
+                                      right: 10,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 118, 115, 115),
+                                            width: 1,
+                                          ))),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.hourglass_empty,
+                                                size: 25,
+                                              ),
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 10),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                child: Text(
+                                                  "Packet Duration",
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    widget.packetDuration +
+                                                        " Days",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 118, 115, 115),
+                                            width: 1,
+                                          ))),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.signal_wifi_0_bar,
+                                                size: 25,
+                                              ),
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 10),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                child: Text(
+                                                  "Internet",
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    "Unlimited",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 118, 115, 115),
+                                            width: 1,
+                                          ))),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.speed,
+                                                size: 25,
+                                              ),
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 10),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                child: Text(
+                                                  "Speed",
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    widget.packetSpeed +
+                                                        " Mbps",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          //Packet Description
+                          Container(
+                            padding: EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width *
+                                          0.05),
+                                  child: Text(
+                                    "Packet Description",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: 10,
+                                      left: MediaQuery.of(context).size.width *
+                                          0.05),
+                                  child: Text("Detail Paket Phoenix : "),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: 10,
+                                      left: MediaQuery.of(context).size.width *
+                                          0.05),
+                                  child: Text(widget.packetDesc),
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.5,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
               //Buy Button
               Container(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.06),
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                      ),
+                      margin: EdgeInsets.only(left: 10, right: 10, bottom: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            child: Text(
-                              "Total Price : ",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                          Container(child: Icon(Icons.shopping_cart)),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.only(bottom: 10, top: 10),
+                              child: Text(
+                                "Total Price : ",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ),

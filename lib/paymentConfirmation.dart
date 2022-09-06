@@ -23,7 +23,7 @@ class paymentConfirmation extends StatefulWidget {
 
 class _paymentConfirmationState extends State<paymentConfirmation> {
   Timer? countdownTimer;
-  Duration timerDuration = Duration(minutes: 60, seconds: 0);
+  Duration timerDuration = Duration(minutes: 0, seconds: 5);
 
   @override
   void initState() {

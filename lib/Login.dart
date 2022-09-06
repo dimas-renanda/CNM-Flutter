@@ -19,7 +19,7 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
-  bool _isObscure = true;
+  bool _isObscure = true, _veryfyingToken = false;
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
 
@@ -89,6 +89,7 @@ class _MyLoginState extends State<MyLogin> {
 
   //With Token
   void verifyToken() async {
+    _veryfyingToken = true;
     String urlString = globals.uriString;
     final response = await get(Uri.parse(
         urlString + "/VerifyToken?tokenString=${globals.tokenString}"));
@@ -98,6 +99,10 @@ class _MyLoginState extends State<MyLogin> {
       final data = jsonDecode(response.body);
       //Yes then redirect to main page with saved info
       if (data["Data"] == "Token is still valid") {
+        setState(() {
+          _veryfyingToken = false;
+        });
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -123,6 +128,10 @@ class _MyLoginState extends State<MyLogin> {
             //Write to local file for further uses
             _saveTokenString();
             _saveUserID();
+
+            setState(() {
+              _veryfyingToken = false;
+            });
           } else {
             debugPrint("Login Failed !");
           }
@@ -137,6 +146,7 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Loading : " + _veryfyingToken.toString());
     return Scaffold(
       body: Center(
           child: Column(

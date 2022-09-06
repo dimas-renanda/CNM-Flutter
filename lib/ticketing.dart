@@ -55,10 +55,18 @@ class _ticketingFormState extends State<ticketingForm> {
         await http.post(Uri.parse(urlString + "/AddTicketing?"), body: {
       "uid": globals.getUserID().toString(),
       "sid": selectedIndexSID,
-      "topic": topicController.text,
-      "description": descController.text,
+      "topic": topicController.text.toString(),
+      "description": descController.text.toString(),
       "status": "Waiting",
+      "created_by": "USER",
     });
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      debugPrint(data["Message"]);
+    } else {
+      debugPrint("Error when trying to create ticket");
+    }
   }
 
   @override

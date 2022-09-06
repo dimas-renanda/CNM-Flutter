@@ -53,9 +53,11 @@ class _ticketingDetailsState extends State<ticketingDetails> {
         setState(() {
           currentTicket = Ticket.fromJson(data["Data"]);
 
-          for (Map i in progressData["Data"]) {
-            tckProgress.add(TicketProgress.fromJson(i));
-            debugPrint(i.values.toString());
+          if (progressData["Data"] != null) {
+            for (Map i in progressData["Data"]) {
+              tckProgress.add(TicketProgress.fromJson(i));
+              debugPrint(i.values.toString());
+            }
           }
           loading = true;
         });
