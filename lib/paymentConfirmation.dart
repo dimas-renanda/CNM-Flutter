@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firstproject/webview_page.dart';
 import 'package:flutter/rendering.dart';
 
 import 'main.dart';
@@ -14,8 +15,9 @@ class paymentConfirmation extends StatefulWidget {
     Key? key,
     required this.totalPrice,
     required this.transactionID,
+    required this.packetMaxDevice,
   }) : super(key: key);
-  int totalPrice, transactionID;
+  int totalPrice, transactionID, packetMaxDevice;
 
   @override
   State<paymentConfirmation> createState() => _paymentConfirmationState();
@@ -40,16 +42,36 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
           "status": status,
         });
 
-    debugPrint("User ID: " +
-        globals.getUserID().toString() +
-        "\nTransaction ID: " +
-        widget.transactionID.toString() +
-        "\nNew Status : " +
-        status);
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      debugPrint("Hit :" + data["Data"]["Hit"].toString());
-      debugPrint("UID: " + data["Data"]["UID"].toString());
+      var passwordResponse = await post(
+          Uri.parse(globals.uriString + "/Get3Letters"),
+          body: {"uid": globals.getUserID().toString()});
+
+      if (passwordResponse.statusCode == 200) {
+        final data = jsonDecode(passwordResponse.body);
+        var radiusResponse = await post(
+            Uri.parse(globals.radiusString + "/CreateNewUser"),
+            body: {
+              "username": globals.firstName + data["Data"],
+              "password": globals.firstName + data["Data"],
+              "packet_max": widget.packetMaxDevice.toString(),
+            });
+
+        if (radiusResponse.statusCode == 200) {
+          final radiusData = jsonDecode(radiusResponse.body);
+          setState(() {
+            globals.currentUser = globals.firstName + data["Data"];
+          });
+          debugPrint("Success Creating New User");
+          debugPrint("New User: " + globals.currentUser);
+          debugPrint(
+              "Created " + radiusData["Data"]["User Created"].toString());
+        } else {
+          debugPrint("Failed to create new user in Radius Server");
+        }
+      } else {
+        debugPrint("Failed to get 3 letters");
+      }
     }
   }
 
@@ -78,7 +100,7 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
         putToAPI("Approved");
         Alert(
           context: context,
-          title: "Sample Alert",
+          title: "Success",
           desc:
               "Your device has been connected to Crossnet. Please show your QR code if you want to use it on your other device/s. ",
           buttons: [],
@@ -94,12 +116,13 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
             ),
           ),
         ).show().then((value) => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MainPage(
-                        reqPage: "0",
-                      )),
-            ));
+            context,
+            MaterialPageRoute(
+                builder: ((context) => webviewpage(
+                      judulnya: "Redirect",
+                      urlnya:
+                          "http://crossradius.net/login?username=${globals.currentUser}&password=${globals.currentUser} ",
+                    )))));
       } else {
         timerDuration = Duration(seconds: seconds);
       }

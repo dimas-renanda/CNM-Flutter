@@ -82,6 +82,7 @@ class _packetListState extends State<packetList> {
                 child: loadPackages(
                   context,
                   getData.packetId,
+                  getData.totalDevices,
                   getData.packetName,
                   getData.packetPrice,
                   getData.packetDuration,
@@ -98,13 +99,15 @@ class _packetListState extends State<packetList> {
   }
 
   Widget loadPackages(
-      BuildContext context,
-      int packetID,
-      String packetName,
-      String packetPrice,
-      String packetDuration,
-      String packetSpeed,
-      String packetDesc) {
+    BuildContext context,
+    int packetID,
+    int packetMaxDevice,
+    String packetName,
+    String packetPrice,
+    String packetDuration,
+    String packetSpeed,
+    String packetDesc,
+  ) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -117,6 +120,7 @@ class _packetListState extends State<packetList> {
                       packetSpeed: packetSpeed,
                       packetDesc: packetDesc,
                       packetID: packetID,
+                      packetMaxDevice: packetMaxDevice,
                     )));
       },
       child: Card(
@@ -201,6 +205,8 @@ class _packetListState extends State<packetList> {
                                                   packetPrice: packetPrice,
                                                   packetDuration:
                                                       packetDuration,
+                                                  packetMaxDevice:
+                                                      packetMaxDevice,
                                                 )));
                                   },
                                   child: Container(

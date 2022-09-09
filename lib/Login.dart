@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:crypto/crypto.dart';
 import 'package:firstproject/ScanQr.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -59,6 +60,13 @@ class _MyLoginState extends State<MyLogin> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setString("tokenString", globals.tokenString);
+    });
+  }
+
+  Future<void> _saveUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString("Username", globals.getUsername());
     });
   }
 
@@ -124,10 +132,14 @@ class _MyLoginState extends State<MyLogin> {
           if (altData["Message"] == "Login Success") {
             globals.tokenString = altData["Data"]["Token"];
             globals.setUserID(int.parse(altData["Data"]["Obj"]["Id"]));
+            globals.firstName = altData["Data"]["Obj"]["Firstname"];
+            globals.lastName = altData["Data"]["Obj"]["Lastname"];
+            globals.username = globals.firstName + globals.lastName;
 
             //Write to local file for further uses
             _saveTokenString();
             _saveUserID();
+            _saveUsername();
 
             setState(() {
               _veryfyingToken = false;

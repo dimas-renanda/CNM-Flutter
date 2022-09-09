@@ -1,8 +1,9 @@
 import 'package:firstproject/paymentGateway.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class packetDetails extends StatefulWidget {
-  int packetID;
+  int packetID, packetMaxDevice;
   String packetName, packetPrice, packetDuration, packetSpeed, packetDesc;
   packetDetails({
     Key? key,
@@ -12,6 +13,7 @@ class packetDetails extends StatefulWidget {
     required this.packetSpeed,
     required this.packetDesc,
     required this.packetID,
+    required this.packetMaxDevice,
   }) : super(key: key);
 
   @override
@@ -378,6 +380,7 @@ class _packetDetailsState extends State<packetDetails> {
                                         packetName: widget.packetName,
                                         packetPrice: widget.packetPrice,
                                         packetDuration: widget.packetDuration,
+                                        packetMaxDevice: widget.packetMaxDevice,
                                       )));
                         },
                         child: Text(

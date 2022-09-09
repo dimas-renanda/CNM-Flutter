@@ -1,7 +1,10 @@
 library my_prj.globals;
 
 //API URL
-String uriString = "http://phoenix.crossnet.co.id:38600";
+String uriString = "http://10.10.10.226:38600";
+
+//Radius URL
+String radiusString = "http://10.10.10.226:38700";
 
 //Token To API
 String tokenString = "";
@@ -13,8 +16,9 @@ String ipv4nya = "";
 //User Information
 //Might need some improvement in the future
 //Vars
+String currentUser = "";
 int userID = 0;
-String firstName = "", lastName = "", email = "", phoneNum = "";
+String firstName = "", lastName = "", email = "", phoneNum = "", username = "";
 
 void setUserID(int UID) {
   userID = UID;

@@ -22,9 +22,10 @@ class paymentGateway extends StatefulWidget {
     required this.packetName,
     required this.packetPrice,
     required this.packetDuration,
+    required this.packetMaxDevice,
   }) : super(key: key);
   String packetName, packetPrice, packetDuration;
-  int packetID;
+  int packetID, packetMaxDevice;
 
   @override
   State<paymentGateway> createState() => _paymentGatewayState();
@@ -49,7 +50,10 @@ class _paymentGatewayState extends State<paymentGateway> {
     super.initState();
     _packetPrice = int.parse(widget.packetPrice);
     pages.add(paymentConfirmation(
-        totalPrice: _packetPrice, transactionID: transactionID));
+      totalPrice: _packetPrice,
+      transactionID: transactionID,
+      packetMaxDevice: 0,
+    ));
   }
 
   void postToAPI() async {
@@ -69,7 +73,10 @@ class _paymentGatewayState extends State<paymentGateway> {
       setState(() {
         transactionID = data["Data"]["getIDLast"];
         pages[1] = paymentConfirmation(
-            totalPrice: _packetPrice, transactionID: transactionID);
+          totalPrice: _packetPrice,
+          transactionID: transactionID,
+          packetMaxDevice: widget.packetMaxDevice,
+        );
       });
     }
   }

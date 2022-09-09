@@ -8,6 +8,7 @@ import 'package:firstproject/webview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'globalspublic.dart' as globals;
 import 'detailVoucher.dart';
 
@@ -100,6 +101,14 @@ class _HomePageState extends State<HomePage> {
     } else {
       debugPrint("Something went wrong");
     }
+  }
+
+  //File Handling
+  Future<void> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      globals.username = (prefs.getString("Username") ?? "0");
+    });
   }
 
   @override
