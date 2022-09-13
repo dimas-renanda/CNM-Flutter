@@ -125,6 +125,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Token: " + globals.tokenString);
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

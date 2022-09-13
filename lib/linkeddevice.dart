@@ -99,17 +99,13 @@ class _linkedDeviceState extends State<linkedDevice> {
                           _isibawah(context),
                           // _isibawah(context),
                           Column(children: [
-                            SingleChildScrollView(
-                              child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.85,
-                                  height: MediaQuery.of(context).size.height,
-                                  child: _cardDevice(context)),
-                              padding: EdgeInsets.only(bottom: 20),
-
-                              //padding: EdgeInsets.only(bottom: 10),
-                            ),
-                            SizedBox(height: 50)
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.85,
+                                height: MediaQuery.of(context).size.height,
+                                padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context).size.height *
+                                        0.2),
+                                child: _cardDevice(context)),
                           ]),
                         ],
                       ),
@@ -283,8 +279,8 @@ class _linkedDeviceState extends State<linkedDevice> {
           if (snapshot.hasData) {
             return ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
                 itemCount: snapshot.data.length,
+                shrinkWrap: true,
                 itemBuilder: (BuildContext context, int itemIndex) {
                   return InkWell(
                     onTap: () {

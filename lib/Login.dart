@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:crypto/crypto.dart';
 import 'package:firstproject/ScanQr.dart';
+import 'package:firstproject/connecteddevice.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'globalspublic.dart' as globals;
 
 import 'main.dart';
@@ -70,32 +72,50 @@ class _MyLoginState extends State<MyLogin> {
     });
   }
 
-  //No Token
-  void loginToAPI() async {
+  //Fresh Login
+  dynamic loginToAPI() async {
     String urlString = globals.uriString;
     //Encoding
     var plainText = utf8.encode(passwordController.text);
     var hashedVal = sha512.convert(plainText);
-    String url = urlString +
-        "/login?email=${usernameController.text}&password=${hashedVal}";
-    final response = await get(Uri.parse(url));
+    var loginResponse = await get(Uri.parse(urlString +
+        "/TestToken?email=${usernameController.text}&password=${hashedVal}"));
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      globals.setUserID(data['Data']['Id']);
-      if (data['Data']['Message'] == "Success") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainPage(
-                    reqPage: "0",
-                  )),
-        );
+    if (loginResponse.statusCode == 200) {
+      final altData = jsonDecode(loginResponse.body);
+      if (altData["Message"] == "Login Success") {
+        globals.tokenString = altData["Data"]["Token"];
+        globals.setUserID(int.parse(altData["Data"]["Obj"]["Id"]));
+        globals.firstName = altData["Data"]["Obj"]["Firstname"];
+        globals.lastName = altData["Data"]["Obj"]["Lastname"];
+        globals.username = globals.firstName + globals.lastName;
+
+        //Write to local file for further uses
+        _saveTokenString();
+        _saveUserID();
+        _saveUsername();
+
+        setState(() {
+          _veryfyingToken = false;
+        });
+        setState(() {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainPage(
+                      reqPage: "0",
+                    )),
+          );
+        });
+      } else {
+        debugPrint("Login Failed !");
       }
+    } else {
+      debugPrint("Something went wrong while trying to create new token");
     }
   }
 
-  //With Token
+  //Verify Token First, If expired then check function above ^
   void verifyToken() async {
     _veryfyingToken = true;
     String urlString = globals.uriString;
@@ -109,47 +129,21 @@ class _MyLoginState extends State<MyLogin> {
       if (data["Data"] == "Token is still valid") {
         setState(() {
           _veryfyingToken = false;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainPage(
+                      reqPage: "0",
+                    )),
+          );
         });
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainPage(
-                    reqPage: "0",
-                  )),
-        );
-      }
-      //No, then try and create a new token
-      else {
-        //Encoding
-        var plainText = utf8.encode(passwordController.text);
-        var hashedVal = sha512.convert(plainText);
-        var altResponse = await get(Uri.parse(urlString +
-            "/TestToken?email=${usernameController.text}&password=${hashedVal}"));
-
-        if (altResponse.statusCode == 200) {
-          final altData = jsonDecode(altResponse.body);
-          if (altData["Message"] == "Login Success") {
-            globals.tokenString = altData["Data"]["Token"];
-            globals.setUserID(int.parse(altData["Data"]["Obj"]["Id"]));
-            globals.firstName = altData["Data"]["Obj"]["Firstname"];
-            globals.lastName = altData["Data"]["Obj"]["Lastname"];
-            globals.username = globals.firstName + globals.lastName;
-
-            //Write to local file for further uses
-            _saveTokenString();
-            _saveUserID();
-            _saveUsername();
-
-            setState(() {
-              _veryfyingToken = false;
-            });
-          } else {
-            debugPrint("Login Failed !");
-          }
-        } else {
-          debugPrint("Something went wrong while trying to create new token");
-        }
+      } else {
+        Alert(
+          context: context,
+          buttons: [],
+          title: "Failed to verify token, Please Login again",
+          closeIcon: Container(),
+        ).show();
       }
     } else {
       debugPrint("Something happened while trying to verify token");
@@ -158,13 +152,14 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Loading : " + _veryfyingToken.toString());
     return Scaffold(
       body: Center(
           child: Column(
         children: [
           _icon(context),
-          Expanded(child: _Gradien(context)),
+          Expanded(
+            child: _Gradien(context),
+          ),
         ],
       )),
     );
@@ -250,14 +245,7 @@ class _MyLoginState extends State<MyLogin> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20))),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => MainPage(
-              //             reqPage: "0",
-              //           )),
-              // );
-              verifyToken();
+              loginToAPI();
             },
             child: Text(
               "Login",
