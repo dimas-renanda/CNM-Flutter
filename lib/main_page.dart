@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firstproject/detailPaket.dart';
 import 'package:firstproject/main.dart';
 import 'package:firstproject/sampleNotifications.dart';
 import 'package:http/http.dart' as http;
@@ -13,29 +14,28 @@ import 'globalspublic.dart' as globals;
 import 'detailVoucher.dart';
 
 class activePackages {
-  int packageBandwith, packageTotalDevices;
-  String packageName, packageExpireDate;
+  int packageDownloadSpeed, packageUploadSpeed, packageTotalDevices;
+  String packageName, packageExpireDate, packageSID, packageType;
 
   activePackages({
-    required this.packageBandwith,
+    required this.packageDownloadSpeed,
+    required this.packageUploadSpeed,
     required this.packageTotalDevices,
     required this.packageName,
     required this.packageExpireDate,
+    required this.packageSID,
+    required this.packageType,
   });
 
   factory activePackages.fromJson(Map<dynamic, dynamic> json) => activePackages(
+        packageType: json["PacketType"],
+        packageSID: json["SID"].toString(),
         packageName: json["PackageName"],
-        packageBandwith: json["PacketBandwith"],
+        packageDownloadSpeed: json["PacketDownloadSpeed"],
+        packageUploadSpeed: json["PacketUploadSpeed"],
         packageTotalDevices: json["PackageTotalDevices"],
         packageExpireDate: json["ExpireDate"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "PackageName": packageName,
-        "PacketBandwith": packageBandwith,
-        "PackageTotalDevices": packageTotalDevices,
-        "ExpireDate": packageExpireDate,
-      };
 }
 
 //mainpage
@@ -288,57 +288,79 @@ class _HomePageState extends State<HomePage> {
         ),
         child: CarouselSlider.builder(
           itemCount: acPack.length,
-          itemBuilder: (BuildContext context, int itemIndex,
-                  int pageViewIndex) =>
-              loadingPackage == true
-                  ? Container(
-                      margin: EdgeInsets.all(50),
-                      child: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => voucherDetail(
-                                    packetName: acPack[itemIndex].packageName,
-                                    expireDate:
-                                        acPack[itemIndex].packageExpireDate,
-                                  )),
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 1),
-                        child: Align(
-                          alignment: Alignment.topLeft,
+          itemBuilder:
+              (BuildContext context, int itemIndex, int pageViewIndex) =>
+                  loadingPackage == true
+                      ? Container(
+                          margin: EdgeInsets.all(50),
+                          child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : InkWell(
+                          onTap: () {
+                            acPack[itemIndex].packageType == "Hotspot"
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => voucherDetail(
+                                              packetName:
+                                                  acPack[itemIndex].packageName,
+                                              expireDate: acPack[itemIndex]
+                                                  .packageExpireDate,
+                                              sid: acPack[itemIndex].packageSID,
+                                              packetMaxDevice: acPack[itemIndex]
+                                                  .packageTotalDevices,
+                                            )),
+                                  )
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => packetDetail(
+                                              packetSID:
+                                                  acPack[itemIndex].packageSID,
+                                              namapaket:
+                                                  acPack[itemIndex].packageName,
+                                              speedd1: acPack[itemIndex]
+                                                  .packageDownloadSpeed
+                                                  .toString(),
+                                              speedu1: acPack[itemIndex]
+                                                  .packageUploadSpeed
+                                                  .toString(),
+                                              activelimit1: acPack[itemIndex]
+                                                  .packageExpireDate,
+                                            )));
+                          },
                           child: Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 5.5, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border.all(
-                                color: Color.fromARGB(255, 0, 88, 160),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(255, 0, 27, 49),
-                                  blurRadius: 4,
-                                  offset: Offset(2, 4), // Shadow position
+                            padding: EdgeInsets.symmetric(horizontal: 1),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 5.5, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  border: Border.all(
+                                    color: Color.fromARGB(255, 0, 88, 160),
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(20),
+                                      topLeft: Radius.circular(20)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.fromARGB(255, 0, 27, 49),
+                                      blurRadius: 4,
+                                      offset: Offset(2, 4), // Shadow position
+                                    ),
+                                  ],
                                 ),
-                              ],
+                                child: _isipaket(context, acPack, itemIndex),
+                              ),
                             ),
-                            child: _isipaket(context, acPack, itemIndex),
                           ),
                         ),
-                      ),
-                    ),
           options: CarouselOptions(
             height: MediaQuery.of(context).size.height * 0.28,
             enableInfiniteScroll: false,
@@ -450,7 +472,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           //margin: EdgeInsets.only(bottom: 4),
                           child: Text(
-                            ": ${data[index].packageBandwith.toString()}MB",
+                            ": ${data[index].packageDownloadSpeed.toString()}MB",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),

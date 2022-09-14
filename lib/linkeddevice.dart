@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'globalspublic.dart' as globals;
 import 'detailPaket.dart';
 
@@ -293,6 +294,8 @@ class _linkedDeviceState extends State<linkedDevice> {
                                   activelimit1: '3-12-22',
                                   speedd1: '3',
                                   speedu1: '1',
+                                  packetSID: snapshot.data[itemIndex]["SID"]
+                                      .toString(),
                                 )),
                       );
                     },
@@ -330,8 +333,27 @@ class _linkedDeviceState extends State<linkedDevice> {
                                 headerAnimationLoop: false,
                                 animType: AnimType.TOPSLIDE,
                                 title: 'Package Info ',
-                                desc:
-                                    "${snapshot.data[itemIndex]['PackageName']}",
+                                body: Container(
+                                  child: Column(
+                                    children: [
+                                      PrettyQr(
+                                        data: snapshot.data[itemIndex]["SID"]
+                                            .toString(),
+                                        size: 200,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          top: 20,
+                                          bottom: 20,
+                                        ),
+                                        child: Text(
+                                          "SID: ${snapshot.data[itemIndex]["SID"].toString()}",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                                 showCloseIcon: true,
                                 btnCancelOnPress: () {},
                                 btnOkOnPress: () {},

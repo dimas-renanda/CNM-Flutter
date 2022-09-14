@@ -1,20 +1,24 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class packetDetail extends StatefulWidget {
   String namapaket;
-
   String speedd1;
   String speedu1;
   String activelimit1;
+  String packetSID;
 
-  packetDetail(
-      {Key? key,
-      required this.namapaket,
-      required this.speedd1,
-      required this.speedu1,
-      required this.activelimit1})
-      : super(key: key);
+  packetDetail({
+    Key? key,
+    required this.packetSID,
+    required this.namapaket,
+    required this.speedd1,
+    required this.speedu1,
+    required this.activelimit1,
+  }) : super(key: key);
 
   @override
   State<packetDetail> createState() => _packetDetailState();
@@ -39,6 +43,7 @@ class _packetDetailState extends State<packetDetail> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                //Back Button
                 Container(
                   margin: EdgeInsets.only(top: 16),
                   alignment: Alignment.centerLeft,
@@ -60,6 +65,7 @@ class _packetDetailState extends State<packetDetail> {
                     ],
                   ),
                 ),
+                //Page Title
                 Container(
                   child: Column(children: [
                     Text(
@@ -81,33 +87,103 @@ class _packetDetailState extends State<packetDetail> {
                   ]),
                 ),
                 Expanded(
-                  child: Stack(children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(60),
-                            topRight: Radius.circular(60),
-                          ),
-                          color: Colors.white,
-                          border: Border.all(color: Colors.white)),
-                      child: ListView(
-                        children: [
-                          createDetailSection(
-                            activelimit: widget.activelimit1,
-                            speedd: widget.speedd1,
-                            speedu: widget.speedu1,
-                          ),
-                          createMRTG(),
-                        ],
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(60),
+                              topRight: Radius.circular(60),
+                            ),
+                            color: Colors.white,
+                            border: Border.all(color: Colors.white)),
+                        child: ListView(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "QR Code",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                top: 8,
+                                bottom: 20,
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  Alert(
+                                    buttons: [
+                                      DialogButton(
+                                        color: Colors.red[300],
+                                        child: Text(
+                                          "Close",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        onPressed: () => Navigator.pop(context),
+                                      )
+                                    ],
+                                    context: context,
+                                    title:
+                                        "QR Code for Package ${widget.namapaket}",
+                                    content: Column(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.only(top: 20),
+                                          child: PrettyQr(
+                                            size: 300,
+                                            data: widget.packetSID,
+                                            errorCorrectLevel:
+                                                QrErrorCorrectLevel.M,
+                                            roundEdges: true,
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Text(
+                                              "Content:\nSID: ${widget.packetSID}"),
+                                        )
+                                      ],
+                                    ),
+                                  ).show();
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        child: PrettyQr(
+                                      size: 150,
+                                      data: widget.packetSID,
+                                      errorCorrectLevel: QrErrorCorrectLevel.M,
+                                      roundEdges: true,
+                                    ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                            createDetailSection(
+                              activelimit: widget.activelimit1,
+                              speedd: widget.speedd1,
+                              speedu: widget.speedu1,
+                            ),
+                            createMRTG(),
+                          ],
+                        ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
               ]),
         ))));
