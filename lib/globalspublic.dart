@@ -4,7 +4,7 @@ library my_prj.globals;
 String uriString = "http://phoenix.crossnet.co.id:38600";
 
 //Radius URL
-String radiusString = "http://10.10.10.226:38700";
+String radiusString = "http://10.10.10.196:38700";
 
 //Token To API
 String tokenString = "";

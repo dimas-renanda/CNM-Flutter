@@ -1,8 +1,25 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_interpolation_to_compose_strings
+import 'dart:convert';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:intl/date_symbol_data_file.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'globalspublic.dart' as globals;
+
+class AvailableUsers {
+  String username;
+  AvailableUsers({
+    required this.username,
+  });
+
+  factory AvailableUsers.fromJson(Map<dynamic, dynamic> json) => AvailableUsers(
+        username: json["Username"],
+      );
+}
 
 class voucherDetail extends StatefulWidget {
   final String packetName, expireDate, sid;
@@ -20,6 +37,36 @@ class voucherDetail extends StatefulWidget {
 }
 
 class _voucherDetailState extends State<voucherDetail> {
+  CarouselController _carouselController = CarouselController();
+  int currentCarrouselIndex = 0;
+  List<AvailableUsers> arrAvUs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchVoucherDetails();
+  }
+
+  Future<Null> _fetchVoucherDetails() async {
+    String phoenixUrl = globals.uriString, radiusUrl = globals.radiusString;
+
+    final voucherResponse = await get(Uri.parse(radiusUrl +
+        "/GetAvailableUsers?username = ${globals.getUsername()}&sid=${widget.sid}"));
+
+    debugPrint("SID: " + widget.sid.toString());
+    if (voucherResponse.statusCode == 200) {
+      final data = jsonDecode(voucherResponse.body);
+
+      setState(() {
+        for (Map i in data["Data"]) {
+          arrAvUs.add(AvailableUsers.fromJson(i));
+        }
+      });
+    } else {
+      debugPrint("Something went wrong while trying to get available users");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,178 +132,192 @@ class _voucherDetailState extends State<voucherDetail> {
                     ),
                     color: Colors.white,
                     border: Border.all(color: Colors.white)),
-                child: ListView(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "QR Codes",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: ListView(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "QR Codes",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.only(
-                        top: 8,
-                      ),
-                      child: CarouselSlider.builder(
-                        itemCount: widget.packetMaxDevice,
-                        itemBuilder: (BuildContext context, int itemIndex,
-                                int pageViewIndex) =>
-                            InkWell(
-                          onTap: () {
-                            Alert(
-                              buttons: [
-                                DialogButton(
-                                  color: Colors.red[300],
-                                  child: Text(
-                                    "Close",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.only(
+                          top: 8,
+                        ),
+                        child: CarouselSlider.builder(
+                          carouselController: _carouselController,
+                          itemCount: arrAvUs.length,
+                          itemBuilder: (BuildContext context, int itemIndex,
+                                  int pageViewIndex) =>
+                              InkWell(
+                            onTap: () {
+                              Alert(
+                                buttons: [
+                                  DialogButton(
+                                    color: Colors.red[300],
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  onPressed: () => Navigator.pop(context),
-                                )
-                              ],
-                              context: context,
-                              title: "QR Code for Device - ${itemIndex + 1}",
-                              content: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.only(top: 20),
-                                    child: PrettyQr(
-                                      size: 300,
-                                      data: widget.sid,
-                                      errorCorrectLevel: QrErrorCorrectLevel.M,
-                                      roundEdges: true,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Text("Content:\nSID: ${widget.sid}"),
-                                  ),
+                                    onPressed: () => Navigator.pop(context),
+                                  )
                                 ],
-                              ),
-                            ).show();
-                          },
+                                context: context,
+                                title: "QR Code for Device - ${itemIndex + 1}",
+                                content: Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: PrettyQr(
+                                        size: 300,
+                                        data: widget.sid,
+                                        errorCorrectLevel:
+                                            QrErrorCorrectLevel.M,
+                                        roundEdges: true,
+                                      ),
+                                    ),
+                                    Container(
+                                      child:
+                                          Text("Content:\nSID: ${widget.sid}"),
+                                    ),
+                                  ],
+                                ),
+                              ).show();
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    arrAvUs[itemIndex].username,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Container(
+                                    child: PrettyQr(
+                                  size: 150,
+                                  data: widget.sid,
+                                  errorCorrectLevel: QrErrorCorrectLevel.M,
+                                  roundEdges: true,
+                                )),
+                              ],
+                            ),
+                          ),
+                          options: CarouselOptions(
+                              enableInfiniteScroll: false,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  currentCarrouselIndex = index;
+                                });
+                              }),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 20, left: 16, right: 16),
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.only(bottom: 10),
+                                margin: EdgeInsets.only(bottom: 5),
                                 child: Text(
-                                  "Device - " + (itemIndex + 1).toString(),
+                                  "Uptime" + currentCarrouselIndex.toString(),
                                   style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      decoration: TextDecoration.underline),
                                 ),
                               ),
+                              createCard(
+                                downloadValue: 1500,
+                                uploadValue: 800,
+                              ),
                               Container(
-                                  child: PrettyQr(
-                                size: 150,
-                                data: widget.sid,
-                                errorCorrectLevel: QrErrorCorrectLevel.M,
-                                roundEdges: true,
-                              )),
+                                alignment: Alignment.centerLeft,
+                                margin: EdgeInsets.only(left: 16, top: 8),
+                                child: Text(
+                                  "Total: " +
+                                      ((1500 + 800) / 1000).toString() +
+                                      " Gb",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          )),
+                      Container(
+                          margin: EdgeInsets.only(top: 32, left: 16, right: 16),
+                          child: Column(
+                            children: [
                               Container(
-                                  margin: EdgeInsets.only(
-                                      top: 20, left: 16, right: 16),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.only(bottom: 5),
-                                        child: Text(
-                                          "Uptime",
+                                margin: EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  "Total Usage",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      decoration: TextDecoration.underline),
+                                ),
+                              ),
+                              createCard(
+                                downloadValue: 8750,
+                                uploadValue: 1000000,
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: EdgeInsets.only(left: 16, top: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        child: AutoSizeText(
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          "Total: " +
+                                              ((8750 + 1000000) / 1000)
+                                                  .toString() +
+                                              " Gb",
+                                          maxLines: 1,
+                                          minFontSize: 10,
+                                        )),
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        child: AutoSizeText(
+                                          "Active until ${widget.expireDate}",
+                                          minFontSize: 5,
+                                          maxLines: 1,
+                                          style: TextStyle(
                                               decoration:
                                                   TextDecoration.underline),
-                                        ),
-                                      ),
-                                      createCard(
-                                        downloadValue: 1500,
-                                        uploadValue: 800,
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        margin:
-                                            EdgeInsets.only(left: 16, top: 8),
-                                        child: Text(
-                                          "Total: " +
-                                              ((1500 + 800) / 1000).toString() +
-                                              " Gb",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  )),
+                                        )),
+                                  ],
+                                ),
+                              ),
                             ],
-                          ),
-                        ),
-                        options: CarouselOptions(
-                          height: MediaQuery.of(context).size.height * 0.55,
-                          enableInfiniteScroll: false,
-                        ),
-                      ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.only(top: 32, left: 16, right: 16),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              child: Text(
-                                "Total Usage",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                            createCard(
-                              downloadValue: 8750,
-                              uploadValue: 1000000,
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              margin: EdgeInsets.only(left: 16, top: 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    child: Text(
-                                      "Total: " +
-                                          ((8750 + 1000000) / 1000).toString() +
-                                          " Gb",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    child: Text(
-                                      "Active until ${widget.expireDate}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10,
-                                          decoration: TextDecoration.underline),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )),
-                    Container(
-                        margin: EdgeInsets.only(top: 16), child: createMRTG()),
-                  ],
+                          )),
+                      Container(
+                          margin: EdgeInsets.only(top: 16),
+                          child: createMRTG()),
+                    ],
+                  ),
                 ),
               ),
             ]),
@@ -321,7 +382,7 @@ class createCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       elevation: 5,
       child: Container(
         padding: EdgeInsets.all(16),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firstproject/detailVoucher.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -285,19 +286,41 @@ class _linkedDeviceState extends State<linkedDevice> {
                 itemBuilder: (BuildContext context, int itemIndex) {
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => packetDetail(
-                                  namapaket:
-                                      "${snapshot.data[itemIndex]['PackageName']}",
-                                  activelimit1: '3-12-22',
-                                  speedd1: '3',
-                                  speedu1: '1',
-                                  packetSID: snapshot.data[itemIndex]["SID"]
-                                      .toString(),
-                                )),
-                      );
+                      snapshot.data[itemIndex]["PacketType"] == "Hotspot"
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => voucherDetail(
+                                        packetName: snapshot.data[itemIndex]
+                                            ["PackageName"],
+                                        sid: snapshot.data[itemIndex]["SID"]
+                                            .toString(),
+                                        expireDate: snapshot.data[itemIndex]
+                                            ["ExpireDate"],
+                                        packetMaxDevice:
+                                            snapshot.data[itemIndex]
+                                                ["PackageTotalDevices"],
+                                      )),
+                            )
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => packetDetail(
+                                        namapaket:
+                                            "${snapshot.data[itemIndex]['PackageName']}",
+                                        activelimit1: snapshot.data[itemIndex]
+                                            ["ExpireDate"],
+                                        speedd1: snapshot.data[itemIndex]
+                                                ["PacketDownloadSpeed"]
+                                            .toString(),
+                                        speedu1: snapshot.data[itemIndex]
+                                                ["PacketUploadSpeed"]
+                                            .toString(),
+                                        packetSID: snapshot.data[itemIndex]
+                                                ["SID"]
+                                            .toString(),
+                                      )),
+                            );
                     },
                     child: Container(
                       padding: EdgeInsets.only(bottom: 10),

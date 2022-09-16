@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firstproject/detailPaket.dart';
 import 'package:firstproject/main.dart';
 import 'package:firstproject/sampleNotifications.dart';
@@ -93,8 +94,10 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
-        for (Map i in data['Data']) {
-          acPack.add(activePackages.fromJson(i));
+        if (data["Data"] != null) {
+          for (Map i in data['Data']) {
+            acPack.add(activePackages.fromJson(i));
+          }
         }
         loadingPackage = false;
       });
@@ -286,86 +289,100 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(
           top: 8,
         ),
-        child: CarouselSlider.builder(
-          itemCount: acPack.length,
-          itemBuilder:
-              (BuildContext context, int itemIndex, int pageViewIndex) =>
-                  loadingPackage == true
-                      ? Container(
-                          margin: EdgeInsets.all(50),
-                          child: SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : InkWell(
-                          onTap: () {
-                            acPack[itemIndex].packageType == "Hotspot"
-                                ? Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => voucherDetail(
-                                              packetName:
-                                                  acPack[itemIndex].packageName,
-                                              expireDate: acPack[itemIndex]
-                                                  .packageExpireDate,
-                                              sid: acPack[itemIndex].packageSID,
-                                              packetMaxDevice: acPack[itemIndex]
-                                                  .packageTotalDevices,
-                                            )),
-                                  )
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => packetDetail(
-                                              packetSID:
-                                                  acPack[itemIndex].packageSID,
-                                              namapaket:
-                                                  acPack[itemIndex].packageName,
-                                              speedd1: acPack[itemIndex]
-                                                  .packageDownloadSpeed
-                                                  .toString(),
-                                              speedu1: acPack[itemIndex]
-                                                  .packageUploadSpeed
-                                                  .toString(),
-                                              activelimit1: acPack[itemIndex]
-                                                  .packageExpireDate,
-                                            )));
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 1),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 5.5, vertical: 10),
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  border: Border.all(
-                                    color: Color.fromARGB(255, 0, 88, 160),
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(255, 0, 27, 49),
-                                      blurRadius: 4,
-                                      offset: Offset(2, 4), // Shadow position
+        child: acPack.length > 0
+            ? CarouselSlider.builder(
+                itemCount: acPack.length,
+                itemBuilder: (BuildContext context, int itemIndex,
+                        int pageViewIndex) =>
+                    loadingPackage == true
+                        ? Container(
+                            margin: EdgeInsets.all(50),
+                            child: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () {
+                              acPack[itemIndex].packageType == "Hotspot"
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => voucherDetail(
+                                                packetName: acPack[itemIndex]
+                                                    .packageName,
+                                                expireDate: acPack[itemIndex]
+                                                    .packageExpireDate,
+                                                sid: acPack[itemIndex]
+                                                    .packageSID,
+                                                packetMaxDevice:
+                                                    acPack[itemIndex]
+                                                        .packageTotalDevices,
+                                              )),
+                                    )
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => packetDetail(
+                                                packetSID: acPack[itemIndex]
+                                                    .packageSID,
+                                                namapaket: acPack[itemIndex]
+                                                    .packageName,
+                                                speedd1: acPack[itemIndex]
+                                                    .packageDownloadSpeed
+                                                    .toString(),
+                                                speedu1: acPack[itemIndex]
+                                                    .packageUploadSpeed
+                                                    .toString(),
+                                                activelimit1: acPack[itemIndex]
+                                                    .packageExpireDate,
+                                              )));
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 1),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 5.5, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border.all(
+                                      color: Color.fromARGB(255, 0, 88, 160),
                                     ),
-                                  ],
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(20),
+                                        topLeft: Radius.circular(20)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color.fromARGB(255, 0, 27, 49),
+                                        blurRadius: 4,
+                                        offset: Offset(2, 4), // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: _isipaket(context, acPack, itemIndex),
                                 ),
-                                child: _isipaket(context, acPack, itemIndex),
                               ),
                             ),
                           ),
-                        ),
-          options: CarouselOptions(
-            height: MediaQuery.of(context).size.height * 0.28,
-            enableInfiniteScroll: false,
-          ),
-        ));
+                options: CarouselOptions(
+                  height: MediaQuery.of(context).size.height * 0.28,
+                  enableInfiniteScroll: false,
+                ),
+              )
+            : Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.085,
+                    right: MediaQuery.of(context).size.width * 0.085),
+                child: AutoSizeText(
+                  "You have not bough any package yet :)",
+                  minFontSize: 10,
+                  maxLines: 2,
+                ),
+              ));
   }
 
   _isipaket(context, List<activePackages> data, int index) {

@@ -3,8 +3,6 @@ import 'dart:convert';
 
 import 'package:firstproject/webview_page.dart';
 import 'package:flutter/rendering.dart';
-
-import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'globalspublic.dart' as globals;
@@ -47,30 +45,23 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
           Uri.parse(globals.uriString + "/Get3Letters"),
           body: {"uid": globals.getUserID().toString()});
 
-      if (passwordResponse.statusCode == 200) {
-        final data = jsonDecode(passwordResponse.body);
-        var radiusResponse = await post(
-            Uri.parse(globals.radiusString + "/CreateNewUser"),
-            body: {
-              "username": globals.firstName + data["Data"],
-              "password": globals.firstName + data["Data"],
-              "packet_max": widget.packetMaxDevice.toString(),
-            });
+      final data = jsonDecode(response.body);
 
-        if (radiusResponse.statusCode == 200) {
-          final radiusData = jsonDecode(radiusResponse.body);
-          setState(() {
-            globals.currentUser = globals.firstName + data["Data"];
-          });
-          debugPrint("Success Creating New User");
-          debugPrint("New User: " + globals.currentUser);
-          debugPrint(
-              "Created " + radiusData["Data"]["User Created"].toString());
-        } else {
-          debugPrint("Failed to create new user in Radius Server");
-        }
+      var radiusResponse =
+          await post(Uri.parse(globals.radiusString + "/CreateNewUser"), body: {
+        "username": globals.getUsername().toString(),
+        "sid": data["Data"]["SID"]["New ID"].toString(),
+        "packet_max": widget.packetMaxDevice.toString(),
+      });
+
+      if (radiusResponse.statusCode == 200) {
+        final radiusData = jsonDecode(radiusResponse.body);
+        setState(() {});
+        debugPrint("Success Creating New User");
+        debugPrint("New User: " + globals.currentUser);
+        debugPrint("Created " + radiusData["Data"]["User Created"].toString());
       } else {
-        debugPrint("Failed to get 3 letters");
+        debugPrint("Failed to create new user in Radius Server");
       }
     }
   }
