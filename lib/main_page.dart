@@ -94,8 +94,13 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
-        if (data["Data"] != null) {
-          for (Map i in data['Data']) {
+        if (data["Data"]["Packet"] != null) {
+          for (Map i in data['Data']["Packet"]) {
+            acPack.add(activePackages.fromJson(i));
+          }
+        }
+        if (data["Data"]["Voucher"] != null) {
+          for (Map i in data['Data']["Voucher"]) {
             acPack.add(activePackages.fromJson(i));
           }
         }

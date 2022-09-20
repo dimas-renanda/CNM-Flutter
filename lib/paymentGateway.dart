@@ -57,13 +57,14 @@ class _paymentGatewayState extends State<paymentGateway> {
   }
 
   void postToAPI() async {
+    debugPrint("Packet Duration: " + widget.packetDuration.toString());
     var response =
         await post(Uri.parse(globals.uriString + "/Transaction"), body: {
       "uid": globals.getUserID().toString(),
       "pid": widget.packetID.toString(),
       "payment": globals.paymentChoice.toString(),
       "status": "Waiting",
-      "duration": widget.packetDuration * 24 * 3600, //Convert it to seconds
+      "duration": widget.packetDuration, //Convert to days
       "price": widget.packetPrice,
     });
 

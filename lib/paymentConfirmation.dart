@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firstproject/main.dart';
 import 'package:firstproject/webview_page.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
@@ -41,10 +42,6 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
         });
 
     if (response.statusCode == 200) {
-      var passwordResponse = await post(
-          Uri.parse(globals.uriString + "/Get3Letters"),
-          body: {"uid": globals.getUserID().toString()});
-
       final data = jsonDecode(response.body);
 
       var radiusResponse =
