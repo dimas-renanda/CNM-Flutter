@@ -53,6 +53,9 @@ class _paymentGatewayState extends State<paymentGateway> {
       totalPrice: _packetPrice,
       transactionID: transactionID,
       packetMaxDevice: 0,
+      packetDuration: 0,
+      packetName: "",
+      paymentChoice: "",
     ));
   }
 
@@ -77,6 +80,9 @@ class _paymentGatewayState extends State<paymentGateway> {
           totalPrice: _packetPrice,
           transactionID: transactionID,
           packetMaxDevice: widget.packetMaxDevice,
+          packetName: widget.packetName,
+          paymentChoice: globals.paymentChoice,
+          packetDuration: int.parse(widget.packetDuration),
         );
       });
     }

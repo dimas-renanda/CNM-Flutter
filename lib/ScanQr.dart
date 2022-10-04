@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'globalspublic.dart' as globals;
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -21,6 +22,8 @@ class QRViewExample extends StatefulWidget {
 }
 
 class _QRViewExampleState extends State<QRViewExample> {
+  sampleNetInfo temp =
+      new sampleNetInfo(globals.internetConnection == true ? 0 : 1);
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -348,7 +351,6 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    final temp = new sampleNetInfo();
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
@@ -374,18 +376,12 @@ class _QRViewExampleState extends State<QRViewExample> {
                 ),
                 dismissOnTouchOutside: true,
                 dismissOnBackKeyPress: false,
-                // onDissmissCallback: (type) {
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     SnackBar(
-                //       content: Text('Dismissed by $type'),
-                //     ),
-                //   );
-                // },
                 headerAnimationLoop: false,
                 animType: AnimType.TOPSLIDE,
                 title: 'Network Info',
-                desc:
-                    'MacAdd\t:${temp.macaddnya}\nIP\t:${temp.wifiIPv4}\nGateway\t:${temp.wifiGatewayIP}\nAP Name\t:${temp.wifiName}\n',
+                desc: globals.internetConnection == true
+                    ? 'MacAdd\t:${temp.macaddnya}\nIP\t:${temp.wifiIPv4}\nGateway\t:${temp.wifiGatewayIP}\nAP Name\t:${temp.wifiName}\n'
+                    : 'None',
                 showCloseIcon: true,
                 btnCancelOnPress: () {},
                 btnOkOnPress: () {},

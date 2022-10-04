@@ -258,16 +258,26 @@ Widget createTicketingProgress(
         Container(
             child: Column(
           children: [
-            ListView.builder(
-              padding: EdgeInsets.only(top: 10),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: uniques.length,
-              itemBuilder: (BuildContext context, int index) {
-                return createTicketingProgressContainer(
-                    context, progress, uniques.keys.elementAt(index));
-              },
-            ),
+            progress.length > 0
+                ? ListView.builder(
+                    padding: EdgeInsets.only(top: 10),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: uniques.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return createTicketingProgressContainer(
+                          context, progress, uniques.keys.elementAt(index));
+                    },
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: Center(
+                      child: Text(
+                        "No Progress Yet :)",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
           ],
         ))
       ],

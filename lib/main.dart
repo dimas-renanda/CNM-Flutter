@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart';
 import 'package:firstproject/CustomerService.dart';
 import 'package:firstproject/Login.dart';
 import 'package:firstproject/ScanQr.dart';
@@ -12,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'paketlistnew.dart';
 import 'globalspublic.dart' as globals;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 //run myapp
 void main() {
@@ -62,7 +66,6 @@ class _MyAppState extends State<MyApp> {
     String urlString = globals.uriString;
     final response = await get(Uri.parse(
         urlString + "/VerifyToken?tokenString=${globals.tokenString}"));
-
     //Verify if token is still valid
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -77,12 +80,38 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           startWidget = MyLogin(
             title: "",
+            loginMessage: "Token Expired, Please Login Again",
           );
         });
       }
     } else {
+      debugPrint("Something happened while trying to verify token");
+    }
+  }
+
+  void checkConn() async {
+    String testUrl = globals.uriString;
+
+    try {
+      final response = await get(Uri.parse(testUrl)).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint("Something happened");
+          throw SocketException("Address Unreachable");
+        },
+      );
       setState(() {
-        startWidget = packetList();
+        globals.internetConnection = true;
+        _loadUserID();
+        _loadTokenString().then((value) => verifyToken(context));
+      });
+    } on SocketException catch (e) {
+      setState(() {
+        startWidget = MyLogin(
+          title: "",
+          loginMessage: "Not Connected To Internet",
+        );
+        globals.internetConnection = false;
       });
     }
   }
@@ -90,8 +119,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _loadUserID();
-    _loadTokenString().then((value) => verifyToken(context));
+    checkConn();
   }
 
   @override

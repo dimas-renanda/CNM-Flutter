@@ -6,7 +6,8 @@
 
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'dart:io';
+//import 'dart:html';
+import 'dart:io' show Platform;
 
 import 'package:mac_address/mac_address.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -15,7 +16,6 @@ import 'package:flutter/services.dart';
 import 'package:dart_ipify/dart_ipify.dart';
 
 class sampleNetInfo {
-  final NetworkInfo _networkInfo = NetworkInfo();
   String? wifiName,
       wifiBSSID,
       wifiIPv4,
@@ -27,6 +27,7 @@ class sampleNetInfo {
       pipnya;
 
   Future<void> _initNetworkInfo() async {
+    final NetworkInfo _networkInfo = NetworkInfo();
     try {
       if (!kIsWeb && Platform.isIOS) {
         var status = await _networkInfo.getLocationServiceAuthorization();
@@ -122,7 +123,20 @@ class sampleNetInfo {
     }
   }
 
-  sampleNetInfo() {
-    _initNetworkInfo();
+  sampleNetInfo(int choice) {
+    if (choice == 0) {
+      debugPrint("This was triggered");
+      _initNetworkInfo();
+    } else {
+      wifiName = "";
+      wifiBSSID = "";
+      wifiIPv4 = "";
+      wifiIPv6 = "";
+      wifiGatewayIP = "";
+      wifiBroadcast = "";
+      wifiSubmask = "";
+      macaddnya = "";
+      pipnya = "";
+    }
   }
 }

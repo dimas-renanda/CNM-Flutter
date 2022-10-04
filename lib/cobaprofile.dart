@@ -3,6 +3,7 @@ import 'package:firstproject/connecteddevice.dart';
 import 'package:firstproject/linkeddevice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'globalspublic.dart' as globals;
 import 'package:mac_address/mac_address.dart';
 import 'Login.dart';
@@ -138,7 +139,7 @@ class _profileFixState extends State<profileFix> {
                         children: [
                           _isibawah(context),
                           Container(
-                              height: MediaQuery.of(context).size.height * 1,
+                              height: MediaQuery.of(context).size.height * 0.2,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -191,10 +192,6 @@ class _profileFixState extends State<profileFix> {
                 _fphone(context),
                 _buttonlinkdevice(
                   context,
-                ),
-                _connectedDevice(context),
-                SizedBox(
-                  height: 50,
                 ),
                 _Logout(context)
               ],
@@ -349,6 +346,7 @@ class _profileFixState extends State<profileFix> {
                 MaterialPageRoute(
                     builder: (context) => MyLogin(
                           title: 'login',
+                          loginMessage: "Logged Out, Please Sign In Again",
                         )),
               );
             },

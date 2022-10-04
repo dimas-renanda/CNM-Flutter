@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class packetDetail extends StatefulWidget {
   String namapaket;
@@ -214,33 +215,28 @@ class _createDetailSectionState extends State<createDetailSection> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(left: 8),
             child: Text(
-              "Bandwith",
+              "Packet Status",
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,
               ),
             ),
           ),
           createCard(
-            cardText: "Download",
-            limit: int.parse(widget.speedd),
-            current: double.parse(widget.speedd),
-          ),
-          createCard(
-            cardText: "Upload",
-            limit: int.parse(widget.speedu),
-            current: double.parse(widget.speedu),
+            packetStatus: "Active",
+            connectivityStatus: "Connected to Internet",
           ),
           Container(
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(right: 5, top: 5),
-            child: Text(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(left: 8, top: 4),
+            child: AutoSizeText(
               'Active until: ${widget.activelimit}',
-              textAlign: TextAlign.left,
+              minFontSize: 10,
               style: TextStyle(
-                fontSize: 10,
                 decoration: TextDecoration.underline,
                 fontWeight: FontWeight.bold,
               ),
@@ -254,14 +250,11 @@ class _createDetailSectionState extends State<createDetailSection> {
 
 //Only use for Voucher / Packet Detail
 class createCard extends StatelessWidget {
-  final String cardText;
-  final int limit;
-  final double current;
+  final String packetStatus, connectivityStatus;
   const createCard({
     Key? key,
-    required this.cardText,
-    required this.limit,
-    required this.current,
+    required this.packetStatus,
+    required this.connectivityStatus,
   }) : super(key: key);
 
   @override
@@ -278,36 +271,39 @@ class createCard extends StatelessWidget {
         ),
         child: Column(
           children: [
+            Container(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Status: ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    packetStatus,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  cardText,
+                  "Connectivity: ",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  limit.toString() + " Mbps",
+                  connectivityStatus,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 1),
-              ),
-              child: LinearProgressIndicator(
-                minHeight: 10,
-                value: current / 10,
-                color: Color.fromARGB(255, 19, 2, 115),
-                backgroundColor: Colors.white,
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text("Current : " + current.toString()),
-            )
           ],
         ),
       ),
@@ -325,15 +321,21 @@ class createMRTG extends StatelessWidget {
       decoration: BoxDecoration(),
       child: Column(
         children: [
-          Text(
-            "Daily Graph",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-              decoration: TextDecoration.underline,
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(bottom: 10, top: 20, left: 8),
+            child: Text(
+              "Daily Graph",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                decoration: TextDecoration.underline,
+              ),
             ),
           ),
-          Image.asset("images/crosslogo.png"),
+          Image.asset(
+            "images/mrtg.png",
+          ),
         ],
       ),
     );

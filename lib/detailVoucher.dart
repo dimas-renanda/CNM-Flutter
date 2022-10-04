@@ -175,22 +175,23 @@ class _voucherDetailState extends State<voucherDetail> {
                                   )
                                 ],
                                 context: context,
-                                title: "QR Code for Device - ${itemIndex + 1}",
+                                title:
+                                    "QR Code for Device - ${arrAvUs[itemIndex].username}",
                                 content: Column(
                                   children: [
                                     Container(
                                       padding: EdgeInsets.only(top: 20),
                                       child: PrettyQr(
                                         size: 300,
-                                        data: widget.sid,
+                                        data: arrAvUs[itemIndex].username,
                                         errorCorrectLevel:
                                             QrErrorCorrectLevel.M,
                                         roundEdges: true,
                                       ),
                                     ),
                                     Container(
-                                      child:
-                                          Text("Content:\nSID: ${widget.sid}"),
+                                      child: Text(
+                                          "Content:\nUsername: ${arrAvUs[itemIndex].username}"),
                                     ),
                                   ],
                                 ),
@@ -210,7 +211,7 @@ class _voucherDetailState extends State<voucherDetail> {
                                 Container(
                                     child: PrettyQr(
                                   size: 150,
-                                  data: widget.sid,
+                                  data: arrAvUs[itemIndex].username,
                                   errorCorrectLevel: QrErrorCorrectLevel.M,
                                   roundEdges: true,
                                 )),
@@ -454,7 +455,7 @@ class createMRTG extends StatelessWidget {
               decoration: TextDecoration.underline,
             ),
           ),
-          Image.asset("images/crosslogo.png"),
+          Image.asset("images/mrtg.png"),
         ],
       ),
     );

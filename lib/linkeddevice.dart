@@ -24,9 +24,20 @@ class _linkedDeviceState extends State<linkedDevice> {
   final String apimypackage =
       globals.uriString + "/GetUserPackage?uid=${globals.getUserID()}";
 
+  final List<dynamic> packageList = [];
+
   Future<List<dynamic>> _fecthMyPackage() async {
     var result = await http.get(Uri.parse(apimypackage));
     return json.decode(result.body)['Data'];
+  }
+
+  //Old Version / Deprecated
+  Future<List<dynamic>> _fecthMyPackageOld() async {
+    String urlString = globals.uriString;
+    var result = await http.get(
+        Uri.parse(urlString + "/GetUserPackageOld?uid=${globals.getUserID()}"));
+    final data = jsonDecode(result.body);
+    return data["Data"];
   }
 
   @override
@@ -276,7 +287,7 @@ class _linkedDeviceState extends State<linkedDevice> {
     return SingleChildScrollView(
       physics: ScrollPhysics(),
       child: FutureBuilder<List<dynamic>>(
-        future: _fecthMyPackage(),
+        future: _fecthMyPackageOld(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:firstproject/ScanQr.dart';
 import 'package:firstproject/connecteddevice.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -13,9 +14,14 @@ import 'globalspublic.dart' as globals;
 import 'main.dart';
 
 class MyLogin extends StatefulWidget {
-  const MyLogin({Key? key, required this.title}) : super(key: key);
+  const MyLogin({
+    Key? key,
+    required this.title,
+    required this.loginMessage,
+  }) : super(key: key);
 
   final String title;
+  final String loginMessage;
 
   @override
   State<MyLogin> createState() => _MyLoginState();
@@ -28,11 +34,21 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   void initState() {
-    debugPrint(globals.tokenString);
     super.initState();
     _isObscure = true;
-    _loadUserID();
-    _loadTokenString().then((value) => verifyToken());
+    debugPrint(widget.loginMessage);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (widget.loginMessage.length > 2) {
+        Alert(
+          context: context,
+          desc: this.widget.loginMessage,
+          buttons: [],
+          closeIcon: Container(),
+        ).show();
+      }
+    });
+    // _loadUserID();
+    // _loadTokenString().then((value) => verifyToken());
   }
 
   //File Handling
