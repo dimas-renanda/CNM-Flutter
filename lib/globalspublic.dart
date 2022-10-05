@@ -19,7 +19,12 @@ String ipv4nya = "";
 //Vars
 String currentUser = "";
 int userID = 0;
-String firstName = "", lastName = "", email = "", phoneNum = "", username = "";
+String firstName = "",
+    lastName = "",
+    email = "",
+    phoneNum = "",
+    username = "",
+    address = "";
 
 void setUserID(int UID) {
   userID = UID;

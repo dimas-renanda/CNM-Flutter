@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
       nama = globals.getUsername();
       globals.email = data['Data']['Email'];
       globals.phoneNum = data['Data']['Phone'];
+      globals.address = data["Data"]["Address"];
     });
   }
 

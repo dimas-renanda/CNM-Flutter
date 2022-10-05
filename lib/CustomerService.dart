@@ -63,8 +63,8 @@ class customerCareGateway extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: 10,
                           itemBuilder: (BuildContext context, int index) {
-                            return createFAQContainer(
-                                "Title ${index + 1}", "AHAHAAHAHA");
+                            return createFAQContainer("Title ${index + 1}",
+                                "Sample FAQ - ${index + 1}");
                           },
                         ),
                       ),

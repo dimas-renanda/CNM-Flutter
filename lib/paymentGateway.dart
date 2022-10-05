@@ -82,8 +82,9 @@ class _paymentGatewayState extends State<paymentGateway> {
           packetMaxDevice: widget.packetMaxDevice,
           packetName: widget.packetName,
           paymentChoice: globals.paymentChoice,
-          packetDuration: int.parse(widget.packetDuration),
+          packetDuration: int.parse(widget.packetDuration.toString()),
         );
+        debugPrint("Payment Gateway");
       });
     }
   }

@@ -10,13 +10,17 @@ import 'globalspublic.dart' as globals;
 import 'package:http/http.dart';
 
 class paymentConfirmation extends StatefulWidget {
-  paymentConfirmation({
-    Key? key,
-    required this.totalPrice,
-    required this.transactionID,
-    required this.packetMaxDevice,
-  }) : super(key: key);
-  int totalPrice, transactionID, packetMaxDevice;
+  paymentConfirmation(
+      {Key? key,
+      required this.totalPrice,
+      required this.transactionID,
+      required this.packetMaxDevice,
+      required this.packetName,
+      required this.paymentChoice,
+      required this.packetDuration})
+      : super(key: key);
+  int totalPrice, transactionID, packetMaxDevice, packetDuration;
+  String packetName, paymentChoice;
 
   @override
   State<paymentConfirmation> createState() => _paymentConfirmationState();
@@ -29,6 +33,7 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
   @override
   void initState() {
     super.initState();
+    debugPrint("Payment Confirmation");
     startTimer();
   }
 
@@ -44,12 +49,21 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
+      debugPrint("Before Radius User Creation");
       var radiusResponse =
           await post(Uri.parse(globals.radiusString + "/CreateNewUser"), body: {
         "username": globals.getUsername().toString(),
         "sid": data["Data"]["SID"]["New ID"].toString(),
         "packet_max": widget.packetMaxDevice.toString(),
+        "email": globals.email.toString(),
+        "phone": globals.phoneNum.toString(),
+        "address": globals.address.toString(),
+        "packetname": widget.packetName.toString(),
+        "paymentMethod": widget.paymentChoice.toString(),
+        "expiredDate": widget.packetDuration.toString(),
+        "ordertaker": "System",
       });
+      debugPrint("After Radius User Creation");
 
       if (radiusResponse.statusCode == 200) {
         final radiusData = jsonDecode(radiusResponse.body);
@@ -58,7 +72,14 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
         debugPrint("New User: " + globals.currentUser);
         debugPrint("Created " + radiusData["Data"]["User Created"].toString());
       } else {
+        final radiusData = jsonDecode(radiusResponse.body);
         debugPrint("Failed to create new user in Radius Server");
+        Alert(
+          context: context,
+          buttons: [],
+          closeIcon: Container(),
+          desc: radiusData["Message"].toString(),
+        ).show();
       }
     }
   }

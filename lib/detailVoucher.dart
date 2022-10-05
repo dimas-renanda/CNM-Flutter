@@ -1,24 +1,37 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_interpolation_to_compose_strings
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/date_symbol_data_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'globalspublic.dart' as globals;
 
 class AvailableUsers {
   String username;
+  int userUptime, userDownload, userUpload;
   AvailableUsers({
     required this.username,
+    required this.userUptime,
+    required this.userDownload,
+    required this.userUpload,
   });
 
   factory AvailableUsers.fromJson(Map<dynamic, dynamic> json) => AvailableUsers(
         username: json["Username"],
+        userUptime: json["Uptime"],
+        userDownload: json["Download"],
+        userUpload: json["Upload"],
       );
+
+  int getTotalUsage() {
+    return userDownload + userUpload;
+  }
 }
 
 class voucherDetail extends StatefulWidget {
@@ -59,11 +72,29 @@ class _voucherDetailState extends State<voucherDetail> {
 
       setState(() {
         for (Map i in data["Data"]) {
-          arrAvUs.add(AvailableUsers.fromJson(i));
+          debugPrint(i["Username"]);
+          _fetchUserUsage(i["Username"]);
         }
+
+        arrAvUs.sort(((a, b) => a.username.compareTo(b.username)));
       });
     } else {
       debugPrint("Something went wrong while trying to get available users");
+    }
+  }
+
+  Future<Null> _fetchUserUsage(String username) async {
+    String radiusUrl = globals.radiusString;
+
+    final usageResponse =
+        await get(Uri.parse(radiusUrl + "/GetUserUsage?username=${username}"));
+
+    if (usageResponse.statusCode == 200) {
+      final data = jsonDecode(usageResponse.body);
+
+      setState(() {
+        arrAvUs.add(AvailableUsers.fromJson(data["Data"]));
+      });
     }
   }
 
@@ -234,7 +265,11 @@ class _voucherDetailState extends State<voucherDetail> {
                               Container(
                                 margin: EdgeInsets.only(bottom: 5),
                                 child: Text(
-                                  "Uptime" + currentCarrouselIndex.toString(),
+                                  "Total Uptime: " +
+                                      arrAvUs[currentCarrouselIndex]
+                                          .userUptime
+                                          .toString() +
+                                      " Seconds",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -242,16 +277,20 @@ class _voucherDetailState extends State<voucherDetail> {
                                 ),
                               ),
                               createCard(
-                                downloadValue: 1500,
-                                uploadValue: 800,
+                                downloadValue:
+                                    arrAvUs[currentCarrouselIndex].userDownload,
+                                uploadValue:
+                                    arrAvUs[currentCarrouselIndex].userUpload,
                               ),
                               Container(
                                 alignment: Alignment.centerLeft,
                                 margin: EdgeInsets.only(left: 16, top: 8),
                                 child: Text(
                                   "Total: " +
-                                      ((1500 + 800) / 1000).toString() +
-                                      " Gb",
+                                      arrAvUs[currentCarrouselIndex]
+                                          .getTotalUsage()
+                                          .toString() +
+                                      " Bytes",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -354,10 +393,10 @@ class createDetailSection extends StatelessWidget {
                 decoration: TextDecoration.underline),
           ),
         ),
-        createCard(
-          downloadValue: this.downloadValue,
-          uploadValue: this.downloadValue,
-        ),
+        // createCard(
+        //   downloadValue: this.downloadValue,
+        //   uploadValue: this.downloadValue,
+        // ),
         Container(
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(left: 16),
@@ -371,8 +410,8 @@ class createDetailSection extends StatelessWidget {
 
 //Only use for Voucher / Packet Detail
 class createCard extends StatelessWidget {
-  final double uploadValue;
-  final double downloadValue;
+  final int uploadValue;
+  final int downloadValue;
   const createCard({
     Key? key,
     required this.uploadValue,
@@ -386,6 +425,7 @@ class createCard extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10))),
       elevation: 5,
       child: Container(
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(width: 1),
@@ -394,40 +434,21 @@ class createCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Upload | " + uploadValue.toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
             Container(
-              margin: EdgeInsets.only(top: 3, bottom: 12),
-              decoration: BoxDecoration(
-                border: Border.all(width: 1),
-              ),
-              child: LinearProgressIndicator(
-                minHeight: 10,
-                value: 0.3,
-                color: Color.fromARGB(255, 19, 2, 115),
-                backgroundColor: Colors.white,
+              padding: EdgeInsets.only(bottom: 10),
+              child: Text(
+                "Upload : " + uploadValue.toString(),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
             ),
             Text(
-              "Download | " + downloadValue.toString(),
+              "Download : " + downloadValue.toString(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 3, bottom: 6),
-              decoration: BoxDecoration(border: Border.all(width: 1)),
-              child: LinearProgressIndicator(
-                minHeight: 10,
-                value: 0.6,
-                color: Color.fromARGB(255, 19, 2, 115),
-                backgroundColor: Colors.white,
+                fontSize: 20,
               ),
             ),
           ],
