@@ -125,9 +125,22 @@ class _MyLoginState extends State<MyLogin> {
         });
       } else {
         debugPrint("Login Failed !");
+        Alert(
+                context: context,
+                buttons: [],
+                closeIcon: Container(),
+                desc:
+                    "Login Failed, Please check your username and or password")
+            .show();
       }
     } else {
       debugPrint("Something went wrong while trying to create new token");
+      Alert(
+              context: context,
+              buttons: [],
+              closeIcon: Container(),
+              desc: "Login Failed, Please check your username and or password")
+          .show();
     }
   }
 

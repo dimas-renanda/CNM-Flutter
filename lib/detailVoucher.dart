@@ -1,15 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_interpolation_to_compose_strings
 import 'dart:convert';
-import 'dart:ffi';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'globalspublic.dart' as globals;
 
 class AvailableUsers {
@@ -57,7 +57,11 @@ class _voucherDetailState extends State<voucherDetail> {
   @override
   void initState() {
     super.initState();
+    checkConntoRadius();
+
     _fetchVoucherDetails();
+    if (globals.radiusConnection) {
+    } else {}
   }
 
   Future<Null> _fetchVoucherDetails() async {
@@ -65,18 +69,16 @@ class _voucherDetailState extends State<voucherDetail> {
 
     final voucherResponse = await get(Uri.parse(radiusUrl +
         "/GetAvailableUsers?username = ${globals.getUsername()}&sid=${widget.sid}"));
-
     debugPrint("SID: " + widget.sid.toString());
     if (voucherResponse.statusCode == 200) {
       final data = jsonDecode(voucherResponse.body);
 
       setState(() {
         for (Map i in data["Data"]) {
-          debugPrint(i["Username"]);
           _fetchUserUsage(i["Username"]);
         }
 
-        arrAvUs.sort(((a, b) => a.username.compareTo(b.username)));
+        debugPrint(arrAvUs.length.toString());
       });
     } else {
       debugPrint("Something went wrong while trying to get available users");
@@ -94,6 +96,34 @@ class _voucherDetailState extends State<voucherDetail> {
 
       setState(() {
         arrAvUs.add(AvailableUsers.fromJson(data["Data"]));
+      });
+    }
+  }
+
+  Future<void> _saveTokenString() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString("tokenString", globals.tokenString);
+    });
+  }
+
+  void checkConntoRadius() async {
+    String testUrl = globals.radiusString;
+
+    try {
+      final response = await get(Uri.parse(testUrl)).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint("Something happened");
+          throw SocketException("Address Unreachable");
+        },
+      );
+      setState(() {
+        globals.radiusConnection = true;
+      });
+    } on SocketException catch (e) {
+      setState(() {
+        globals.radiusConnection = false;
       });
     }
   }
@@ -156,210 +186,236 @@ class _voucherDetailState extends State<voucherDetail> {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60),
-                    ),
-                    color: Colors.white,
-                    border: Border.all(color: Colors.white)),
-                child: Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: ListView(
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "QR Codes",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(60),
+                        topRight: Radius.circular(60),
+                      ),
+                      color: Colors.white,
+                      border: Border.all(color: Colors.white)),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: ListView(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "QR Codes",
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.only(
-                          top: 8,
-                        ),
-                        child: CarouselSlider.builder(
-                          carouselController: _carouselController,
-                          itemCount: arrAvUs.length,
-                          itemBuilder: (BuildContext context, int itemIndex,
-                                  int pageViewIndex) =>
-                              InkWell(
-                            onTap: () {
-                              Alert(
-                                buttons: [
-                                  DialogButton(
-                                    color: Colors.red[300],
-                                    child: Text(
-                                      "Close",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                        Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.only(
+                              top: 8,
+                            ),
+                            child: arrAvUs.length == widget.packetMaxDevice
+                                ? CarouselSlider.builder(
+                                    carouselController: _carouselController,
+                                    itemCount: arrAvUs.length,
+                                    itemBuilder: (BuildContext context,
+                                            int itemIndex, int pageViewIndex) =>
+                                        InkWell(
+                                      onTap: () {
+                                        Alert(
+                                          buttons: [
+                                            DialogButton(
+                                              color: Colors.red[300],
+                                              child: Text(
+                                                "Close",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                            )
+                                          ],
+                                          context: context,
+                                          title:
+                                              "QR Code for Device - ${arrAvUs[itemIndex].username}",
+                                          content: Column(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    EdgeInsets.only(top: 20),
+                                                child: PrettyQr(
+                                                  size: 300,
+                                                  data: arrAvUs[itemIndex]
+                                                      .username,
+                                                  errorCorrectLevel:
+                                                      QrErrorCorrectLevel.M,
+                                                  roundEdges: true,
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                    "Content:\nUsername: ${arrAvUs[itemIndex].username}"),
+                                              ),
+                                            ],
+                                          ),
+                                        ).show();
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding:
+                                                EdgeInsets.only(bottom: 10),
+                                            child: Text(
+                                              arrAvUs[itemIndex].username,
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Container(
+                                              child: PrettyQr(
+                                            size: 150,
+                                            data: arrAvUs[itemIndex].username,
+                                            errorCorrectLevel:
+                                                QrErrorCorrectLevel.M,
+                                            roundEdges: true,
+                                          )),
+                                        ],
                                       ),
                                     ),
-                                    onPressed: () => Navigator.pop(context),
+                                    options: CarouselOptions(
+                                        enableInfiniteScroll: false,
+                                        onPageChanged: (index, reason) {
+                                          setState(() {
+                                            currentCarrouselIndex = index;
+                                          });
+                                        }),
                                   )
-                                ],
-                                context: context,
-                                title:
-                                    "QR Code for Device - ${arrAvUs[itemIndex].username}",
-                                content: Column(
+                                : Container(
+                                    alignment: Alignment.center,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.3,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    child: CircularProgressIndicator(),
+                                  )),
+
+                        //Individual Usage
+                        arrAvUs.length == widget.packetMaxDevice
+                            ? Container(
+                                margin: EdgeInsets.only(
+                                    top: 20, left: 16, right: 16),
+                                child: Column(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: PrettyQr(
-                                        size: 300,
-                                        data: arrAvUs[itemIndex].username,
-                                        errorCorrectLevel:
-                                            QrErrorCorrectLevel.M,
-                                        roundEdges: true,
+                                      margin: EdgeInsets.only(bottom: 5),
+                                      child: Text(
+                                        "Total Uptime: " +
+                                            arrAvUs[currentCarrouselIndex]
+                                                .userUptime
+                                                .toString() +
+                                            " Seconds",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            decoration:
+                                                TextDecoration.underline),
                                       ),
                                     ),
+                                    createCard(
+                                      downloadValue:
+                                          arrAvUs[currentCarrouselIndex]
+                                              .userDownload,
+                                      uploadValue:
+                                          arrAvUs[currentCarrouselIndex]
+                                              .userUpload,
+                                    ),
                                     Container(
+                                      alignment: Alignment.centerLeft,
+                                      margin: EdgeInsets.only(left: 16, top: 8),
                                       child: Text(
-                                          "Content:\nUsername: ${arrAvUs[itemIndex].username}"),
+                                        "Total: " +
+                                            arrAvUs[currentCarrouselIndex]
+                                                .getTotalUsage()
+                                                .toString() +
+                                            " Bytes",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ],
-                                ),
-                              ).show();
-                            },
+                                ))
+                            : Container(),
+
+                        //Total Usage
+                        Container(
+                            margin:
+                                EdgeInsets.only(top: 32, left: 16, right: 16),
                             child: Column(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(bottom: 10),
+                                  margin: EdgeInsets.only(bottom: 5),
                                   child: Text(
-                                    arrAvUs[itemIndex].username,
+                                    "Total Usage",
                                     style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        decoration: TextDecoration.underline),
                                   ),
                                 ),
+                                createCard(
+                                  downloadValue: 8750,
+                                  uploadValue: 1000000,
+                                ),
                                 Container(
-                                    child: PrettyQr(
-                                  size: 150,
-                                  data: arrAvUs[itemIndex].username,
-                                  errorCorrectLevel: QrErrorCorrectLevel.M,
-                                  roundEdges: true,
-                                )),
+                                  alignment: Alignment.centerLeft,
+                                  margin: EdgeInsets.only(left: 16, top: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          child: AutoSizeText(
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            "Total: " +
+                                                ((8750 + 1000000) / 1000)
+                                                    .toString() +
+                                                " Gb",
+                                            maxLines: 1,
+                                            minFontSize: 10,
+                                          )),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          child: AutoSizeText(
+                                            "Active until ${widget.expireDate}",
+                                            minFontSize: 5,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                decoration:
+                                                    TextDecoration.underline),
+                                          )),
+                                    ],
+                                  ),
+                                ),
                               ],
-                            ),
-                          ),
-                          options: CarouselOptions(
-                              enableInfiniteScroll: false,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  currentCarrouselIndex = index;
-                                });
-                              }),
-                        ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(top: 20, left: 16, right: 16),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(bottom: 5),
-                                child: Text(
-                                  "Total Uptime: " +
-                                      arrAvUs[currentCarrouselIndex]
-                                          .userUptime
-                                          .toString() +
-                                      " Seconds",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      decoration: TextDecoration.underline),
-                                ),
-                              ),
-                              createCard(
-                                downloadValue:
-                                    arrAvUs[currentCarrouselIndex].userDownload,
-                                uploadValue:
-                                    arrAvUs[currentCarrouselIndex].userUpload,
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: EdgeInsets.only(left: 16, top: 8),
-                                child: Text(
-                                  "Total: " +
-                                      arrAvUs[currentCarrouselIndex]
-                                          .getTotalUsage()
-                                          .toString() +
-                                      " Bytes",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(top: 32, left: 16, right: 16),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(bottom: 5),
-                                child: Text(
-                                  "Total Usage",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      decoration: TextDecoration.underline),
-                                ),
-                              ),
-                              createCard(
-                                downloadValue: 8750,
-                                uploadValue: 1000000,
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: EdgeInsets.only(left: 16, top: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        child: AutoSizeText(
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          "Total: " +
-                                              ((8750 + 1000000) / 1000)
-                                                  .toString() +
-                                              " Gb",
-                                          maxLines: 1,
-                                          minFontSize: 10,
-                                        )),
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        child: AutoSizeText(
-                                          "Active until ${widget.expireDate}",
-                                          minFontSize: 5,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline),
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(top: 16),
-                          child: createMRTG()),
-                    ],
-                  ),
-                ),
-              ),
+                            )),
+                        Container(
+                            margin: EdgeInsets.only(top: 16),
+                            child: createMRTG()),
+                      ],
+                    ),
+                  )),
             ]),
           ),
         ],
