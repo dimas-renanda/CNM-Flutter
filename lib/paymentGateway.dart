@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firstproject/Payment.dart';
 import 'package:firstproject/paymentConfirmation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:math';
 import 'package:timelines/timelines.dart';
 import 'globalspublic.dart' as globals;
@@ -50,6 +51,7 @@ class _paymentGatewayState extends State<paymentGateway> {
     super.initState();
     _packetPrice = int.parse(widget.packetPrice);
     pages.add(paymentConfirmation(
+      packetID: 0,
       totalPrice: _packetPrice,
       transactionID: transactionID,
       packetMaxDevice: 0,
@@ -60,7 +62,6 @@ class _paymentGatewayState extends State<paymentGateway> {
   }
 
   void postToAPI() async {
-    debugPrint("Packet Duration: " + widget.packetDuration.toString());
     var response =
         await post(Uri.parse(globals.uriString + "/Transaction"), body: {
       "uid": globals.getUserID().toString(),
@@ -74,9 +75,34 @@ class _paymentGatewayState extends State<paymentGateway> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       debugPrint("Last inserted ID: " + data["Data"]["getIDLast"].toString());
+
+      var invoiceResponse = await post(
+          Uri.parse(globals.radiusString + "/CreateNewInvoice?"),
+          body: {
+            "UID": globals.getUserID().toString(),
+            "statusID": "1",
+            "typeID": "1",
+            "invoiceNote":
+                globals.getUsername() + " bought " + widget.packetName,
+            "planID": widget.packetID.toString(),
+            "invAmmount": widget.packetPrice,
+            "invTax": "0",
+            "itemNotes": globals.getUsername() + " bought " + widget.packetName,
+            "transactionID": data["Data"]["getIDLast"].toString(),
+          });
+      debugPrint("After Radius Invoice");
+      if (invoiceResponse.statusCode == 200) {
+        final invoiceData = jsonDecode(invoiceResponse.body);
+        debugPrint(invoiceData.toString());
+        debugPrint("Success Creating Invoice on Radius Server");
+      } else {
+        debugPrint("Failed Creating Invoice on Radius Server");
+      }
+
       setState(() {
         transactionID = data["Data"]["getIDLast"];
         pages[1] = paymentConfirmation(
+          packetID: widget.packetID,
           totalPrice: _packetPrice,
           transactionID: transactionID,
           packetMaxDevice: widget.packetMaxDevice,
@@ -84,7 +110,6 @@ class _paymentGatewayState extends State<paymentGateway> {
           paymentChoice: globals.paymentChoice,
           packetDuration: int.parse(widget.packetDuration.toString()),
         );
-        debugPrint("Payment Gateway");
       });
     }
   }

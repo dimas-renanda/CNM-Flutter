@@ -51,7 +51,10 @@ class voucherDetail extends StatefulWidget {
 
 class _voucherDetailState extends State<voucherDetail> {
   CarouselController _carouselController = CarouselController();
-  int currentCarrouselIndex = 0;
+  int currentCarrouselIndex = 0,
+      abnormalUser = 0,
+      totalUpload = 0,
+      totalDownload = 0;
   List<AvailableUsers> arrAvUs = [];
 
   @override
@@ -73,13 +76,18 @@ class _voucherDetailState extends State<voucherDetail> {
     if (voucherResponse.statusCode == 200) {
       final data = jsonDecode(voucherResponse.body);
 
-      setState(() {
+      if (data["Data"] != null) {
         for (Map i in data["Data"]) {
-          _fetchUserUsage(i["Username"]);
+          setState(() {
+            _fetchUserUsage(i["Username"]);
+          });
         }
-
-        debugPrint(arrAvUs.length.toString());
-      });
+      } else {
+        setState(() {
+          abnormalUser = 1;
+        });
+        debugPrint("No Data Returned From API");
+      }
     } else {
       debugPrint("Something went wrong while trying to get available users");
     }
@@ -96,6 +104,8 @@ class _voucherDetailState extends State<voucherDetail> {
 
       setState(() {
         arrAvUs.add(AvailableUsers.fromJson(data["Data"]));
+        totalUpload += int.parse(data["Data"]["Upload"].toString());
+        totalDownload += int.parse(data["Data"]["Download"].toString());
       });
     }
   }
@@ -130,6 +140,7 @@ class _voucherDetailState extends State<voucherDetail> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Abnormal: " + abnormalUser.toString());
     return Scaffold(
         body: Center(
             child: Container(
@@ -194,113 +205,152 @@ class _voucherDetailState extends State<voucherDetail> {
                       color: Colors.white,
                       border: Border.all(color: Colors.white)),
                   child: Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 10),
                     child: ListView(
                       children: [
-                        Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "QR Codes",
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                        abnormalUser == 0
+                            ? Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "QR Codes",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              )
+                            : Container(),
                         Container(
                             width: double.infinity,
                             padding: EdgeInsets.only(
                               top: 8,
                             ),
-                            child: arrAvUs.length == widget.packetMaxDevice
-                                ? CarouselSlider.builder(
-                                    carouselController: _carouselController,
-                                    itemCount: arrAvUs.length,
-                                    itemBuilder: (BuildContext context,
-                                            int itemIndex, int pageViewIndex) =>
-                                        InkWell(
-                                      onTap: () {
-                                        Alert(
-                                          buttons: [
-                                            DialogButton(
-                                              color: Colors.red[300],
-                                              child: Text(
-                                                "Close",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                            child: abnormalUser == 0
+                                ? arrAvUs.length == widget.packetMaxDevice
+                                    ? CarouselSlider.builder(
+                                        carouselController: _carouselController,
+                                        itemCount: arrAvUs.length,
+                                        itemBuilder: (BuildContext context,
+                                                int itemIndex,
+                                                int pageViewIndex) =>
+                                            InkWell(
+                                          onTap: () {
+                                            Alert(
+                                              buttons: [
+                                                DialogButton(
+                                                  color: Colors.red[300],
+                                                  child: Text(
+                                                    "Close",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                )
+                                              ],
+                                              context: context,
+                                              title:
+                                                  "QR Code for Device - ${arrAvUs[itemIndex].username}",
+                                              content: Column(
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                        top: 20),
+                                                    child: PrettyQr(
+                                                      size: 300,
+                                                      data: arrAvUs[itemIndex]
+                                                          .username,
+                                                      errorCorrectLevel:
+                                                          QrErrorCorrectLevel.M,
+                                                      roundEdges: true,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                        "Content:\nUsername: ${arrAvUs[itemIndex].username}"),
+                                                  ),
+                                                ],
                                               ),
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                            )
-                                          ],
-                                          context: context,
-                                          title:
-                                              "QR Code for Device - ${arrAvUs[itemIndex].username}",
-                                          content: Column(
+                                            ).show();
+                                          },
+                                          child: Column(
                                             children: [
                                               Container(
                                                 padding:
-                                                    EdgeInsets.only(top: 20),
-                                                child: PrettyQr(
-                                                  size: 300,
-                                                  data: arrAvUs[itemIndex]
-                                                      .username,
-                                                  errorCorrectLevel:
-                                                      QrErrorCorrectLevel.M,
-                                                  roundEdges: true,
+                                                    EdgeInsets.only(bottom: 10),
+                                                child: Text(
+                                                  arrAvUs[itemIndex].username,
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                               ),
                                               Container(
-                                                child: Text(
-                                                    "Content:\nUsername: ${arrAvUs[itemIndex].username}"),
-                                              ),
+                                                  child: PrettyQr(
+                                                size: 150,
+                                                data:
+                                                    arrAvUs[itemIndex].username,
+                                                errorCorrectLevel:
+                                                    QrErrorCorrectLevel.M,
+                                                roundEdges: true,
+                                              )),
                                             ],
                                           ),
-                                        ).show();
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            padding:
-                                                EdgeInsets.only(bottom: 10),
-                                            child: Text(
-                                              arrAvUs[itemIndex].username,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          Container(
-                                              child: PrettyQr(
-                                            size: 150,
-                                            data: arrAvUs[itemIndex].username,
-                                            errorCorrectLevel:
-                                                QrErrorCorrectLevel.M,
-                                            roundEdges: true,
-                                          )),
-                                        ],
-                                      ),
-                                    ),
-                                    options: CarouselOptions(
-                                        enableInfiniteScroll: false,
-                                        onPageChanged: (index, reason) {
-                                          setState(() {
-                                            currentCarrouselIndex = index;
-                                          });
-                                        }),
-                                  )
+                                        ),
+                                        options: CarouselOptions(
+                                            enableInfiniteScroll: false,
+                                            onPageChanged: (index, reason) {
+                                              setState(() {
+                                                currentCarrouselIndex = index;
+                                              });
+                                            }),
+                                      )
+                                    : Container(
+                                        alignment: Alignment.center,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.3,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.5,
+                                        child: CircularProgressIndicator(),
+                                      )
                                 : Container(
+                                    padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width *
+                                          0.08,
+                                      right: MediaQuery.of(context).size.width *
+                                          0.08,
+                                    ),
                                     alignment: Alignment.center,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.3,
                                     width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    child: CircularProgressIndicator(),
-                                  )),
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.only(bottom: 60),
+                                          child: Icon(
+                                            Icons.error_outline,
+                                            color: Colors.red,
+                                            size: 150,
+                                          ),
+                                        ),
+                                        AutoSizeText(
+                                          "There seems to be a problem with this packet / voucher, please contact CS for further information",
+                                          presetFontSizes: [20, 10],
+                                          maxLines: 10,
+                                          minFontSize: 10,
+                                          wrapWords: true,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ))),
 
                         //Individual Usage
                         arrAvUs.length == widget.packetMaxDevice
@@ -349,70 +399,77 @@ class _voucherDetailState extends State<voucherDetail> {
                                 ))
                             : Container(),
 
-                        //Total Usage
-                        Container(
-                            margin:
-                                EdgeInsets.only(top: 32, left: 16, right: 16),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 5),
-                                  child: Text(
-                                    "Total Usage",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        decoration: TextDecoration.underline),
-                                  ),
-                                ),
-                                createCard(
-                                  downloadValue: 8750,
-                                  uploadValue: 1000000,
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  margin: EdgeInsets.only(left: 16, top: 8),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.4,
-                                          child: AutoSizeText(
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            "Total: " +
-                                                ((8750 + 1000000) / 1000)
-                                                    .toString() +
-                                                " Gb",
-                                            maxLines: 1,
-                                            minFontSize: 10,
-                                          )),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.4,
-                                          child: AutoSizeText(
-                                            "Active until ${widget.expireDate}",
-                                            minFontSize: 5,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                decoration:
-                                                    TextDecoration.underline),
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )),
-                        Container(
-                            margin: EdgeInsets.only(top: 16),
-                            child: createMRTG()),
+                        abnormalUser == 0
+                            ?
+                            //Total Usage
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: 32, left: 16, right: 16),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(bottom: 5),
+                                      child: Text(
+                                        "Total Usage",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                    ),
+                                    createCard(
+                                      downloadValue: totalDownload,
+                                      uploadValue: totalUpload,
+                                    ),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      margin: EdgeInsets.only(left: 16, top: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              child: AutoSizeText(
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                "Total: " +
+                                                    ((8750 + 1000000) / 1000)
+                                                        .toString() +
+                                                    " Gb",
+                                                maxLines: 1,
+                                                minFontSize: 10,
+                                              )),
+                                          Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              child: AutoSizeText(
+                                                "Active until ${widget.expireDate}",
+                                                minFontSize: 5,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    decoration: TextDecoration
+                                                        .underline),
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                            : Container(),
+                        //MRTG Image
+                        abnormalUser == 0
+                            ? Container(
+                                margin: EdgeInsets.only(top: 16),
+                                child: createMRTG())
+                            : Container()
                       ],
                     ),
                   )),
@@ -493,18 +550,20 @@ class createCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(bottom: 10),
               child: Text(
-                "Upload : " + uploadValue.toString(),
+                "Upload : " + ((uploadValue * 8) / 1000000).toString() + " Mb",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),
               ),
             ),
             Text(
-              "Download : " + downloadValue.toString(),
+              "Download : " +
+                  ((downloadValue * 8) / 1000000).toString() +
+                  " Mb",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: 18,
               ),
             ),
           ],

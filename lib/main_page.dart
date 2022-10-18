@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firstproject/detailPaket.dart';
 import 'package:firstproject/main.dart';
-import 'package:firstproject/sampleDetailVoucher.dart';
 import 'package:firstproject/sampleNotifications.dart';
 import 'package:http/http.dart' as http;
 

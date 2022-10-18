@@ -10,16 +10,17 @@ import 'globalspublic.dart' as globals;
 import 'package:http/http.dart';
 
 class paymentConfirmation extends StatefulWidget {
-  paymentConfirmation(
-      {Key? key,
-      required this.totalPrice,
-      required this.transactionID,
-      required this.packetMaxDevice,
-      required this.packetName,
-      required this.paymentChoice,
-      required this.packetDuration})
-      : super(key: key);
-  int totalPrice, transactionID, packetMaxDevice, packetDuration;
+  paymentConfirmation({
+    Key? key,
+    required this.totalPrice,
+    required this.transactionID,
+    required this.packetMaxDevice,
+    required this.packetName,
+    required this.paymentChoice,
+    required this.packetDuration,
+    required this.packetID,
+  }) : super(key: key);
+  int totalPrice, transactionID, packetMaxDevice, packetDuration, packetID;
   String packetName, paymentChoice;
 
   @override
@@ -33,7 +34,6 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
   @override
   void initState() {
     super.initState();
-    debugPrint("Payment Confirmation");
     startTimer();
   }
 
@@ -49,28 +49,43 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      debugPrint("Before Radius User Creation");
-      var radiusResponse =
-          await post(Uri.parse(globals.radiusString + "/CreateNewUser"), body: {
-        "username": globals.getUsername().toString(),
-        "sid": data["Data"]["SID"]["New ID"].toString(),
-        "packet_max": widget.packetMaxDevice.toString(),
-        "email": globals.email.toString(),
-        "phone": globals.phoneNum.toString(),
-        "address": globals.address.toString(),
-        "packetname": widget.packetName.toString(),
-        "paymentMethod": widget.paymentChoice.toString(),
-        "expiredDate": widget.packetDuration.toString(),
-        "ordertaker": "System",
-      });
+      var radiusResponse = await post(
+          Uri.parse(globals.radiusString + "/CreateNewUser?"),
+          body: {
+            "username": globals.getUsername().toString(),
+            "sid": data["Data"]["SID"]["New ID"].toString(),
+            "packet_max": widget.packetMaxDevice.toString(),
+            "email": globals.email.toString(),
+            "phone": globals.phoneNum.toString(),
+            "address": globals.address.toString(),
+            "packetname": widget.packetName.toString(),
+            "paymentMethod": widget.paymentChoice.toString(),
+            "expiredDate": widget.packetDuration.toString(),
+            "ordertaker": "System",
+            "profileName": "samplehotspot-2M",
+          });
       debugPrint("After Radius User Creation");
 
       if (radiusResponse.statusCode == 200) {
         final radiusData = jsonDecode(radiusResponse.body);
-        setState(() {});
         debugPrint("Success Creating New User");
-        debugPrint("New User: " + globals.currentUser);
-        debugPrint("Created " + radiusData["Data"]["User Created"].toString());
+        debugPrint(
+            "New User: " + radiusData["Data"]["User Created"].toString());
+
+        var paymentResponse = await post(
+            Uri.parse(globals.radiusString + "/CreateNewPayment?"),
+            body: {
+              "invoiceID": widget.transactionID.toString(),
+              "amountPaid": widget.totalPrice.toString(),
+              "paymentType": "3",
+              "paymentNotes": "Payment For " + widget.packetName.toString()
+            });
+
+        if (paymentResponse.statusCode == 200) {
+          debugPrint("Success Adding Payment to Radius");
+        } else {
+          debugPrint("Failed Adding Payment to Radius");
+        }
       } else {
         final radiusData = jsonDecode(radiusResponse.body);
         debugPrint("Failed to create new user in Radius Server");
@@ -112,7 +127,30 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
           title: "Success",
           desc:
               "Your device has been connected to Crossnet. Please show your QR code if you want to use it on your other device/s. ",
-          buttons: [],
+          buttons: [
+            DialogButton(
+                child: Text("Home"),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => MainPage(
+                                reqPage: "0",
+                              ))));
+                }),
+            DialogButton(
+                child: Text("CrossRadius"),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => webviewpage(
+                                judulnya: "Redirect",
+                                urlnya:
+                                    "http://crossradius.net/login?username=${globals.currentUser}&password=${globals.currentUser} ",
+                              ))));
+                })
+          ],
           style: AlertStyle(
             animationType: AnimationType.fromBottom,
             alertBorder: RoundedRectangleBorder(
@@ -127,10 +165,8 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
         ).show().then((value) => Navigator.push(
             context,
             MaterialPageRoute(
-                builder: ((context) => webviewpage(
-                      judulnya: "Redirect",
-                      urlnya:
-                          "http://crossradius.net/login?username=${globals.currentUser}&password=${globals.currentUser} ",
+                builder: ((context) => MainPage(
+                      reqPage: "0",
                     )))));
       } else {
         timerDuration = Duration(seconds: seconds);
@@ -263,7 +299,12 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
                       title: "Payment Cancelled",
                       desc: "Redirrecting you to packet list",
                       buttons: [],
-                    ).show().then((value) => Navigator.pop(context));
+                    ).show().then((value) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => MainPage(
+                                  reqPage: "0",
+                                )))));
                   }
                 },
                 child: Text(
