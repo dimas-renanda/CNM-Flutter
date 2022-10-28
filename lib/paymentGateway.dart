@@ -63,7 +63,7 @@ class _paymentGatewayState extends State<paymentGateway> {
 
   void postToAPI() async {
     var response =
-        await post(Uri.parse(globals.uriString + "/Transaction"), body: {
+        await post(Uri.parse(globals.uriString + "/Transaction?"), body: {
       "uid": globals.getUserID().toString(),
       "pid": widget.packetID.toString(),
       "payment": globals.paymentChoice.toString(),
@@ -90,7 +90,6 @@ class _paymentGatewayState extends State<paymentGateway> {
             "itemNotes": globals.getUsername() + " bought " + widget.packetName,
             "transactionID": data["Data"]["getIDLast"].toString(),
           });
-      debugPrint("After Radius Invoice");
       if (invoiceResponse.statusCode == 200) {
         final invoiceData = jsonDecode(invoiceResponse.body);
         debugPrint(invoiceData.toString());

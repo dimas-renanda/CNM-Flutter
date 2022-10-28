@@ -38,8 +38,9 @@ class _paymentConfirmationState extends State<paymentConfirmation> {
   }
 
   void putToAPI(String status) async {
+    debugPrint("Transaction ID: " + widget.transactionID.toString());
     var response = await put(
-        Uri.parse(globals.uriString + "/UpdateTransactionStatus"),
+        Uri.parse(globals.uriString + "/UpdateTransactionStatus?"),
         body: {
           "uid": globals.getUserID().toString(),
           "id": widget.transactionID.toString(),

@@ -116,10 +116,38 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _savePhoenixServerString(String newValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("phoenixString", newValue);
+  }
+
+  Future<void> _loadPhoenixServerString() async {
+    final prefs = await SharedPreferences.getInstance();
+    globals.uriString = (prefs.getString("phoenixString") ??
+        "http://phoenix.crossnet.co.id:38600");
+  }
+
+  Future<void> _saveRadiusServerString(String newValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("radiusString", newValue);
+  }
+
+  Future<void> _loadRadiusServerString() async {
+    final prefs = await SharedPreferences.getInstance();
+    globals.radiusString =
+        (prefs.getString("radiusString") ?? "http://10.5.50.32:38700");
+  }
+
   @override
   void initState() {
     super.initState();
     checkConn();
+    setState(() {
+      //_loadPhoenixServerString();
+      //_loadRadiusServerString();
+      globals.radiusString = "http://10.5.50.32:38700";
+      globals.uriString = "http://phoenix.crossnet.co.id:38600";
+    });
   }
 
   @override

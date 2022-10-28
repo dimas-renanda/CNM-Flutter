@@ -29,9 +29,10 @@ class _notificationsHistoryPageState extends State<notificationsHistoryPage> {
 
   Future<Null> _fetchUserHistory() async {
     String urlString = globals.uriString;
-
-    final response = await get(
-        Uri.parse(urlString + "/UserHistory?uid=${globals.getUserID()}"));
+    debugPrint("User ID: " + globals.getUserID().toString());
+    final response = await get(Uri.parse(
+            urlString + "/UserHistory?uid=${globals.getUserID().toString()}"))
+        .timeout(const Duration(seconds: 2));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
