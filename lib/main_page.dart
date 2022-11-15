@@ -549,7 +549,7 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.topLeft,
         child: (GestureDetector(
           child: Text(
-            "Recomended for you !",
+            "Package for you !",
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 0, 88, 160),
