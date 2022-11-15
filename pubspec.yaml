@@ -56,7 +56,7 @@ dependencies:
   auto_size_text: ^3.0.0
   dropdown_button2: ^1.8.2
   connectivity_plus: ^2.3.7
-  internet_connection_checker: ^1.0.0+1
+  
 
 
   

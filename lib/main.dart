@@ -15,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'paketlistnew.dart';
 import 'globalspublic.dart' as globals;
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 //run myapp
 void main() {
