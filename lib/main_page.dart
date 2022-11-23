@@ -63,11 +63,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   //func news
-  final String apiUrlNews = "http://saurav.tech/NewsAPI/sources.json";
+  final String apiUrlNews =
+      "http://phoenix.crossnet.co.id/xradius/crossradius-admin/Api/News/";
 
   Future<List<dynamic>> _fecthDataUsers() async {
     var result = await http.get(Uri.parse(apiUrlNews));
-    return json.decode(result.body)['sources'];
+    return json.decode(result.body)['data'];
   }
 
   Future _fetchUsersInfo() async {
@@ -778,7 +779,7 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return CarouselSlider.builder(
-              itemCount: 3,
+              itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int itemIndex,
                       int pageViewIndex) =>
                   Container(
@@ -830,7 +831,7 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 children: [
                                   Text(
-                                    snapshot.data[itemIndex]['name'],
+                                    snapshot.data[itemIndex]['title'],
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
