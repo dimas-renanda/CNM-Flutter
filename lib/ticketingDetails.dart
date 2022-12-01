@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart';
 import 'globalspublic.dart' as globals;
 
@@ -23,6 +24,9 @@ class _ticketingDetailsState extends State<ticketingDetails> {
     ticketSID: "",
     ticketTopic: "",
     ticketDescription: "",
+    ticketDetail: "",
+    ticketStatus: "",
+    ticketProgressDate: "",
   );
   List<TicketProgress> tckProgress = [];
   int currentArrayIndex = 0;
@@ -52,6 +56,7 @@ class _ticketingDetailsState extends State<ticketingDetails> {
         final progressData = jsonDecode(ticketingProgressQuery.body);
         setState(() {
           currentTicket = Ticket.fromJson(data["Data"]);
+          debugPrint(data["Data"].toString());
 
           if (progressData["Data"] != null) {
             for (Map i in progressData["Data"]) {
@@ -168,7 +173,19 @@ class _ticketingDetailsState extends State<ticketingDetails> {
                               false,
                             ),
 
-                            createTicketingProgress(context, tckProgress),
+                            createTicketingIndividualForm(
+                              "Ticket Status",
+                              Colors.grey,
+                              currentTicket.ticketStatus,
+                              false,
+                            ),
+
+                            //HOTFIX
+                            createTicketingProgressFix(
+                                context,
+                                currentTicket.ticketDetail,
+                                currentTicket.ticketProgressDate),
+                            //createTicketingProgress(context, tckProgress),
                           ],
                         ),
                       )),
@@ -210,6 +227,90 @@ Widget createTicketingIndividualForm(
                     ))),
           ),
         )
+      ],
+    ),
+  );
+}
+
+//HOTFIX
+Widget createTicketingProgressFix(
+    BuildContext context, String ticketDetail, String ticketDate) {
+  return Container(
+    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
+    decoration: BoxDecoration(
+        border: Border.all(width: 1),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(20),
+          topLeft: Radius.circular(22),
+        )),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        //Process Header / Title
+        Container(
+          height: MediaQuery.of(context).size.height * 0.05,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+              ),
+              color: Color.fromARGB(255, 4, 32, 107)),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(left: 10),
+            child: Text(
+              "Progress",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ),
+        //Process Details / Content
+        Container(
+            child: Column(
+          children: [
+            ticketDetail.length > 0
+                ? Container(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 5, bottom: 5, left: 5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Progress Ticketing",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 7, bottom: 2),
+                          alignment: Alignment.centerLeft,
+                          child: Text(ticketDate),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 7),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            ticketDetail,
+                          ),
+                        ),
+                      ],
+                    ))
+                : Container(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: Center(
+                      child: Text(
+                        "No Progress Yet :)",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+          ],
+        ))
       ],
     ),
   );
@@ -265,8 +366,8 @@ Widget createTicketingProgress(
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: uniques.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return createTicketingProgressContainer(
-                          context, progress, uniques.keys.elementAt(index));
+                      return createTicketingProgressContainer(context, progress,
+                          uniques.keys.elementAt(index), index);
                     },
                   )
                 : Container(
@@ -285,11 +386,11 @@ Widget createTicketingProgress(
   );
 }
 
-Widget createTicketingProgressContainer(
-    BuildContext context, List<TicketProgress> progress, String currentIndex) {
-  int contentLength =
-      progress.where((x) => x.progressDate.toString() == currentIndex).length;
-
+Widget createTicketingProgressContainer(BuildContext context,
+    List<TicketProgress> progress, String currentIndexName, int currentIndex) {
+  int contentLength = progress
+      .where((x) => x.progressDate.toString() == currentIndexName)
+      .length;
   return Container(
     padding: EdgeInsets.only(bottom: 15),
     margin: EdgeInsets.only(left: 20),
@@ -299,7 +400,7 @@ Widget createTicketingProgressContainer(
         Container(
           padding: EdgeInsets.only(bottom: 5),
           child: Text(
-            currentIndex,
+            currentIndexName,
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -310,7 +411,8 @@ Widget createTicketingProgressContainer(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               for (int i = 0; i < contentLength; i++)
-                createTicketingProgressAction(context, progress[i]),
+                createTicketingProgressAction(
+                    context, progress[i + currentIndex]),
             ],
           ),
         )
@@ -330,20 +432,32 @@ Widget createTicketingProgressAction(BuildContext context, TicketProgress obj) {
 }
 
 class Ticket {
-  String ticketID, ticketSID, ticketTopic, ticketDescription;
+  String ticketID,
+      ticketSID,
+      ticketTopic,
+      ticketDescription,
+      ticketDetail,
+      ticketStatus,
+      ticketProgressDate;
 
   Ticket({
     required this.ticketID,
     required this.ticketSID,
     required this.ticketTopic,
     required this.ticketDescription,
+    required this.ticketDetail,
+    required this.ticketStatus,
+    required this.ticketProgressDate,
   });
 
   factory Ticket.fromJson(Map<dynamic, dynamic> json) => Ticket(
-        ticketID: json["ID"],
+        ticketID: json["TicketID"],
         ticketSID: json["SID"],
         ticketTopic: json["Topic"],
         ticketDescription: json["Description"],
+        ticketDetail: json["TicketDetail"],
+        ticketStatus: json["TicketStatus"],
+        ticketProgressDate: json["TicketProgressDate"],
       );
 }
 
