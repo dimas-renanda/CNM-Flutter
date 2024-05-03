@@ -1,6 +1,6 @@
-# firstproject
+# Android APP
 
-A new Flutter project.
+MyCNM Flutter project.
 
 ## Getting Started
 
